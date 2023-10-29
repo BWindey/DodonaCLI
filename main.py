@@ -23,7 +23,18 @@ class ArgumentParser:
         self.args = self.parser.parse_args()
 
 
-def show_courses(connection, headers, tab='my'):
+def show_courses(connection, headers, short_tab='m'):
+    if short_tab == 'm':
+        tab = 'my'
+    elif short_tab == 'f':
+        tab = 'featured'
+    elif short_tab == 'i':
+        tab = 'institution'
+    elif short_tab == 'a':
+        tab = 'all'
+    else:
+        return
+
     connection.request("GET", "/courses.json?tab=" + tab, headers=headers)
     res = connection.getresponse()
     print(res.status, res.reason)
@@ -51,7 +62,7 @@ def main():
 
     if arg_parser.args.show_courses:
         print(arg_parser.args.show_courses)
-        show_courses(connection, headers,)
+        show_courses(connection, headers, arg_parser.args.show_courses)
 
 
 if __name__ == "__main__":
