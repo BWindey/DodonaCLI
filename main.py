@@ -1,29 +1,9 @@
-import argparse
 import http.client
 import json
+import click
 
 
-class ArgumentParser:
-    def __init__(self, description):
-        self.parser = argparse.ArgumentParser(description=description, formatter_class=argparse.RawTextHelpFormatter)
-        self.add_arguments()
-        self.args = None
-        self.parse_args()
-
-    def add_arguments(self):
-        # Command-line arguments
-        self.parser.add_argument("-c", "--show_courses",
-                                 metavar='OPTION',
-                                 nargs='?',
-                                 choices=['a', 'm', 'i', 'f'],
-                                 default='m',
-                                 help="Show courses (a: all, m: my (default), i: institution, f: featured")
-
-    def parse_args(self):
-        self.args = self.parser.parse_args()
-
-
-def show_courses(connection, headers, short_tab='m'):
+def show_the_courses(connection, headers, short_tab='m'):
     if short_tab == 'm':
         tab = 'my'
     elif short_tab == 'f':
@@ -45,13 +25,13 @@ def show_courses(connection, headers, short_tab='m'):
     print(pretty_json)
 
 
-def main():
+@click.command()
+@click.option('--show_courses', '-c',
+              help="")
+def main(show_courses):
     token_file = open("token")
     TOKEN = token_file.read()[:-1]
     token_file.close()
-
-    arg_parser = ArgumentParser("Dodona Command Line Interface (dodona.be)")
-    print(arg_parser.args)
 
     connection = http.client.HTTPSConnection("dodona.be")
     headers = {
@@ -60,9 +40,9 @@ def main():
         "Authorization": TOKEN
     }
 
-    if arg_parser.args.show_courses:
-        print(arg_parser.args.show_courses)
-        show_courses(connection, headers, arg_parser.args.show_courses)
+    if show_courses:
+        print(show_courses)
+        show_the_courses(connection, headers, show_courses)
 
 
 if __name__ == "__main__":
