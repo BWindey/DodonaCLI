@@ -19,12 +19,25 @@ def show_the_courses(connection, headers, short_tab='m'):
 
     connection.request("GET", "/courses.json?tab=" + tab, headers=headers)
     res = connection.getresponse()
-    print(res.status, res.reason)
+    if res.status != 200:
+        print('Error connecting to dodona: ' + str(res.status))
+        print(res.reason)
+        return
     data = res.read()
     connection.close()
 
-    pretty_json = json.dumps(json.loads(data), indent=2)
-    print(pretty_json)
+    json_data = json.loads(data)
+
+    print('id: \033[1;4mcourse\033[0m by teacher\n' + '\u203E' * 21)
+    courses = []
+    for course in json_data:
+        courses.append((str(course['id']), course['name'], course['teacher']))
+    max_course_id_length = max(len(e[0]) for e in courses)
+    max_course_name_length = max(len(e[1]) for e in courses)
+
+    courses = sorted(courses, key=lambda x: x[1])
+    for e in courses:
+        print(f'{e[0].ljust(max_course_id_length)}: \033[1m{e[1].ljust(max_course_name_length)}\033[0m\tby {e[2]}')
 
 
 @click.command(help="A Command Line Interface for Dodona. Finally you have no need to exit your terminal anymore!\n"
@@ -64,7 +77,6 @@ def main(show_courses, select, up, uptop):
     }
 
     if show_courses:
-        print(show_courses)
         show_the_courses(connection, headers, show_courses)
 
     else:
