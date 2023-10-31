@@ -4,9 +4,15 @@
 2) How to use
 3) All flags
 
+
 ## How to install
-Humpty dumpty.\
-I don't even know yet how to install this...
+- Clone this repo somewhere on your pc.
+- Make main.py executable: `chmod +x main.py`
+- Set an alias for it, in the rest of this I'll assume you have set it like this: `dodona=<path_to_main.py>`
+      (I'll assume you know how to set aliasses, if you don't, look it up on the interwebs)
+- Check if it works by going to "How to use"
+- Updates should be easy: navigate to the folder where you cloned this repo, and do `git pull` 
+
 
 ## How to use
 When freshly installed, run 
@@ -25,4 +31,5 @@ That's all you can do for now... I hope to be implementing more functionality th
 
 
 ## All flags
-I'm too lazy to type them out now, even too lazy to copy, just run `dodona --help` or '-h' to get info about all the available flags.
+I'm too lazy to type them out right now, even too lazy to copy, just run `dodona --help` or '-h' to get info about all the available flags.
+When this project matures, I'll update this README to give more info.
