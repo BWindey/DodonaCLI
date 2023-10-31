@@ -3,6 +3,7 @@ import click
 import http.client
 
 from get_data import *
+from pretty_print import *
 from set_data import *
 
 
@@ -37,26 +38,43 @@ def main(display, select, up, uptop, status):
     }
 
     if display:
-        json_data = courses_data(connection, headers)
-        courses = []
-        for course in json_data:
-            courses.append((str(course['id']), course['name'], course['teacher']))
-        max_course_id_length = max(len(e[0]) for e in courses)
-        max_course_name_length = max(len(e[1]) for e in courses)
-        courses = sorted(courses, key=lambda x: x[1])
+        if config['course_id'] is None:
+            # Print available courses
+            json_data = courses_data(connection, headers)
+            print_courses_data(json_data)
 
-        print('\033[4;94mYour courses:\033[0m')
-        for e in courses:
-            print(f'{e[0].ljust(max_course_id_length)}: \033[1m{e[1].ljust(max_course_name_length)}\033[0m\tby {e[2]}')
+        elif config['serie_id'] is None:
+            # Print available series
+            json_data = series_data(connection, headers, config['course_id'])
+            print_series_data(json_data)
+
+        elif config['exercise_id'] is None:
+            # Print available exercises
+            pass
+        else:
+            # Print assignment
+            pass
 
     elif select:
         if config['course_id'] is None:
-            config['course_id'] = select
-            select_course(select)
+            # Select a course
+            course_ids = set(str(course['id']) for course in courses_data(connection, headers))
+            if select in course_ids:
+                config['course_id'] = select
+                select_course(select)
+            else:
+                print("Not a valid course id!")
+
         elif config['serie_id'] is None:
-            config['serie_id'] = select
-            select_serie(select)
+            # Select a series
+            if select in (series['id'] for series in series_data(connection, headers, config['course_id'])):
+                config['serie_id'] = select
+                select_serie(select)
+            else:
+                print("Not a valid series id!")
+
         elif config['exercise_id'] is None:
+            # Select an exercise
             config['exercise_id'] = select
             select_exercise(select)
         else:
@@ -97,4 +115,4 @@ def main(display, select, up, uptop, status):
 
 
 if __name__ == "__main__":
-    main()
+    main(['-d'])
