@@ -1,4 +1,7 @@
 # Command Line Interface for Dodona.
+
+IMPORTANT: currently only id's will work to select courses, series and exercises!
+
 ## Contents:
 1) How to install
 2) How to use
