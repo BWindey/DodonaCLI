@@ -1,12 +1,9 @@
 #!/bin/env python3
 import click
 import http.client
-import os
 
 from get_data import *
 from set_data import *
-
-selected = {'course_id': None, 'serie_id': None, 'exercise_id': None}
 
 
 @click.command(help="A Command Line Interface for Dodona. Finally you have no need to exit your terminal anymore!\n"
@@ -24,30 +21,19 @@ selected = {'course_id': None, 'serie_id': None, 'exercise_id': None}
                    "Exercise -> serie, serie -> course, course -> top. Use --up-top to immediatly go to the top.")
 @click.option('--uptop', is_flag=True,
               help="Go immediatly to the top of the structure.")
-def main(display, select, up, uptop):
+@click.option('--status', is_flag=True,
+              help="Shows selected course, selected serie and selected exercise.")
+def main(display, select, up, uptop, status):
     """
     A Command Line Interface for Dodona. Finally you have no need to exit your terminal anymore!
     Use --help for more info about flags, or read the README on discord.
     """
-    script_directory = os.path.dirname(os.path.abspath(__file__))
-    token_path = os.path.join(script_directory, 'token')
-    try:
-        token_file = open(token_path, 'r')
-        TOKEN = token_file.read().rstrip('\n')
-    except FileNotFoundError:
-        TOKEN = input('\033[1;91mToken file not found!\033[0m If it already exists, '
-                      'move it to the same directory as the dodonaCLI script, '
-                      'else enter your code here: ')
-        token_file = open(token_path, 'w')
-        token_file.write(TOKEN)
-        print('\033[1;92mToken saved.\033[0m\n')
-    token_file.close()
-
+    config = get_configs()
     connection = http.client.HTTPSConnection("dodona.be")
     headers = {
         "Content-type": "application/json",
         "Accept": "application/json",
-        "Authorization": TOKEN
+        "Authorization": config['TOKEN']
     }
 
     if display:
@@ -63,41 +49,47 @@ def main(display, select, up, uptop):
         for e in courses:
             print(f'{e[0].ljust(max_course_id_length)}: \033[1m{e[1].ljust(max_course_name_length)}\033[0m\tby {e[2]}')
 
-        return
+    elif select:
+        if config['course_id'] is None:
+            config['course_id'] = select
+            select_course(select)
+        elif config['serie_id'] is None:
+            config['serie_id'] = select
+            select_serie(select)
+        elif config['exercise_id'] is None:
+            config['exercise_id'] = select
+            select_exercise(select)
+        else:
+            print('There is already an exercise selected, '
+                  'please remove selection with --up or -u to select a new exercise first.')
+        dump_config(config)
 
-    if select:
-        if selected['course_id'] is not None:
-            select_course()
-            return
-        if selected['serie_id'] is not None:
-            select_serie()
-            return
-        if selected['exercise_id'] is not None:
-            select_exercise()
-            return
-        print('There is already an exercise selected, '
-              'please remove selection with --up or -u to select a new exercise first.')
-        return
-
-    if up:
-        if selected['exercise_id']:
-            selected['exercise_id'] = None
+    elif up:
+        if config['exercise_id']:
+            config['exercise_id'] = None
             print('Deselected exercise.')
-        elif selected['serie_id']:
-            selected['serie_id'] = None
+        elif config['serie_id']:
+            config['serie_id'] = None
             print('Deselected serie.')
-        elif selected['course_id']:
-            selected['course_id'] = None
+        elif config['course_id']:
+            config['course_id'] = None
             print('Deselected course.')
         else:
             print('Already at the top.')
-        return
+        dump_config(config)
 
-    if uptop:
-        selected['exercise_id'] = None
-        selected['serie_id'] = None
-        selected['course_id'] = None
+    elif uptop:
+        config['exercise_id'] = None
+        config['serie_id'] = None
+        config['course_id'] = None
         print('At the top.')
+        dump_config(config)
+
+    elif status:
+        print(f"Status:\n"
+              f"\tCourse: {config['course_id']}\n"
+              f"\tSerie: {config['serie_id']}\n"
+              f"\tExercise: {config['exercise_id']}\n")
         return
 
     else:
