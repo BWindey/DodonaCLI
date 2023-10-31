@@ -1,6 +1,7 @@
 # Command Line Interface for Dodona.
 
-IMPORTANT: currently only id's will work to select courses, series and exercises!
+IMPORTANT: currently only id's will work to select courses, series and exercises!\
+All efforts to format displayed text in an orderly fashion were made using a GNOME-terminal. If it doesn't look good in your terminal (links can be an issue), you probably are not running a GNOME-terminal. As this is open-source software, feel free to add terminal-detection to make things pretty for your terminal too. 
 
 ## Contents:
 1) How to install
