@@ -48,6 +48,7 @@ There are a few steps to take before being able to call this a fully working (mi
 - getting the results of your solution
 
 When above steps are implemented, there are some features I'd like to add:
+- choose course/series/exercises by name instead of id
 - easy (automatic?) downloading of files mentioned in exercise description
 - user-settings (f.e. auto-download of files, language, formatting, ...)
 - caching to make it feel like a real command, blazingly fast! Currently you'll often have to wait a few hundred milliseconds for the API-call to return
