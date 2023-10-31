@@ -7,6 +7,7 @@
 
 ## How to install
 - Clone this repo somewhere on your pc.
+- Run `pip install requirements.txt`
 - Make main.py executable: `chmod +x main.py`
 - Set an alias for it, in the rest of this I'll assume you have set it like this: `dodona=<path_to_main.py>`
       (I'll assume you know how to set aliasses, if you don't, look it up on the interwebs)
