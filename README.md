@@ -6,6 +6,7 @@ IMPORTANT: currently only id's will work to select courses, series and exercises
 1) How to install
 2) How to use
 3) All flags
+4) Roadmap
 
 
 ## How to install
@@ -37,3 +38,16 @@ That's all you can do for now... I hope to be implementing more functionality th
 ## All flags
 I'm too lazy to type them out right now, even too lazy to copy, just run `dodona --help` or '-h' to get info about all the available flags.
 When this project matures, I'll update this README to give more info.
+
+
+## Roadmap
+There are a few steps to take before being able to call this a fully working (minimal) command:
+- viewing available exercises
+- posting your solution (as a file-argument)
+- getting the results of your solution
+
+When above steps are implemented, there are some features I'd like to add:
+- easy (automatic?) downloading of files mentioned in exercise description
+- user-settings (f.e. auto-download of files, language, formatting, ...)
+- caching to make it feel like a real command, blazingly fast! Currently you'll often have to wait a few hundred milliseconds for the API-call to return
+- a python- or ed-like own terminal after running the `dodona` command to not have to repeat the command often. This seems complicated, but it might be possible.
