@@ -1,6 +1,6 @@
 import shutil
 import textwrap
-
+import re
 
 def print_courses_data(json_data):
     display_data = []
@@ -24,6 +24,10 @@ def print_series_data(json_data):
     max_series_id_length = max(len(e[0]) for e in display_data)
     max_series_name_length = max(len(e[1]) for e in display_data)
 
+    bold = "\033[1m"
+    italic = "\033[3m"
+    normal = "\033[0m"
+
     print("\033[4;94mAll series:\033[0m")
     for e in display_data:
         description = e[2].split('\n')
@@ -41,6 +45,13 @@ def print_series_data(json_data):
                     new_line += word + ' '
                     line_size += len(word + ' ')
                 line = new_line
+
+            # Replace bold and italics in Markdown to use Ansi codes
+            line = re.sub(r'\*\*(.*?)\*\*', '\033[1m\\1\033[0m', line)
+            line = re.sub(r'_(.*?)_', '\033[3m\\1\033[0m', line)
+
+
             new_description += line + '\n'
+
         new_description = textwrap.indent(new_description, '\t')
         print(f"{e[0].ljust(max_series_id_length)}: \033[1m{e[1].ljust(max_series_name_length)}\033[0m\n{new_description}")
