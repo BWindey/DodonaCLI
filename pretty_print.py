@@ -33,7 +33,7 @@ def print_series_data(json_data):
         for line in description:
             # Convert Markdown links to Ansi links. TERMINAL DEPENDANT
             line = re.sub(r'{: target="_blank"}', '', line)
-            line = re.sub(r'\[([^\]]*)\]\(([^\)]*)\)', '\033]8;;\\2\033\\ \\1\033]8;;\033\\ ', line)
+            line = re.sub(r'\[(.*?)\]\((.*?)\)', '\033]8;;\\2\033\\ \\1\033]8;;\033\\ ', line)
 
             # Replace bold and italics in Markdown to use Ansi codes
             line = re.sub(r'\*\*(.*?)\*\*', '\033[1m\\1\033[0m', line)
