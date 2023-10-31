@@ -1,11 +1,10 @@
 import json
 import os
 
-import set_data
+from set_data import dump_config
 
 
 def courses_data(connection, headers):
-
     connection.request("GET", "/courses.json?tab=my", headers=headers)
     res = connection.getresponse()
     if res.status != 200:
@@ -18,6 +17,19 @@ def courses_data(connection, headers):
     json_data = json.loads(data)
 
     return json_data
+
+
+def series_data(connection, headers, course_id):
+    connection.request("GET", "/courses/" + course_id + "/series.json", headers=headers)
+    res = connection.getresponse()
+    if res.status != 200:
+        print("Error connecting to Dodona: " + str(res.status))
+        print("Reason: " + res.reason)
+        return
+    data = res.read()
+    connection.close()
+
+    return json.loads(data)
 
 
 def get_configs():
@@ -34,6 +46,6 @@ def get_configs():
         config["course_id"] = None
         config["serie_id"] = None
         config["exercise_id"] = None
-        set_data.dump_config(config)
+        dump_config(config)
 
     return config
