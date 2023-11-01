@@ -32,6 +32,19 @@ def series_data(connection, headers, course_id):
     return json.loads(data)
 
 
+def exercise_data(connection, headers, series_id):
+    connection.request("GET", "/series/" + series_id + "/activities.json", headers=headers)
+    res = connection.getresponse()
+    if res.status != 200:
+        print("Error connection to Dodona: " + str(res.status))
+        print("Reason: " + res.reason)
+        return
+    data = res.read()
+    connection.close()
+
+    return json.loads(data)
+
+
 def get_configs():
     script_directory = os.path.dirname(os.path.abspath(__file__))
     config_file_path = os.path.join(script_directory, 'config.json')
