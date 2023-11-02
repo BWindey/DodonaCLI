@@ -37,6 +37,9 @@ def main(display, select, up, uptop, status):
         "Authorization": config['TOKEN']
     }
 
+    sandbox_connection = http.client.HTTPSConnection("sandbox.dodona.be")
+    sandbox_headers = {"Autorization": config['TOKEN']}
+
     if display:
         if config['course_id'] is None:
             # Print available courses
@@ -50,12 +53,12 @@ def main(display, select, up, uptop, status):
 
         elif config['exercise_id'] is None:
             # Print available exercises
-            json_data = exercise_data(connection, headers, config['serie_id'])
+            json_data = exercises_data(connection, headers, config['serie_id'])
             print_exercise_data(json_data)
 
         else:
-            # Print assignment
-            pass
+            json_data = exercise_data(connection, headers, config['course_id'], config['exercise_id'])
+            print_exercise(json_data, sandbox_connection, sandbox_headers)
 
     elif select:
         if config['course_id'] is None:
@@ -77,9 +80,11 @@ def main(display, select, up, uptop, status):
 
         elif config['exercise_id'] is None:
             # Select an exercise
-            if select in set(str(exercise['id']) for exercise in exercise_data(connection, headers, config['serie_id'])):
+            if select in set(str(exercise['id']) for exercise in exercises_data(connection, headers, config['serie_id'])):
                 config['exercise_id'] = select
                 select_exercise(select)
+            else:
+                print("Not a valid exercise id!")
         else:
             print('There is already an exercise selected, '
                   'please remove selection with --up or -u to select a new exercise first.')
@@ -118,4 +123,4 @@ def main(display, select, up, uptop, status):
 
 
 if __name__ == "__main__":
-    main()
+    main(['-d'])

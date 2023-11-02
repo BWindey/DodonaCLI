@@ -1,7 +1,7 @@
-import json
+from bs4 import BeautifulSoup
 import shutil
-import textwrap
 import re
+import textwrap
 
 
 def print_courses_data(json_data):
@@ -74,3 +74,20 @@ def print_exercise_data(json_data):
               "\033[1;92mSOLVED\033[0m" * (e[2] and e[3]) +
               "\033[1;91mWRONG\033[0m" * (not e[2] and e[3]) +
               "\033[1mNOT YET SOLVED\033[0m" * (not e[3]))
+
+
+def print_exercise(json_data, connection, headers):
+    description_url = json_data['description_url'][28:]
+    connection.request("GET", description_url, headers=headers)
+    res = connection.getresponse()
+    data = res.read()
+    connection.close()
+
+    soup = BeautifulSoup(data, features="html.parser")
+    description = soup.find("div", {"class": "activity-description"})
+
+    print("\033[1;4;91mWARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
+          "Instead, use this url:\033[0m " + json_data['description_url'])
+    print(description.get_text())
+    print("\033[1;4;91mWARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
+          "Instead, use this url:\033[0m " + json_data['description_url'])
