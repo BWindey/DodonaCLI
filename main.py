@@ -123,4 +123,4 @@ def main(display, select, up, uptop, status):
 
 
 if __name__ == "__main__":
-    main(['-d'])
+    main()
