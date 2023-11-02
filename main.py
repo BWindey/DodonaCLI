@@ -17,6 +17,9 @@ from set_data import *
               help="Select based on name or id. Depends on where in the structure you are. With nothing yet selected, "
                    "this tries to select a course. When a course is selected, you can select a series of exercises, "
                    "and when a serie is selected, you can select an exercise.")
+@click.option('--post', '-p', type=click.Path(exists=True, file_okay=True, dir_okay=False, resolve_path=True),
+              help="Post the contents of a file to Dodona as a solution of the current selected exercise."
+                   "Only works if there is a selected exercise.")
 @click.option('--up', '-u', is_flag=True,
               help="Go up in the structure by one level depending on where you are. "
                    "Exercise -> serie, serie -> course, course -> top. Use --up-top to immediatly go to the top.")
@@ -24,7 +27,7 @@ from set_data import *
               help="Go immediatly to the top of the structure.")
 @click.option('--status', is_flag=True,
               help="Shows selected course, selected serie and selected exercise.")
-def main(display, select, up, uptop, status):
+def main(display, select, post, up, uptop, status):
     """
     A Command Line Interface for Dodona. Finally you have no need to exit your terminal anymore!
     Use --help for more info about flags, or read the README on discord.
@@ -89,6 +92,14 @@ def main(display, select, up, uptop, status):
             print('There is already an exercise selected, '
                   'please remove selection with --up or -u to select a new exercise first.')
         dump_config(config)
+
+    elif post:
+        if not config['exercise_id']:
+            print("No exercise selected!")
+        else:
+            with open(post, 'r') as infile:
+                content = infile.read()
+                post_solution(content, connection, headers, config)
 
     elif up:
         if config['exercise_id']:

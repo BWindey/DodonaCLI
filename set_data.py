@@ -23,3 +23,24 @@ def dump_config(config):
 
     with open(config_file_path, 'w') as config_file:
         json.dump(config, config_file)
+
+
+def post_solution(content, connection, headers, config):
+    payload = {
+        "submission": {
+            "code": content,
+            "course_id": config['course_id'],
+            "exercise_id": config['exercise_id']
+        }
+    }
+    json_payload = json.dumps(payload)
+
+    connection.request("POST", "/submissions.json", json_payload, headers=headers)
+    res = connection.getresponse()
+    if res.status != 200:
+        print("Error connection to Dodona: " + str(res.status))
+        print("Reason: " + res.reason)
+        return
+
+    print(res.read().decode())
+    return
