@@ -1,3 +1,4 @@
+import http.client
 import json
 import os
 
@@ -30,6 +31,33 @@ def series_data(connection, headers, course_id):
     connection.close()
 
     return json.loads(data)
+
+
+def exercises_data(connection, headers, series_id):
+    connection.request("GET", "/series/" + series_id + "/activities.json", headers=headers)
+    res = connection.getresponse()
+    if res.status != 200:
+        print("Error connection to Dodona: " + str(res.status))
+        print("Reason: " + res.reason)
+        return
+    data = res.read()
+    connection.close()
+
+    return json.loads(data)
+
+
+def exercise_data(connection, headers, course_id, exercise_id):
+    connection.request("GET", "/courses/" + course_id + "/activities/" + exercise_id + ".json", headers=headers)
+    res = connection.getresponse()
+    if res.status != 200:
+        print("Error connection to Dodona: " + str(res.status))
+        print("Reason: " + res.reason)
+        return
+    data = res.read()
+    json_data = json.loads(data)
+    connection.close()
+
+    return json_data
 
 
 def get_configs():

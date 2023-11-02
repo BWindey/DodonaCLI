@@ -37,6 +37,9 @@ def main(display, select, up, uptop, status):
         "Authorization": config['TOKEN']
     }
 
+    sandbox_connection = http.client.HTTPSConnection("sandbox.dodona.be")
+    sandbox_headers = {"Autorization": config['TOKEN']}
+
     if display:
         if config['course_id'] is None:
             # Print available courses
@@ -50,10 +53,12 @@ def main(display, select, up, uptop, status):
 
         elif config['exercise_id'] is None:
             # Print available exercises
-            pass
+            json_data = exercises_data(connection, headers, config['serie_id'])
+            print_exercise_data(json_data)
+
         else:
-            # Print assignment
-            pass
+            json_data = exercise_data(connection, headers, config['course_id'], config['exercise_id'])
+            print_exercise(json_data, sandbox_connection, sandbox_headers)
 
     elif select:
         if config['course_id'] is None:
@@ -67,7 +72,7 @@ def main(display, select, up, uptop, status):
 
         elif config['serie_id'] is None:
             # Select a series
-            if select in (series['id'] for series in series_data(connection, headers, config['course_id'])):
+            if select in set(str(series['id']) for series in series_data(connection, headers, config['course_id'])):
                 config['serie_id'] = select
                 select_serie(select)
             else:
@@ -75,8 +80,11 @@ def main(display, select, up, uptop, status):
 
         elif config['exercise_id'] is None:
             # Select an exercise
-            config['exercise_id'] = select
-            select_exercise(select)
+            if select in set(str(exercise['id']) for exercise in exercises_data(connection, headers, config['serie_id'])):
+                config['exercise_id'] = select
+                select_exercise(select)
+            else:
+                print("Not a valid exercise id!")
         else:
             print('There is already an exercise selected, '
                   'please remove selection with --up or -u to select a new exercise first.')
@@ -115,4 +123,4 @@ def main(display, select, up, uptop, status):
 
 
 if __name__ == "__main__":
-    main(['-d'])
+    main()
