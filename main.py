@@ -64,7 +64,7 @@ def main(display, select, post, up, uptop, status):
             print_exercise(json_data, sandbox_connection, sandbox_headers)
 
     elif select:
-        if not select.isNumeric():
+        if not select.isnumeric():
             print("I'm sorry, only ID's are allowed. This will improve later.")
             return
 
