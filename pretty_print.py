@@ -3,6 +3,8 @@ import shutil
 import re
 import textwrap
 
+from pretty_console import console, escape
+
 
 def print_courses_data(json_data):
     display_data = []
@@ -13,7 +15,7 @@ def print_courses_data(json_data):
     max_course_name_length = max(len(e[1]) for e in display_data)
     display_data = sorted(display_data, key=lambda x: x[1])
 
-    print('\033[4;94mYour courses:\033[0m')
+    console.print('[u bright_blue]Your courses:[/u bright_blue]')
     for e in display_data:
         print(f'{e[0].ljust(max_course_id_length)}: \033[1m{e[1].ljust(max_course_name_length)}\033[0m\tby {e[2]}')
 
@@ -26,7 +28,7 @@ def print_series_data(json_data):
     max_series_id_length = max(len(e[0]) for e in display_data)
     max_series_name_length = max(len(e[1]) for e in display_data)
 
-    print("\033[4;94mAll series:\033[0m")
+    console.print("[u bright_blue]All series:[/u bright_blue]")
     for e in display_data:
         description = e[2].split('\n')
         new_description = ''
@@ -67,13 +69,12 @@ def print_exercise_data(json_data):
     max_exercise_id_length = max(len(e[0]) for e in display_data)
     max_exercise_name_length = max(len(e[1]) for e in display_data)
 
-    print('\033[4;94mExercises:\033[0m')
-    # print(json.dumps(json_data, indent=4))
+    console.print('[u bright_blue]Exercises:[/u bright_blue]')
     for e in display_data:
-        print(f"{e[0].ljust(max_exercise_id_length)}: \033[1m{e[1].ljust(max_exercise_name_length)}\033[0m\t" +
-              "\033[1;92mSOLVED\033[0m" * (e[2] and e[3]) +
-              "\033[1;91mWRONG\033[0m" * (not e[2] and e[3]) +
-              "\033[1mNOT YET SOLVED\033[0m" * (not e[3]))
+        console.print(f"{escape(e[0].ljust(max_exercise_id_length))}: [bold]{e[1].ljust(max_exercise_name_length)}[/bold]\t" +
+                      "[bold bright_green]SOLVED[/bold bright_green]" * (e[2] and e[3]) +
+                      "[bold bright_red]WRONG[/bold bright_red]" * (not e[2] and e[3]) +
+                      "[bold]NOT YET SOLVED[/bold]" * (not e[3]))
 
 
 def print_exercise(json_data, connection, headers):
