@@ -64,6 +64,10 @@ def main(display, select, post, up, uptop, status):
             print_exercise(json_data, sandbox_connection, sandbox_headers)
 
     elif select:
+        if not select.isNumeric():
+            print("I'm sorry, only ID's are allowed. This will improve later.")
+            return
+
         if config['course_id'] is None:
             # Select a course
             course_ids = set(str(course['id']) for course in courses_data(connection, headers))
