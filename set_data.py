@@ -3,21 +3,7 @@ import os
 import time
 
 from pretty_print import print_result
-
-
-def select_course(course):
-    print('selecting course ' + course)
-    return
-
-
-def select_serie(serie):
-    print('selecting serie ' + serie)
-    return
-
-
-def select_exercise(exercise):
-    print('selecting exercise ' + exercise)
-    return
+from pretty_console import console
 
 
 def dump_config(config):
@@ -49,7 +35,11 @@ def post_solution(content, connection, headers, config):
     # Connect to Dodona and post the solution
     connection.request("POST", "/submissions.json", json_payload, headers=headers)
     res = connection.getresponse()
-    if res.status != 200:
+    status = res.status
+    if status == 422:
+        console.print("\n[i]Patience, young padawan.\n"
+                      "A cooldown, Dodona servers have, to prevent DDOS attacks, hmm, yes.[/]\n")
+    if status != 200:
         print("Error connection to Dodona: " + str(res.status))
         print("Reason: " + res.reason)
         return
