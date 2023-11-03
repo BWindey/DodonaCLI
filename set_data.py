@@ -29,6 +29,14 @@ def dump_config(config):
 
 
 def post_solution(content, connection, headers, config):
+    """
+    Post the solution in content to Dodona and print the results
+    :param content: str with the solution to post to Dodona
+    :param connection: HTTPSConnection object that connects to www.dodona.be
+    :param headers: dict with extra info for connection, mainly authorization needed
+    :param config: dict with configs from config-file
+    """
+    # Make dict with info needed to post the solution and dump in in a json object
     payload = {
         "submission": {
             "code": content,
@@ -38,6 +46,7 @@ def post_solution(content, connection, headers, config):
     }
     json_payload = json.dumps(payload)
 
+    # Connect to Dodona and post the solution
     connection.request("POST", "/submissions.json", json_payload, headers=headers)
     res = connection.getresponse()
     if res.status != 200:
@@ -45,9 +54,11 @@ def post_solution(content, connection, headers, config):
         print("Reason: " + res.reason)
         return
 
+    # Read out the result
     data = res.read()
     json_data = json.loads(data)
 
+    # The Dodona servers take some time to test the solution, so we ping them every 0.3s for an answer.
     json_data['status'] = "running"
 
     print("Posting your solution, please wait while the servers evaluate your code.\n")
@@ -65,6 +76,5 @@ def post_solution(content, connection, headers, config):
 
     connection.close()
 
+    # Print out the results
     print_result(json.loads(json_data['result']))
-
-    return

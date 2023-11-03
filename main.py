@@ -32,7 +32,10 @@ def main(display, select, post, up, uptop, status):
     A Command Line Interface for Dodona. Finally you have no need to exit your terminal anymore!
     Use --help for more info about flags, or read the README on discord.
     """
+    # Read configs in
     config = get_configs()
+
+    # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
     headers = {
         "Content-type": "application/json",
@@ -40,10 +43,13 @@ def main(display, select, post, up, uptop, status):
         "Authorization": config['TOKEN']
     }
 
+    # Start up the connection to Dodona's sandbox (for downloading files and viewing exercise-descriptions)
     sandbox_connection = http.client.HTTPSConnection("sandbox.dodona.be")
     sandbox_headers = {"Autorization": config['TOKEN']}
 
+    # Handle all the different flags
     if display:
+        # Display flag changes behaviour depending on the values in the config-dictionary.
         if config['course_id'] is None:
             # Print available courses
             json_data = courses_data(connection, headers)
@@ -60,11 +66,14 @@ def main(display, select, post, up, uptop, status):
             print_exercise_data(json_data)
 
         else:
+            # Print exercise-description
             json_data = exercise_data(connection, headers, config['course_id'], config['exercise_id'])
             print_exercise(json_data, sandbox_connection, sandbox_headers)
 
     elif select:
+        # Select flag changes behaviour depending on the values in the config-dictionary
         if not select.isnumeric():
+            # Check if value after flag is an id, will be improved as soon as possible
             print("I'm sorry, only ID's are allowed. This will improve later.")
             return
 
@@ -93,19 +102,23 @@ def main(display, select, post, up, uptop, status):
             else:
                 print("Not a valid exercise id!")
         else:
+            # You can't select more when everything is already selected
             print('There is already an exercise selected, '
                   'please remove selection with --up or -u to select a new exercise first.')
+        # Save selections in config file
         dump_config(config)
 
     elif post:
+        # Post exercise to Dodona, does not work if there is no exercise selected
         if not config['exercise_id']:
             print("No exercise selected!")
         else:
             with open(post, 'r') as infile:
                 content = infile.read()
-                post_solution(content, connection, headers, config)
+            post_solution(content, connection, headers, config)
 
     elif up:
+        # Deselect last selection
         if config['exercise_id']:
             config['exercise_id'] = None
             print('Deselected exercise.')
@@ -117,16 +130,20 @@ def main(display, select, post, up, uptop, status):
             print('Deselected course.')
         else:
             print('Already at the top.')
+        # Save selections in config file
         dump_config(config)
 
     elif uptop:
+        # Deselect everything
         config['exercise_id'] = None
         config['serie_id'] = None
         config['course_id'] = None
         print('At the top.')
+        # Save selections in config file
         dump_config(config)
 
     elif status:
+        # Print out current selection
         print(f"Status:\n"
               f"\tCourse: {config['course_id']}\n"
               f"\tSerie: {config['serie_id']}\n"
@@ -134,8 +151,10 @@ def main(display, select, post, up, uptop, status):
         return
 
     else:
+        # No flags specified, print command summary
         print(main.help)
 
 
 if __name__ == "__main__":
+    # Main entry-point
     main()
