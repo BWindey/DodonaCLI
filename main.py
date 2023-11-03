@@ -16,7 +16,8 @@ from set_data import *
 @click.option('--select', '-s',
               help="Select based on name or id. Depends on where in the structure you are. With nothing yet selected, "
                    "this tries to select a course. When a course is selected, you can select a series of exercises, "
-                   "and when a serie is selected, you can select an exercise.")
+                   "and when a serie is selected, you can select an exercise. When using a name instead of an id, "
+                   "the first occurence of that name will be chosen.")
 @click.option('--post', '-p', type=click.Path(exists=True, file_okay=True, dir_okay=False, resolve_path=True),
               help="Post the contents of a file to Dodona as a solution of the current selected exercise."
                    "Only works if there is a selected exercise.")
@@ -29,7 +30,7 @@ from set_data import *
               help="Shows selected course, selected serie and selected exercise.")
 def main(display, select, post, up, uptop, status):
     """
-    A Command Line Interface for Dodona. Finally you have no need to exit your terminal anymore!
+    A Command Line Interface for Dodona. Finally, you have no need to exit your terminal anymore!
     Use --help for more info about flags, or read the README on discord.
     """
     # Read configs in
@@ -71,40 +72,66 @@ def main(display, select, post, up, uptop, status):
             print_exercise(json_data, sandbox_connection, sandbox_headers)
 
     elif select:
-        # Select flag changes behaviour depending on the values in the config-dictionary
-        if not select.isnumeric():
-            # Check if value after flag is an id, will be improved as soon as possible
-            print("I'm sorry, only ID's are allowed. This will improve later.")
-            return
-
         if config['course_id'] is None:
             # Select a course
-            course_ids = set(str(course['id']) for course in courses_data(connection, headers))
-            if select in course_ids:
+            data_courses = courses_data(connection, headers)
+
+            courses = {str(course['id']): course['name'] for course in data_courses}
+
+            # If select is an id, search if it matches id's, else search if it matches a name, then store the id
+            if select.isnumeric() and select in courses:
                 config['course_id'] = select
-                select_course(select)
+                console.print("Course [bold]" + courses[select] + "[/] selected.")
             else:
-                print("Not a valid course id!")
+                for course in courses.items():
+                    if select.lower() in course[1].lower():
+                        config['course_id'] = course[0]
+                        console.print("\nCourse [bold]\"" + courses[course[0]] + "\"[/] selected.")
+                        break
+            if config['course_id'] is None:
+                print("\nNot a valid course id or -name!\n")
 
         elif config['serie_id'] is None:
             # Select a series
-            if select in set(str(series['id']) for series in series_data(connection, headers, config['course_id'])):
+            data_series = series_data(connection, headers, config['course_id'])
+
+            series = {str(serie['id']): serie['name'] for serie in data_series}
+
+            if select.isnumeric() and select in series:
                 config['serie_id'] = select
-                select_serie(select)
+                console.print("\nSeries [bold]\"" + series[select] + "\"[/] selected.\n")
             else:
-                print("Not a valid series id!")
+                for serie in series.items():
+                    if select.lower() in serie[1].lower():
+                        config['serie_id'] = serie[0]
+                        console.print("\nSerie [bold]\"" + series[serie[0]] + "\"[/] selected.\n")
+                        break
+            if config['serie_id'] is None:
+                print("\nNot a valid series id or -name!\n")
 
         elif config['exercise_id'] is None:
             # Select an exercise
-            if select in set(str(exercise['id']) for exercise in exercises_data(connection, headers, config['serie_id'])):
+            data_exercises = exercises_data(connection, headers, config['serie_id'])
+
+            exercises = {str(exercise['id']): exercise['name'] for exercise in data_exercises}
+
+            if select.isnumeric() and select in exercises:
                 config['exercise_id'] = select
-                select_exercise(select)
+                console.print("\nExercise [bold]\'" + exercises[select] + "\"[/] selected.\n")
             else:
+                for exercise in exercises.items():
+                    if select.lower() in exercise[1].lower():
+                        config['exercise_id'] = exercise[0]
+                        console.print("\nExercise [bold]\"" + exercises[exercise[0]] + "\"[/] selected.\n")
+                        break
+            if config['exercise_id'] is None:
                 print("Not a valid exercise id!")
+
         else:
             # You can't select more when everything is already selected
             print('There is already an exercise selected, '
                   'please remove selection with --up or -u to select a new exercise first.')
+
         # Save selections in config file
         dump_config(config)
 
