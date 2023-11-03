@@ -15,7 +15,7 @@ def print_courses_data(json_data):
     max_course_name_length = max(len(e[1]) for e in display_data)
     display_data = sorted(display_data, key=lambda x: x[1])
 
-    console.print('[u bright_blue]Your courses:[/u bright_blue]')
+    console.print('[u bright_blue]Your courses:[/]')
     for e in display_data:
         print(f'{e[0].ljust(max_course_id_length)}: \033[1m{e[1].ljust(max_course_name_length)}\033[0m\tby {e[2]}')
 
@@ -28,7 +28,7 @@ def print_series_data(json_data):
     max_series_id_length = max(len(e[0]) for e in display_data)
     max_series_name_length = max(len(e[1]) for e in display_data)
 
-    console.print("[u bright_blue]All series:[/u bright_blue]")
+    console.print("[u bright_blue]All series:[/]")
     for e in display_data:
         description = e[2].split('\n')
         new_description = ''
@@ -69,12 +69,14 @@ def print_exercise_data(json_data):
     max_exercise_id_length = max(len(e[0]) for e in display_data)
     max_exercise_name_length = max(len(e[1]) for e in display_data)
 
-    console.print('[u bright_blue]Exercises:[/u bright_blue]')
+    console.print('[u bright_blue]Exercises:[/]')
     for e in display_data:
-        console.print(f"{escape(e[0].ljust(max_exercise_id_length))}: [bold]{e[1].ljust(max_exercise_name_length)}[/bold]\t" +
-                      "[bold bright_green]SOLVED[/bold bright_green]" * (e[2] and e[3]) +
-                      "[bold bright_red]WRONG[/bold bright_red]" * (not e[2] and e[3]) +
-                      "[bold]NOT YET SOLVED[/bold]" * (not e[3]))
+        console.print(
+            f"{escape(e[0].ljust(max_exercise_id_length))}: [bold]{e[1].ljust(max_exercise_name_length)}[/]\t" +
+            "[bold bright_green]SOLVED[/]" * (e[2] and e[3]) +
+            "[bold bright_red]WRONG[/]" * (not e[2] and e[3]) +
+            "[bold]NOT YET SOLVED[/]" * (not e[3])
+        )
 
 
 def print_exercise(json_data, connection, headers):
@@ -92,3 +94,11 @@ def print_exercise(json_data, connection, headers):
     print(description.get_text())
     print("\033[1;4;91mWARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
           "Instead, use this url:\033[0m " + json_data['description_url'])
+
+
+def print_result(json_results):
+    if json_results['accepted']:
+        console.print("[bold bright_green]All test passed![/] You can continue to next exercise.")
+    else:
+        for groep in json_results['groups']:
+            print(groep['description'] + ": " + str(groep['badgeCount']) + " tests failed.")

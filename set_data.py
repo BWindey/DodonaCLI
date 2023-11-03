@@ -1,5 +1,8 @@
 import json
 import os
+import time
+
+from pretty_print import print_result
 
 
 def select_course(course):
@@ -42,5 +45,26 @@ def post_solution(content, connection, headers, config):
         print("Reason: " + res.reason)
         return
 
-    print(res.read().decode())
+    data = res.read()
+    json_data = json.loads(data)
+
+    json_data['status'] = "running"
+
+    print("Posting your solution, please wait while the servers evaluate your code.\n")
+    while json_data['status'] == "running":
+        time.sleep(0.3)
+        connection.request("GET", "/submissions/" + str(json_data['id']) + ".json", headers=headers)
+        res = connection.getresponse()
+        if res.status != 200:
+            print("Error connection to Dodona: " + str(res.status))
+            print("Reason: " + res.reason)
+            return
+
+        data = res.read()
+        json_data = json.loads(data)
+
+    connection.close()
+
+    print_result(json.loads(json_data['result']))
+
     return
