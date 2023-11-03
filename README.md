@@ -50,7 +50,7 @@ To display all the info you need to make your next selection or post your soluti
 
 ## Roadmap
 There are a few steps to take before being able to call this a fully working (minimal) command:
-- getting the results of your solution
+- None! Well done, this command now works well enough to use. Let's start with adding extra features!
 
 When above steps are implemented, there are some features I'd like to add:
 - choose course/series/exercises by name instead of id
