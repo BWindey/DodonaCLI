@@ -100,5 +100,12 @@ def print_result(json_results):
     if json_results['accepted']:
         console.print("[bold bright_green]All test passed![/] You can continue to next exercise.")
     else:
-        for groep in json_results['groups']:
-            print(groep['description'] + ": " + str(groep['badgeCount']) + " tests failed.")
+        for group in json_results['groups']:
+            print(group['description'] + ": " + str(group['badgeCount']) + " tests failed.")
+
+            if group['badgeCount'] > 0:
+                print("Failed exercises:")
+                for test in group['groups']:
+                    if not test['accepted']:
+                        print("\t- " + test['description']['description'] + "\n\t\t" +
+                              test['groups'][0]['description']['description'])
