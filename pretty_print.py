@@ -4,6 +4,7 @@ import re
 import textwrap
 
 from pretty_console import console
+from custom_HTML_printer import print_html
 
 
 def print_courses_data(json_data):
@@ -123,20 +124,14 @@ def print_exercise(json_data, connection, headers):
 
     # Parse the HTML with BeautifulSoup and take onle the description
     soup = BeautifulSoup(data, features="html.parser")
-    description = soup.find("div", {"class": "activity-description"}).get_text()
-
-    description_lines = description.split("\n")
-
-    for line in description_lines:
-        line += " "
-        pass
+    description = soup.find("div", {"class": "card-supporting-text"}).get_text()
 
     # Print the HTML with warnings
     print("\033[1;4;91mWARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
           "Instead, use this url:\033[0m " + json_data['description_url'] + '\n')
 
     console.print("Expected programming language: " + json_data['programming_language']['name'] + '\n')
-    print(description)
+    print_html(description)
 
     print("\033[1;4;91mWARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
           "Instead, use this url:\033[0m " + json_data['description_url'])
