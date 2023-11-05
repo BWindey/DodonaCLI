@@ -184,4 +184,4 @@ def main(display, select, post, up, uptop, status):
 
 if __name__ == "__main__":
     # Main entry-point
-    main(['-d'])
+    main()
