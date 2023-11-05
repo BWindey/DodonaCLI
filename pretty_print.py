@@ -1,3 +1,5 @@
+import subprocess
+
 from bs4 import BeautifulSoup
 import os
 import re
@@ -115,16 +117,6 @@ def print_exercise(json_data, connection, headers):
     :param connection: HTTPSConnection object that connects to sandbox.Dodona.be
     :param headers: dict with extra info for connection, mainly authorization needed
     """
-    # Strip https://www.sandbox.dodona.be from the description_url and get the description in HTML
-    description_url = json_data['description_url'][28:]
-    connection.request("GET", description_url, headers=headers)
-    res = connection.getresponse()
-    data = res.read()
-    connection.close()
-
-    # Parse the HTML with BeautifulSoup and take onle the description
-    soup = BeautifulSoup(data, features="html.parser")
-    description = soup.find("div", {"class": "card-supporting-text"})
 
     # Print the HTML with warnings
     console.print(
@@ -132,16 +124,16 @@ def print_exercise(json_data, connection, headers):
         "Instead, use this url:[/] " + json_data['description_url']
     )
 
-    console.print("Expected programming language: " + json_data['programming_language']['name'] + '\n')
+    console.print("\nExpected programming language: " + json_data['programming_language']['name'] + '\n')
 
-    print('\n' +
-          str(os.system(
-              "lynx -dump https://sandbox.dodona.be/nl/activities/1669118545/description/QGv8syuDRqqCpiWk/"))
-          + '\n')
+    description = subprocess.getoutput("lynx --dump " + json_data['description_url'])
+    description = re.sub(r'\[(\d+)\]([ \w-]+)\^(\1)', r'[\1: \2]', description, flags=re.DOTALL)
+
+    console.print(description)
 
     console.print(
-        "[u bold bright_red]WARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
-        "Instead, use this url:[/] " + json_data['description_url']
+        "\n[u bold bright_red]WARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
+        "Instead, use this url:[/] " + json_data['description_url'] + '\n'
     )
 
 
