@@ -1,10 +1,10 @@
 from bs4 import BeautifulSoup
-import shutil
+import os
 import re
+import shutil
 import textwrap
 
 from pretty_console import console
-from custom_HTML_printer import print_html
 
 
 def print_courses_data(json_data):
@@ -127,11 +127,17 @@ def print_exercise(json_data, connection, headers):
     description = soup.find("div", {"class": "card-supporting-text"})
 
     # Print the HTML with warnings
-    print("\033[1;4;91mWARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
-          "Instead, use this url:\033[0m " + json_data['description_url'] + '\n')
+    console.print(
+        "\n[u bold bright_red]WARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
+        "Instead, use this url:[/] " + json_data['description_url']
+    )
 
     console.print("Expected programming language: " + json_data['programming_language']['name'] + '\n')
-    print_html(str(description))
+
+    print('\n' +
+          str(os.system(
+              "lynx -dump https://sandbox.dodona.be/nl/activities/1669118545/description/QGv8syuDRqqCpiWk/"))
+          + '\n')
 
     console.print(
         "[u bold bright_red]WARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
