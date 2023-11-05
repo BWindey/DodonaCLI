@@ -1,6 +1,5 @@
 # Command Line Interface for Dodona.
 
-IMPORTANT: currently only id's will work to select courses, series and exercises!\
 All efforts to format displayed text in an orderly fashion were made using a GNOME-terminal. If it doesn't look good in your terminal (links can be an issue), you probably are not running a GNOME-terminal. As this is open-source software, feel free to add terminal-detection to make things pretty for your terminal too, but this isn't feasible to do for me. 
 
 ## Contents:
@@ -54,7 +53,7 @@ There are a few steps to take before being able to call this a fully working (mi
 
 When above steps are implemented, there are some features I'd like to add:
 - DONE: choose course/series/exercises by name instead of id
-- format the exercise-description in a neat way
+- DONE: format the exercise-description in a neat way
 - add indicator to series to mark if all their exercises are completely solved
 - easy (automatic?) downloading of files mentioned in exercise description
 - user-settings (f.e. auto-download of files, language, formatting, ...)

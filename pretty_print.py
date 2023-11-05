@@ -1,6 +1,9 @@
+import subprocess
+
 from bs4 import BeautifulSoup
-import shutil
+import os
 import re
+import shutil
 import textwrap
 
 from pretty_console import console
@@ -114,32 +117,24 @@ def print_exercise(json_data, connection, headers):
     :param connection: HTTPSConnection object that connects to sandbox.Dodona.be
     :param headers: dict with extra info for connection, mainly authorization needed
     """
-    # Strip https://www.sandbox.dodona.be from the description_url and get the description in HTML
-    description_url = json_data['description_url'][28:]
-    connection.request("GET", description_url, headers=headers)
-    res = connection.getresponse()
-    data = res.read()
-    connection.close()
-
-    # Parse the HTML with BeautifulSoup and take onle the description
-    soup = BeautifulSoup(data, features="html.parser")
-    description = soup.find("div", {"class": "activity-description"}).get_text()
-
-    description_lines = description.split("\n")
-
-    for line in description_lines:
-        line += " "
-        pass
 
     # Print the HTML with warnings
-    print("\033[1;4;91mWARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
-          "Instead, use this url:\033[0m " + json_data['description_url'] + '\n')
+    console.print(
+        "\n[u bold bright_red]WARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
+        "Instead, use this url:[/] " + json_data['description_url']
+    )
 
-    console.print("Expected programming language: " + json_data['programming_language']['name'] + '\n')
-    print(description)
+    console.print("\nExpected programming language: " + json_data['programming_language']['name'] + '\n')
 
-    print("\033[1;4;91mWARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
-          "Instead, use this url:\033[0m " + json_data['description_url'])
+    description = subprocess.getoutput("lynx --dump " + json_data['description_url'])
+    description = re.sub(r'\[(\d+)\]([ \w-]+)\^(\1)', r'[\1: \2]', description, flags=re.DOTALL)
+
+    console.print(description)
+
+    console.print(
+        "\n[u bold bright_red]WARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
+        "Instead, use this url:[/] " + json_data['description_url'] + '\n'
+    )
 
 
 def print_result(json_results):
