@@ -53,7 +53,7 @@ There are a few steps to take before being able to call this a fully working (mi
 
 When above steps are implemented, there are some features I'd like to add:
 - DONE: choose course/series/exercises by name instead of id
-- format the exercise-description in a neat way
+- DONE: format the exercise-description in a neat way
 - add indicator to series to mark if all their exercises are completely solved
 - easy (automatic?) downloading of files mentioned in exercise description
 - user-settings (f.e. auto-download of files, language, formatting, ...)
