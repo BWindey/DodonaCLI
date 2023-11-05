@@ -124,17 +124,19 @@ def print_exercise(json_data, connection, headers):
 
     # Parse the HTML with BeautifulSoup and take onle the description
     soup = BeautifulSoup(data, features="html.parser")
-    description = soup.find("div", {"class": "card-supporting-text"}).get_text()
+    description = soup.find("div", {"class": "card-supporting-text"})
 
     # Print the HTML with warnings
     print("\033[1;4;91mWARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
           "Instead, use this url:\033[0m " + json_data['description_url'] + '\n')
 
     console.print("Expected programming language: " + json_data['programming_language']['name'] + '\n')
-    print_html(description)
+    print_html(str(description))
 
-    print("\033[1;4;91mWARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
-          "Instead, use this url:\033[0m " + json_data['description_url'])
+    console.print(
+        "[u bold bright_red]WARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
+        "Instead, use this url:[/] " + json_data['description_url']
+    )
 
 
 def print_result(json_results):

@@ -1,15 +1,17 @@
-from bs4 import BeautifulSoup
 import re
-import textwrap
 import markdownify
-import os
 
 from pretty_console import console
 
 
 def print_html(raw_html: str):
-    # markdown_my_beloved = markdownify.markdownify(raw_html)
-    return ('\n' +
-            str(os.system(
-                "lynx -dump https://sandbox.dodona.be/nl/activities/1669118545/description/QGv8syuDRqqCpiWk/"))
-            + '\n')
+    stripped_html = re.sub("<div .*?>", "", raw_html)
+    stripped_html = re.sub("</div>", "", stripped_html)
+    stripped_html = re.sub("<meta .*?>", "", stripped_html)
+
+    markdown_description = markdownify.markdownify(stripped_html)
+
+    description = re.sub("\\*\\*(.*?)\\*\\*", "[bold]\\1[/bold]", markdown_description, flags=re.DOTALL)
+    description = re.sub("\\*(.*?)\\*", "[i]\\1[/i]", description, flags=re.DOTALL)
+
+    console.print(description)
