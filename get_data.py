@@ -2,6 +2,20 @@ import json
 import os
 
 from set_data import dump_config
+from pretty_console import console
+
+def make_connection(connection):
+    res = connection.getresponse()
+    status = res.status()
+    if status != 200:
+        print("Error connecting to Dodona: " + str(status))
+        print("Reason: " + res.reason)
+        exit(-1)
+
+    data = res.read()
+    connection.close()
+
+    return data
 
 
 def courses_data(connection, headers):
@@ -12,17 +26,9 @@ def courses_data(connection, headers):
     :return: json object with info about available courses
     """
     connection.request("GET", "/courses.json?tab=my", headers=headers)
-    res = connection.getresponse()
-    if res.status != 200:
-        print('Error connecting to dodona: ' + str(res.status))
-        print(res.reason)
-        return
-    data = res.read()
-    connection.close()
+    data = make_connection(connection)
 
-    json_data = json.loads(data)
-
-    return json_data
+    return json.loads(data)
 
 
 def series_data(connection, headers, course_id):
@@ -34,13 +40,7 @@ def series_data(connection, headers, course_id):
     :return: json object with info about available series
     """
     connection.request("GET", "/courses/" + course_id + "/series.json", headers=headers)
-    res = connection.getresponse()
-    if res.status != 200:
-        print("Error connecting to Dodona: " + str(res.status))
-        print("Reason: " + res.reason)
-        return
-    data = res.read()
-    connection.close()
+    data = make_connection(connection)
 
     return json.loads(data)
 
@@ -54,13 +54,7 @@ def exercises_data(connection, headers, series_id):
     :return: json object with info about available exercises
     """
     connection.request("GET", "/series/" + series_id + "/activities.json", headers=headers)
-    res = connection.getresponse()
-    if res.status != 200:
-        print("Error connection to Dodona: " + str(res.status))
-        print("Reason: " + res.reason)
-        return
-    data = res.read()
-    connection.close()
+    data = make_connection(connection)
 
     return json.loads(data)
 
@@ -75,16 +69,9 @@ def exercise_data(connection, headers, course_id, exercise_id):
     :return: json object with info about exercise
     """
     connection.request("GET", "/courses/" + course_id + "/activities/" + exercise_id + ".json", headers=headers)
-    res = connection.getresponse()
-    if res.status != 200:
-        print("Error connection to Dodona: " + str(res.status))
-        print("Reason: " + res.reason)
-        return
-    data = res.read()
-    json_data = json.loads(data)
-    connection.close()
+    data = make_connection(connection)
 
-    return json_data
+    return json.loads(data)
 
 
 def get_configs():
@@ -102,13 +89,13 @@ def get_configs():
     try:
         with open(config_file_path, "r") as file:
             config = json.load(file)
+
     except FileNotFoundError:
-        config = {}
-        TOKEN = input('\033[1;91mAPI-Token not found!\033[0m Enter your code here: ')
+        # Create config dictionary
+        config = {e: None for e in ["course_id", "serie_id", "exercise_id"]}
+        TOKEN = console.input('[bold bright_red]API-Token not found![/] Enter your code here: ')
         config["TOKEN"] = TOKEN
-        config["course_id"] = None
-        config["serie_id"] = None
-        config["exercise_id"] = None
+
         # Save configs
         dump_config(config)
 
