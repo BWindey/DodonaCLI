@@ -1,5 +1,3 @@
-import http.client
-
 from pretty_print import *
 from get_data import *
 from set_data import post_solution
@@ -24,13 +22,8 @@ def handle_display(config, connection, headers):
 
     else:
         # Print exercise-description
-
-        # Start up the connection to Dodona's sandbox (for downloading files and viewing exercise-descriptions)
-        sandbox_connection = http.client.HTTPSConnection("sandbox.dodona.be")
-        sandbox_headers = {"Autorization": config['TOKEN']}
-
         json_data = exercise_data(connection, headers, config['course_id'], config['exercise_id'])
-        print_exercise(json_data, sandbox_connection, sandbox_headers)
+        print_exercise(json_data)
 
 
 def handle_select(select, config, connection, headers):
@@ -43,12 +36,12 @@ def handle_select(select, config, connection, headers):
         # If select is an id, search if it matches id's, else search if it matches a name, then store the id
         if select.isnumeric() and select in courses:
             config['course_id'] = select
-            console.print("Course [bold]" + courses[select] + "[/] selected.")
+            console.print("\nCourse [bold]" + courses[select] + "[/] selected.\n")
         else:
             for course in courses.items():
                 if select.lower() in course[1].lower():
                     config['course_id'] = course[0]
-                    console.print("\nCourse [bold]\"" + courses[course[0]] + "\"[/] selected.")
+                    console.print("\nCourse [bold]\"" + courses[course[0]] + "\"[/] selected.\n")
                     break
         if config['course_id'] is None:
             print("\nNot a valid course id or -name!\n")

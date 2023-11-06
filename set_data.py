@@ -22,7 +22,7 @@ def post_solution(content, connection, headers, config):
     :param headers: dict with extra info for connection, mainly authorization needed
     :param config: dict with configs from config-file
     """
-    # Make dict with info needed to post the solution and dump in in a json object
+    # Make dict with info needed to post the solution and dump it in a json object
     payload = {
         "submission": {
             "code": content,
