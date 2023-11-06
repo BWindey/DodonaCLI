@@ -56,13 +56,9 @@ To display all the info you need to make your next selection or post your soluti
 
 
 ## Roadmap
-There are a few steps to take before being able to call this a fully working (minimal) command:
-- None! Well done, this command now works well enough to use. Let's start with adding extra features!
 
-When above steps are implemented, there are some features I'd like to add:
-- DONE: choose course/series/exercises by name instead of id
-- DONE: format the exercise-description in a neat way
-- DONE: save boilerplate-code
+More features to maybe add in the future:
+- store name too in config file to be able to print it out with the '--status' flag
 - add indicator to series to mark if all their exercises are completely solved
 - user-settings (f.e. auto-download of files, language, formatting, ...)
 - figure out how to more easily view an exercise description, boilerplate and the code you're writing together
