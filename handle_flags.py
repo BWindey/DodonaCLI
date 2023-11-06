@@ -87,6 +87,7 @@ def handle_select(select, config, connection, headers):
                         with open("boilerplate", "w") as boilerplate_file:
                             boilerplate_file.write(boilerplate)
                     break
+
         if config['exercise_id'] is None:
             print("Not a valid exercise id!")
 
