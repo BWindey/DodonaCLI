@@ -113,16 +113,24 @@ def main(display, select, post, up, uptop, status):
             # Select an exercise
             data_exercises = exercises_data(connection, headers, config['serie_id'])
 
-            exercises = {str(exercise['id']): exercise['name'] for exercise in data_exercises}
+            exercises = {str(exercise['id']): (exercise['name'], i) for i, exercise in enumerate(data_exercises)}
 
             if select.isnumeric() and select in exercises:
                 config['exercise_id'] = select
                 console.print("\nExercise [bold]\'" + exercises[select] + "\"[/] selected.\n")
             else:
                 for exercise in exercises.items():
-                    if select.lower() in exercise[1].lower():
-                        config['exercise_id'] = exercise[0]
-                        console.print("\nExercise [bold]\"" + exercises[exercise[0]] + "\"[/] selected.\n")
+                    exercise_id, (exercise_name, number) = exercise
+                    if select.lower() in exercise_name.lower():
+                        config['exercise_id'] = exercise_id
+                        console.print("\nExercise [bold]\"" + exercises[exercise_id][0] + "\"[/] selected.\n")
+                        boilerplate = data_exercises[number].get("boilerplate")
+                        if boilerplate is not None and boilerplate.strip() != "":
+                            print("\nBoilerplate code (can be found in boilerplate-file):\n")
+                            print(textwrap.indent(boilerplate, '\t'))
+
+                            with open("boilerplate", "w") as boilerplate_file:
+                                boilerplate_file.write(boilerplate)
                         break
             if config['exercise_id'] is None:
                 print("Not a valid exercise id!")
