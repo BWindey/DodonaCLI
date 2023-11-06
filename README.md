@@ -34,6 +34,8 @@ You can always check what you have selected by running `dodona --status`.
 
 If you want to deselect something, run `dodona -u` or '--up' to deselect the last selected option. If you want to deselect everything, run `dodona --uptop`.
 
+If there is some boilerplate-code associated with an exercise, it will get printed out to the terminal once you select the exercise. You can also find it in the file 'boilerplate'. You can use it to write your solution in, and post it, but be aware that this file gets overwritten when you select a new exercise that has boilerplate-code attached (not all do).
+
 When you have an exercise selected, you can post your solution as follows:
 - write your solution to a file
 - run `dodona -p solution_file`, or use the '--post' flag instead of '-p'
@@ -54,8 +56,10 @@ There are a few steps to take before being able to call this a fully working (mi
 When above steps are implemented, there are some features I'd like to add:
 - DONE: choose course/series/exercises by name instead of id
 - DONE: format the exercise-description in a neat way
+- DONE: save boilerplate-code
 - add indicator to series to mark if all their exercises are completely solved
-- easy (automatic?) downloading of files mentioned in exercise description
 - user-settings (f.e. auto-download of files, language, formatting, ...)
+- figure out how to more easily view an exercise description, boilerplate and the code you're writing together
+- easy (automatic?) downloading of files mentioned in exercise description
 - caching to make it feel like a real command, blazingly fast! Currently you'll often have to wait a few hundred milliseconds for the API-call to return
 - a python- or ed-like own terminal after running the `dodona` command to not have to repeat the command often. This seems complicated, but it might be possible.
