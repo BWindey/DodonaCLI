@@ -4,6 +4,7 @@ import os
 from set_data import dump_config
 from pretty_console import console
 
+
 def make_connection(connection):
     res = connection.getresponse()
     status = res.status()
