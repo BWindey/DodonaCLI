@@ -1,12 +1,9 @@
-import subprocess
-
-from bs4 import BeautifulSoup
-import os
 import re
 import shutil
+import subprocess
 import textwrap
 
-from pretty_console import console
+from .pretty_console import console
 
 
 def print_courses_data(json_data):
@@ -28,9 +25,12 @@ def print_courses_data(json_data):
     display_data = sorted(display_data, key=lambda x: x[1])
 
     # Print out all courses in display_data
-    console.print('[u bright_blue]Your courses:[/]')
+    console.print('\n[u bright_blue]Your courses:[/]')
+    all_courses_formatted = ""
     for e in display_data:
-        print(f'{e[0].ljust(max_course_id_length)}: \033[1m{e[1].ljust(max_course_name_length)}\033[0m\tby {e[2]}')
+        all_courses_formatted += (f'\t{e[0].ljust(max_course_id_length)}: '
+                                  f'[bold]{e[1].ljust(max_course_name_length)}[/]\tby {e[2]}\n')
+    console.print(all_courses_formatted)
 
 
 def print_series_data(json_data):
@@ -80,7 +80,8 @@ def print_series_data(json_data):
 
         new_description = textwrap.indent(new_description, '\t')
         print(
-            f"{e[0].ljust(max_series_id_length)}: \033[1m{e[1].ljust(max_series_name_length)}\033[0m\n{new_description}")
+            f"{e[0].ljust(max_series_id_length)}: "
+            f"\033[1m{e[1].ljust(max_series_name_length)}\033[0m\n{new_description}")
 
 
 def print_exercise_data(json_data):
@@ -109,13 +110,11 @@ def print_exercise_data(json_data):
         )
 
 
-def print_exercise(json_data, connection, headers):
+def print_exercise(json_data):
     """
     Print out the exercise-description. Needs to call the Dodona-sandbox and convert HTML to text.
     Prints out a warning for potential incompleteness, which may be dangerous for tests and exams.
     :param json_data: json object with info about a Dodona exercise
-    :param connection: HTTPSConnection object that connects to sandbox.Dodona.be
-    :param headers: dict with extra info for connection, mainly authorization needed
     """
 
     # Print the HTML with warnings
@@ -127,7 +126,7 @@ def print_exercise(json_data, connection, headers):
     console.print("\nExpected programming language: " + json_data['programming_language']['name'] + '\n')
 
     description = subprocess.getoutput("lynx --dump " + json_data['description_url'])
-    description = re.sub(r'\[(\d+)\]([ \w-]+)\^(\1)', r'[\1: \2]', description, flags=re.DOTALL)
+    description = re.sub(r'\[(\d+)]([ \w-]+)\^(\1)', r'[\1: \2]', description, flags=re.DOTALL)
 
     console.print(description)
 
