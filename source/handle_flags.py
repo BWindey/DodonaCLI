@@ -1,35 +1,36 @@
-from pretty_print import *
-from get_data import *
-from set_data import post_solution
+import textwrap
+
+from . import pretty_print, get_data, set_data
+from .pretty_console import console
 
 
 def handle_display(config, connection, headers):
     # Display flag changes behaviour depending on the values in the config-dictionary.
     if config['course_id'] is None:
         # Print available courses
-        json_data = courses_data(connection, headers)
-        print_courses_data(json_data)
+        json_data = get_data.courses_data(connection, headers)
+        pretty_print.print_courses_data(json_data)
 
     elif config['serie_id'] is None:
         # Print available series
-        json_data = series_data(connection, headers, config['course_id'])
-        print_series_data(json_data)
+        json_data = get_data.series_data(connection, headers, config['course_id'])
+        pretty_print.print_series_data(json_data)
 
     elif config['exercise_id'] is None:
         # Print available exercises
-        json_data = exercises_data(connection, headers, config['serie_id'])
-        print_exercise_data(json_data)
+        json_data = get_data.exercises_data(connection, headers, config['serie_id'])
+        pretty_print.print_exercise_data(json_data)
 
     else:
         # Print exercise-description
-        json_data = exercise_data(connection, headers, config['course_id'], config['exercise_id'])
-        print_exercise(json_data)
+        json_data = get_data.exercise_data(connection, headers, config['course_id'], config['exercise_id'])
+        pretty_print.print_exercise(json_data)
 
 
 def handle_select(select, config, connection, headers):
     if config['course_id'] is None:
         # Select a course
-        data_courses = courses_data(connection, headers)
+        data_courses = get_data.courses_data(connection, headers)
 
         courses = {str(course['id']): course['name'] for course in data_courses}
 
@@ -48,7 +49,7 @@ def handle_select(select, config, connection, headers):
 
     elif config['serie_id'] is None:
         # Select a series
-        data_series = series_data(connection, headers, config['course_id'])
+        data_series = get_data.series_data(connection, headers, config['course_id'])
 
         series = {str(serie['id']): serie['name'] for serie in data_series}
 
@@ -66,7 +67,7 @@ def handle_select(select, config, connection, headers):
 
     elif config['exercise_id'] is None:
         # Select an exercise
-        data_exercises = exercises_data(connection, headers, config['serie_id'])
+        data_exercises = get_data.exercises_data(connection, headers, config['serie_id'])
 
         exercises = {str(exercise['id']): (exercise['name'], i) for i, exercise in enumerate(data_exercises)}
 
@@ -84,7 +85,7 @@ def handle_select(select, config, connection, headers):
                         print("\nBoilerplate code (can be found in boilerplate-file):\n")
                         print(textwrap.indent(boilerplate, '\t'))
 
-                        with open("boilerplate", "w") as boilerplate_file:
+                        with open("../boilerplate", "w") as boilerplate_file:
                             boilerplate_file.write(boilerplate)
                     break
 
@@ -97,7 +98,7 @@ def handle_select(select, config, connection, headers):
               'please remove selection with --up or -u to select a new exercise first.')
 
     # Save selections in config file
-    dump_config(config)
+    set_data.dump_config(config)
 
 
 def handle_post(post, config, connection, headers):
@@ -107,7 +108,7 @@ def handle_post(post, config, connection, headers):
     else:
         with open(post, 'r') as infile:
             content = infile.read()
-        post_solution(content, connection, headers, config)
+        set_data.post_solution(content, connection, headers, config)
 
 
 def handle_up(config):
@@ -124,7 +125,7 @@ def handle_up(config):
     else:
         print('Already at the top.')
     # Save selections in config file
-    dump_config(config)
+    set_data.dump_config(config)
 
 
 def handle_uptop(config):
@@ -134,7 +135,7 @@ def handle_uptop(config):
     config['course_id'] = None
     print('At the top.')
     # Save selections in config file
-    dump_config(config)
+    set_data.dump_config(config)
 
 
 def handle_status(config):

@@ -1,13 +1,13 @@
 import json
 import os
 
-from set_data import dump_config
-from pretty_console import console
+from .set_data import dump_config
+from .pretty_console import console
 
 
 def make_connection(connection):
     res = connection.getresponse()
-    status = res.status()
+    status = res.status
     if status != 200:
         print("Error connecting to Dodona: " + str(status))
         print("Reason: " + res.reason)
@@ -84,7 +84,7 @@ def get_configs():
     # the python files, but the command may be executed from anywhere with the apropriate alias set.
     # Thus, first te path to the directory of the python files is retrieved, then the config-file-name is appended
     script_directory = os.path.dirname(os.path.abspath(__file__))
-    config_file_path = os.path.join(script_directory, 'config.json')
+    config_file_path = os.path.join(script_directory, '../config.json')
 
     # First try to open, if unable to open, create new config-file and ask user for a token
     try:

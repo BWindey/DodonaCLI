@@ -1,10 +1,9 @@
-import subprocess
-
 import re
 import shutil
+import subprocess
 import textwrap
 
-from pretty_console import console
+from .pretty_console import console
 
 
 def print_courses_data(json_data):

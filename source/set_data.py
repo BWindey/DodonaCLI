@@ -2,13 +2,13 @@ import json
 import os
 import time
 
-from pretty_print import print_result
-from pretty_console import console
+from .pretty_print import print_result
+from .pretty_console import console
 
 
 def dump_config(config):
     script_directory = os.path.dirname(os.path.abspath(__file__))
-    config_file_path = os.path.join(script_directory, 'config.json')
+    config_file_path = os.path.join(script_directory, '../config.json')
 
     with open(config_file_path, 'w') as config_file:
         json.dump(config, config_file)
@@ -52,6 +52,7 @@ def post_solution(content, connection, headers, config):
     json_data['status'] = "running"
 
     print("Posting your solution, please wait while the servers evaluate your code.\n")
+
     while json_data['status'] == "running":
         time.sleep(0.3)
         connection.request("GET", "/submissions/" + str(json_data['id']) + ".json", headers=headers)

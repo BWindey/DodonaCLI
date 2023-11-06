@@ -2,7 +2,7 @@
 import click
 import http.client
 
-from handle_flags import *
+from source import handle_flags, get_data
 
 
 @click.command(help="A Command Line Interface for Dodona. Finally you have no need to exit your terminal anymore!\n"
@@ -32,7 +32,7 @@ def main(display, select, post, up, uptop, status):
     Use --help for more info about flags, or read the README on discord.
     """
     # Read configs in
-    config = get_configs()
+    config = get_data.get_configs()
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
@@ -44,22 +44,22 @@ def main(display, select, post, up, uptop, status):
 
     # Handle all the different flags
     if display:
-        handle_display(config, connection, headers)
+        handle_flags.handle_display(config, connection, headers)
 
     elif select:
-        handle_select(select, config, connection, headers)
+        handle_flags.handle_select(select, config, connection, headers)
 
     elif post:
-        handle_post(post, config, connection, headers)
+        handle_flags.handle_post(post, config, connection, headers)
 
     elif up:
-        handle_up(config)
+        handle_flags.handle_up(config)
 
     elif uptop:
-        handle_uptop(config)
+        handle_flags.handle_uptop(config)
 
     elif status:
-        handle_status(config)
+        handle_flags.handle_status(config)
 
     else:
         # No flags specified, print command summary
