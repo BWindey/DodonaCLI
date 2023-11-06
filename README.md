@@ -1,6 +1,12 @@
 # Command Line Interface for Dodona.
 
+### Disclaimers
+
+Altough the exercise-description formatting is quite nice, do NOT rely on this for tests and exams! The printed description may not be complete, or even incorrect. Please be aware of this!
+
 All efforts to format displayed text in an orderly fashion were made using a GNOME-terminal. If it doesn't look good in your terminal (links can be an issue), you probably are not running a GNOME-terminal. As this is open-source software, feel free to add terminal-detection to make things pretty for your terminal too, but this isn't feasible to do for me. 
+
+This project was made in Linux, and is currently untested on Windows. If you have been able to test it on another operating system, please share the results with me by making a pull request that updates this README, or by leaving an ["issue"](https://github.com/BWindey/DodonaCLI/issues).
 
 ## Contents:
 1) How to install
@@ -19,7 +25,7 @@ All efforts to format displayed text in an orderly fashion were made using a GNO
 
 Updating should be easy: navigate to the folder where you cloned this repo, and do `git pull`.
 
-By default you should be on the master branch, but if you saw an interesting-looking commit on the develop branch, feel free to switch to develop to try it out and maybe give some feedback on the [Issues](https://github.com/BramWindey/DodonaCLI/issues)-page. The develop-branch does not guarantee proper error-handling, so I'd advice normal users to stay on the master branch.
+By default you should be on the master branch, but if you saw an interesting-looking commit on the develop branch, feel free to switch to develop to try it out and maybe give some feedback on the [Issues](https://github.com/BWindey/DodonaCLI/issues)-page. The develop-branch does not guarantee proper error-handling, so I'd advice normal users to stay on the master branch.
 
 
 ## How to use
