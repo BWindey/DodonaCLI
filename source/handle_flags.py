@@ -37,11 +37,13 @@ def handle_select(select, config, connection, headers):
         # If select is an id, search if it matches id's, else search if it matches a name, then store the id
         if select.isnumeric() and select in courses:
             config['course_id'] = select
+            config['course_name'] = courses[select]
             console.print("\nCourse [bold]" + courses[select] + "[/] selected.\n")
         else:
             for course in courses.items():
                 if select.lower() in course[1].lower():
                     config['course_id'] = course[0]
+                    config['course_name'] = course[1]
                     console.print("\nCourse [bold]\"" + courses[course[0]] + "\"[/] selected.\n")
                     break
         if config['course_id'] is None:
@@ -55,11 +57,13 @@ def handle_select(select, config, connection, headers):
 
         if select.isnumeric() and select in series:
             config['serie_id'] = select
+            config['serie_name'] = series[select]
             console.print("\nSeries [bold]\"" + series[select] + "\"[/] selected.\n")
         else:
             for serie in series.items():
                 if select.lower() in serie[1].lower():
                     config['serie_id'] = serie[0]
+                    config['serie_name'] = serie[1]
                     console.print("\nSerie [bold]\"" + series[serie[0]] + "\"[/] selected.\n")
                     break
         if config['serie_id'] is None:
@@ -73,12 +77,14 @@ def handle_select(select, config, connection, headers):
 
         if select.isnumeric() and select in exercises:
             config['exercise_id'] = select
+            config['exercise_name'] = exercises[select]
             console.print("\nExercise [bold]\'" + exercises[select] + "\"[/] selected.\n")
         else:
             for exercise in exercises.items():
                 exercise_id, (exercise_name, number) = exercise
                 if select.lower() in exercise_name.lower():
                     config['exercise_id'] = exercise_id
+                    config['exercise_name'] = exercise_name
                     console.print("\nExercise [bold]\"" + exercises[exercise_id][0] + "\"[/] selected.\n")
                     boilerplate = data_exercises[number].get("boilerplate")
                     if boilerplate is not None and boilerplate.strip() != "":
@@ -115,12 +121,15 @@ def handle_up(config):
     # Deselect last selection
     if config['exercise_id']:
         config['exercise_id'] = None
+        config['exercise_name'] = None
         print('Deselected exercise.')
     elif config['serie_id']:
         config['serie_id'] = None
+        config['serie_name'] = None
         print('Deselected serie.')
     elif config['course_id']:
         config['course_id'] = None
+        config['course_name'] = None
         print('Deselected course.')
     else:
         print('Already at the top.')
@@ -131,8 +140,11 @@ def handle_up(config):
 def handle_uptop(config):
     # Deselect everything
     config['exercise_id'] = None
+    config['exercise_name'] = None
     config['serie_id'] = None
+    config['serie_name'] = None
     config['course_id'] = None
+    config['course_name'] = None
     print('At the top.')
     # Save selections in config file
     set_data.dump_config(config)
@@ -141,6 +153,6 @@ def handle_uptop(config):
 def handle_status(config):
     # Print out current selection
     print(f"Status:\n"
-          f"\tCourse: {config['course_id']}\n"
-          f"\tSerie: {config['serie_id']}\n"
-          f"\tExercise: {config['exercise_id']}\n")
+          f"\tCourse: {config['course_name']}\n"
+          f"\tSerie: {config['serie_name']}\n"
+          f"\tExercise: {config['exercise_name']}\n")
