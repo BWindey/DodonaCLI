@@ -1,31 +1,49 @@
 # Command Line Interface for Dodona.
 
-### Disclaimers
+**Contents**:
+1) [Disclaimers](#disclaimers)
+2) [How to install](#how-to-install)
+3) [How to use](#how-to-use)
+4) [All flags](#all-flags)
+5) [Roadmap](#roadmap)
 
-Altough the exercise-description formatting is quite nice, do NOT rely on this for tests and exams! The printed description may not be complete, or even incorrect. Please be aware of this!
 
-All efforts to format displayed text in an orderly fashion were made using a GNOME-terminal. If it doesn't look good in your terminal (links can be an issue), you probably are not running a GNOME-terminal. As this is open-source software, feel free to add terminal-detection to make things pretty for your terminal too, but this isn't feasible to do for me. 
+## Disclaimers
 
-This project was made in Linux, and is currently untested on Windows. If you have been able to test it on another operating system, please share the results with me by making a pull request that updates this README, or by leaving an ["issue"](https://github.com/BWindey/DodonaCLI/issues).
+Altough the exercise-description formatting is decent, do NOT rely on this for tests and exams! The printed description may not be complete, or even incorrect. Please be aware of this!
 
-## Contents:
-1) How to install
-2) How to use
-3) All flags
-4) Roadmap
+All efforts to displayed text in an orderly fashion were made using a Linux GNOME-terminal. If it doesn't look good in your terminal, you probably are not running a GNOME-terminal. As this is open-source software, feel free to add terminal-detection to make things pretty for your terminal too, but this isn't feasible to do for me. 
+
+This project was made in Linux, and was tested in the Command Prompt on Windows. For both platforms you'll find an installation guide below. If you wish to use this in other terminals, you'll have to experiment yourself. I'm planning on writing a guide for MacOS once I was able to try it on there too.
+
 
 
 ## How to install
-- Clone this repo somewhere on your pc.
+### Linux
+- Clones this repo to your pc: `git clone https://github.com/BWindey/DodonaCLI.git`
+- Move in the directory: `cd DodonaCLI`
 - Run `pip install requirements.txt`
 - Make main.py executable: `chmod +x main.py`
-- Set an alias for it, in the rest of this I'll assume you have set it like this: `dodona=<path_to_main.py>`
-      (I'll assume you know how to set aliasses, if you don't, look it up on the interwebs)
-- Check if it works by going to "How to use"
+- Set an alias for it by appending this line to ~/.bashrc or ~/.bashprofile: `alias dodona='<absolute_path_to_DodonaCLI_folder>/main.py`
+- Check if it works with `dodona --help`
 
-Updating should be easy: navigate to the folder where you cloned this repo, and do `git pull`.
+### Windows Command Prompt
+- Clones this repo to your pc `git clone https://github.com/BWindey/DodonaCLI.git`
+- Move in the directory: `cd DodonaCLI`
+- Check if Python is installed: `python --version`, if not installed, please install first
+- Run `pip install -r requirements.txt`
+- Set temporary alias: `doskey dodona=python "<absolute_path_to_DodonaCLI_folder>\main.py" $*`
+- Test the alias (preferably in different directories): `dodona --help`
+- Create set_alias.bat in homedirectory for permanent alias with folowwing lines:
+      ```
+      @echo off
+      doskey dodona=python "<absolute_path_to_DodonaCLI_folder>\main.py" $*
+      ```
+- Open Register-editor (use the Windows search-bar if you don't know where it is)
+- Navigate to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor
+- Add a String Value with name 'AutoRun' and give it as value the absolute path to set_alias.bat
+- Test by opening a new command prompt and running `dodona --help`
 
-By default you should be on the master branch, but if you saw an interesting-looking commit on the develop branch, feel free to switch to develop to try it out and maybe give some feedback on the [Issues](https://github.com/BWindey/DodonaCLI/issues)-page. The develop-branch does not guarantee proper error-handling, so I'd advice normal users to stay on the master branch.
 
 
 ## How to use
@@ -47,6 +65,7 @@ When you have an exercise selected, you can post your solution as follows:
 - run `dodona -p solution_file`, or use the '--post' flag instead of '-p'
 
 
+
 ## All flags
 You can get info about all the flags by using '--help' or '-h'. Here is a brief explanation.
 
@@ -55,14 +74,10 @@ Most flags have a short and long version. Exceptions are '--uptop' and '--status
 To display all the info you need to make your next selection or post your solution, use '--display'. Selecting then happens with '--select', posting with '--post'. To deselect the current selection, use '--up', or '--uptop' to deselect everything. '--status' will give you an overview of what you have selected.
 
 
-## Roadmap
-There are a few steps to take before being able to call this a fully working (minimal) command:
-- None! Well done, this command now works well enough to use. Let's start with adding extra features!
 
-When above steps are implemented, there are some features I'd like to add:
-- DONE: choose course/series/exercises by name instead of id
-- DONE: format the exercise-description in a neat way
-- DONE: save boilerplate-code
+## Roadmap
+More features to maybe add in the future:
+- store name too in config file to be able to print it out with the '--status' flag
 - add indicator to series to mark if all their exercises are completely solved
 - user-settings (f.e. auto-download of files, language, formatting, ...)
 - figure out how to more easily view an exercise description, boilerplate and the code you're writing together
