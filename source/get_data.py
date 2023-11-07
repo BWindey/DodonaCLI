@@ -5,7 +5,13 @@ from .set_data import dump_config
 from .pretty_console import console
 
 
-def make_connection(connection):
+def handle_connection(connection):
+    """
+    Handle response from Dodona connection
+    Terminates program if there was a problem with the connection
+    :param connection: HTTPSConnection object that has had a request
+    :return: data
+    """
     res = connection.getresponse()
     status = res.status
     if status != 200:
@@ -27,7 +33,7 @@ def courses_data(connection, headers):
     :return: json object with info about available courses
     """
     connection.request("GET", "/courses.json?tab=my", headers=headers)
-    data = make_connection(connection)
+    data = handle_connection(connection)
 
     return json.loads(data)
 
@@ -41,7 +47,7 @@ def series_data(connection, headers, course_id):
     :return: json object with info about available series
     """
     connection.request("GET", "/courses/" + course_id + "/series.json", headers=headers)
-    data = make_connection(connection)
+    data = handle_connection(connection)
 
     return json.loads(data)
 
@@ -55,7 +61,7 @@ def exercises_data(connection, headers, series_id):
     :return: json object with info about available exercises
     """
     connection.request("GET", "/series/" + series_id + "/activities.json", headers=headers)
-    data = make_connection(connection)
+    data = handle_connection(connection)
 
     return json.loads(data)
 
@@ -70,7 +76,7 @@ def exercise_data(connection, headers, course_id, exercise_id):
     :return: json object with info about exercise
     """
     connection.request("GET", "/courses/" + course_id + "/activities/" + exercise_id + ".json", headers=headers)
-    data = make_connection(connection)
+    data = handle_connection(connection)
 
     return json.loads(data)
 
@@ -93,7 +99,7 @@ def get_configs():
 
     except FileNotFoundError:
         # Create config dictionary
-        config = {e: None for e in ["course_id", "serie_id", "exercise_id"]}
+        config = {e: None for e in ["course_id", "course_name", "serie_id", "serie_name", "exercise_id", "exercise_name"]}
         TOKEN = console.input('[bold bright_red]API-Token not found![/] Enter your code here: ')
         config["TOKEN"] = TOKEN
 
