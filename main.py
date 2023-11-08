@@ -1,7 +1,7 @@
 import click
 import http.client
 
-from source import handle_flags, get_data
+from source import handle_flags, get_data, tutorial
 
 
 @click.command(help="A Command Line Interface for Dodona. Finally you have no need to exit your terminal anymore!\n"
@@ -25,7 +25,9 @@ from source import handle_flags, get_data
               help="Go immediatly to the top of the structure.")
 @click.option('--status', is_flag=True,
               help="Shows selected course, selected serie and selected exercise.")
-def main(display, select, post, up, uptop, status):
+@click.option('--tutorial', is_flag=True,
+              help="Starts the tutorial.")
+def main(display, select, post, up, uptop, status, tutorial_flag):
     """
     A Command Line Interface for Dodona. Finally, you have no need to exit your terminal anymore!
     Use --help for more info about flags, or read the README on discord.
@@ -59,6 +61,9 @@ def main(display, select, post, up, uptop, status):
 
     elif status:
         handle_flags.handle_status(config)
+
+    elif tutorial_flag:
+        tutorial.start_tutorial(config)
 
     else:
         # No flags specified, print command summary

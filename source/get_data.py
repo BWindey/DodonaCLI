@@ -112,4 +112,6 @@ def get_configs():
         # Save configs
         set_data.dump_config(config)
 
+        exit(0)
+
     return config
