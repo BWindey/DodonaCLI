@@ -23,8 +23,7 @@ This project was made in Linux, and was tested in the Command Prompt on Windows.
 - Clones this repo to your pc: `git clone https://github.com/BWindey/DodonaCLI.git`
 - Move in the directory: `cd DodonaCLI`
 - Run `pip install requirements.txt`
-- Make main.py executable: `chmod +x main.py`
-- Set an alias for it by appending this line to ~/.bashrc or ~/.bashprofile: `alias dodona='<absolute_path_to_DodonaCLI_folder>/main.py`
+- Set an alias for it by appending this line to ~/.bashrc or ~/.bashprofile: `alias dodona=python3 '<absolute_path_to_DodonaCLI_folder>/main.py'`
 - Check if it works with `dodona --help`
 
 ### Windows Command Prompt
@@ -44,7 +43,12 @@ This project was made in Linux, and was tested in the Command Prompt on Windows.
 - Add a String Value with name 'AutoRun' and give it as value the absolute path to set_alias.bat
 - Test by opening a new command prompt and running `dodona --help`
 
-
+### MacOS
+- Clone this repo to your pc
+- Move in dir
+- Check if Python installed
+- Pip install -r requirements.txt
+- Create alias by appending this line to ~/.zshrc "alias dodona=python <absolute_path_to_DodonaCLI_folder>/main.py"
 
 ## How to use
 When freshly installed, run 
