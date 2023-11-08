@@ -14,7 +14,7 @@ Altough the exercise-description formatting is decent, do NOT rely on this for t
 
 All efforts to displayed text in an orderly fashion were made using a Linux GNOME-terminal. If it doesn't look good in your terminal, you probably are not running a GNOME-terminal. As this is open-source software, feel free to add terminal-detection to make things pretty for your terminal too, but this isn't feasible to do for me. 
 
-This project was made in Linux, and was tested in the Command Prompt on Windows. For both platforms you'll find an installation guide below. If you wish to use this in other terminals, you'll have to experiment yourself. I'm planning on writing a guide for MacOS once I was able to try it on there too.
+This project was made in Linux, and was tested in the Command Prompt on Windows and on the zsh shell on MacOS. For those platforms you'll find an installation guide below. If you wish to use this in other terminals, you'll have to experiment yourself.
 
 
 
@@ -33,7 +33,7 @@ This project was made in Linux, and was tested in the Command Prompt on Windows.
 - Run `pip install -r requirements.txt`
 - Set temporary alias: `doskey dodona=python "<absolute_path_to_DodonaCLI_folder>\main.py" $*`
 - Test the alias (preferably in different directories): `dodona --help`
-- Create set_alias.bat in homedirectory for permanent alias with folowwing lines:
+- Create set_alias.bat in homedirectory for permanent alias with folowwing lines:\
       ```
       @echo off
       doskey dodona=python "<absolute_path_to_DodonaCLI_folder>\main.py" $*
@@ -47,8 +47,8 @@ This project was made in Linux, and was tested in the Command Prompt on Windows.
 - Clone this repo to your pc
 - Move in dir
 - Check if Python installed
-- Pip install -r requirements.txt
-- Create alias by appending this line to ~/.zshrc "alias dodona=python <absolute_path_to_DodonaCLI_folder>/main.py"
+- Run `pip install -r requirements.txt`
+- Create alias by appending this line to ~/.zshrc `alias dodona=python <absolute_path_to_DodonaCLI_folder>/main.py`
 
 ## How to use
 When freshly installed, run 
