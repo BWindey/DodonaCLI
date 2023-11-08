@@ -2,7 +2,7 @@ import json
 import os
 
 from . import set_data
-from . import pretty_console
+from . import tutorial
 
 
 def handle_connection(connection):
@@ -100,8 +100,14 @@ def get_configs():
     except FileNotFoundError:
         # Create config dictionary
         config = {e: None for e in ["course_id", "course_name", "serie_id", "serie_name", "exercise_id", "exercise_name"]}
-        TOKEN = pretty_console.console.input('[bold bright_red]API-Token not found![/] Enter your code here: ')
-        config["TOKEN"] = TOKEN
+
+        answer = input("This may be your first time using DodonaCLI, do you wish to follow a short tutorial?")
+
+        if answer.lower().startswith("yes"):
+            config = tutorial.start_tutorial(config)
+        else:
+            TOKEN = input('API-Token not found! Enter your code here: ')
+            config["TOKEN"] = TOKEN
 
         # Save configs
         set_data.dump_config(config)
