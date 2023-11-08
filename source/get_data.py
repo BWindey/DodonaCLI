@@ -1,8 +1,8 @@
 import json
 import os
 
-from .set_data import dump_config
-from .pretty_console import console
+from . import set_data
+from . import pretty_console
 
 
 def handle_connection(connection):
@@ -100,10 +100,10 @@ def get_configs():
     except FileNotFoundError:
         # Create config dictionary
         config = {e: None for e in ["course_id", "course_name", "serie_id", "serie_name", "exercise_id", "exercise_name"]}
-        TOKEN = console.input('[bold bright_red]API-Token not found![/] Enter your code here: ')
+        TOKEN = pretty_console.console.input('[bold bright_red]API-Token not found![/] Enter your code here: ')
         config["TOKEN"] = TOKEN
 
         # Save configs
-        dump_config(config)
+        set_data.dump_config(config)
 
     return config

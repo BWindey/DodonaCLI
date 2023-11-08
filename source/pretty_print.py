@@ -3,7 +3,7 @@ import shutil
 import subprocess
 import textwrap
 
-from .pretty_console import console
+from . import pretty_console
 
 
 def print_courses_data(json_data):
@@ -25,12 +25,12 @@ def print_courses_data(json_data):
     display_data = sorted(display_data, key=lambda x: x[1])
 
     # Print out all courses in display_data
-    console.print('\n[u bright_blue]Your courses:[/]')
+    pretty_console.console.print('\n[u bright_blue]Your courses:[/]')
     all_courses_formatted = ""
     for e in display_data:
         all_courses_formatted += (f'\t{e[0].ljust(max_course_id_length)}: '
                                   f'[bold]{e[1].ljust(max_course_name_length)}[/]\tby {e[2]}\n')
-    console.print(all_courses_formatted)
+    pretty_console.console.print(all_courses_formatted)
 
 
 def print_series_data(json_data):
@@ -49,7 +49,7 @@ def print_series_data(json_data):
     max_series_name_length = max(len(e[1]) for e in display_data)
 
     # Print out all the series in display_data while also handling the Markdown inside the series-description
-    console.print("[u bright_blue]All series:[/]")
+    pretty_console.console.print("[u bright_blue]All series:[/]")
     for e in display_data:
         description = e[2].split('\n')
         new_description = ''
@@ -100,9 +100,9 @@ def print_exercise_data(json_data):
     max_exercise_name_length = max(len(e[1]) for e in display_data)
 
     # Print out all exercises in display_data with indicator about solution-status: solved, wrong or not yet solved
-    console.print('[u bright_blue]Exercises:[/]')
+    pretty_console.console.print('[u bright_blue]Exercises:[/]')
     for e in display_data:
-        console.print(
+        pretty_console.console.print(
             f"{e[0].ljust(max_exercise_id_length)}: [bold]{e[1].ljust(max_exercise_name_length)}[/]\t" +
             "[bold bright_green]SOLVED[/]" * (e[2] and e[3]) +
             "[bold bright_red]WRONG[/]" * (not e[2] and e[3]) +
@@ -118,19 +118,19 @@ def print_exercise(json_data):
     """
 
     # Print the HTML with warnings
-    console.print(
+    pretty_console.console.print(
         "\n[u bold bright_red]WARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
         "Instead, use this url:[/] " + json_data['description_url']
     )
 
-    console.print("\nExpected programming language: " + json_data['programming_language']['name'] + '\n')
+    pretty_console.console.print("\nExpected programming language: " + json_data['programming_language']['name'] + '\n')
 
     description = subprocess.getoutput("lynx --dump " + json_data['description_url'])
     description = re.sub(r'\[(\d+)]([ \w-]+)\^(\1)', r'[\1: \2]', description, flags=re.DOTALL)
 
-    console.print(description)
+    pretty_console.console.print(description)
 
-    console.print(
+    pretty_console.console.print(
         "\n[u bold bright_red]WARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
         "Instead, use this url:[/] " + json_data['description_url'] + '\n'
     )
@@ -143,7 +143,7 @@ def print_result(json_results):
     """
     if json_results['accepted']:
         # Everything passed, well done!
-        console.print("[bold bright_green]All test passed![/] You can continue to next exercise.")
+        pretty_console.console.print("[bold bright_green]All test passed![/] You can continue to next exercise.")
     else:
         # There were some problems, list them here
         for group in json_results['groups']:

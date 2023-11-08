@@ -1,7 +1,7 @@
 import textwrap
 
 from . import pretty_print, get_data, set_data
-from .pretty_console import console
+from . import pretty_console
 
 
 def handle_display(config, connection, headers):
@@ -38,13 +38,13 @@ def handle_select(select, config, connection, headers):
         if select.isnumeric() and select in courses:
             config['course_id'] = select
             config['course_name'] = courses[select]
-            console.print("\nCourse [bold]" + courses[select] + "[/] selected.\n")
+            pretty_console.console.print("\nCourse [bold]" + courses[select] + "[/] selected.\n")
         else:
             for course in courses.items():
                 if select.lower() in course[1].lower():
                     config['course_id'] = course[0]
                     config['course_name'] = course[1]
-                    console.print("\nCourse [bold]\"" + courses[course[0]] + "\"[/] selected.\n")
+                    pretty_console.console.print("\nCourse [bold]\"" + courses[course[0]] + "\"[/] selected.\n")
                     break
         if config['course_id'] is None:
             print("\nNot a valid course id or -name!\n")
@@ -58,13 +58,13 @@ def handle_select(select, config, connection, headers):
         if select.isnumeric() and select in series:
             config['serie_id'] = select
             config['serie_name'] = series[select]
-            console.print("\nSeries [bold]\"" + series[select] + "\"[/] selected.\n")
+            pretty_console.console.print("\nSeries [bold]\"" + series[select] + "\"[/] selected.\n")
         else:
             for serie in series.items():
                 if select.lower() in serie[1].lower():
                     config['serie_id'] = serie[0]
                     config['serie_name'] = serie[1]
-                    console.print("\nSerie [bold]\"" + series[serie[0]] + "\"[/] selected.\n")
+                    pretty_console.console.print("\nSerie [bold]\"" + series[serie[0]] + "\"[/] selected.\n")
                     break
         if config['serie_id'] is None:
             print("\nNot a valid series id or -name!\n")
@@ -78,14 +78,14 @@ def handle_select(select, config, connection, headers):
         if select.isnumeric() and select in exercises:
             config['exercise_id'] = select
             config['exercise_name'] = exercises[select]
-            console.print("\nExercise [bold]\'" + exercises[select] + "\"[/] selected.\n")
+            pretty_console.console.print("\nExercise [bold]\'" + exercises[select] + "\"[/] selected.\n")
         else:
             for exercise in exercises.items():
                 exercise_id, (exercise_name, number) = exercise
                 if select.lower() in exercise_name.lower():
                     config['exercise_id'] = exercise_id
                     config['exercise_name'] = exercise_name
-                    console.print("\nExercise [bold]\"" + exercises[exercise_id][0] + "\"[/] selected.\n")
+                    pretty_console.console.print("\nExercise [bold]\"" + exercises[exercise_id][0] + "\"[/] selected.\n")
                     boilerplate = data_exercises[number].get("boilerplate")
                     if boilerplate is not None and boilerplate.strip() != "":
                         print("\nBoilerplate code (can be found in boilerplate-file):\n")

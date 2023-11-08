@@ -2,8 +2,8 @@ import json
 import os
 import time
 
-from .pretty_print import print_result
-from .pretty_console import console
+from . import pretty_print
+from . import pretty_console
 
 
 def dump_config(config):
@@ -37,7 +37,7 @@ def post_solution(content, connection, headers, config):
     res = connection.getresponse()
     status = res.status
     if status == 422:
-        console.print("\n[i]Patience, young padawan.\n"
+        pretty_console.console.print("\n[i]Patience, young padawan.\n"
                       "A cooldown, Dodona servers have, to prevent DDOS attacks, hmm, yes.[/]\n")
     if status != 200:
         print("Error connection to Dodona: " + str(res.status))
@@ -68,4 +68,4 @@ def post_solution(content, connection, headers, config):
     connection.close()
 
     # Print out the results
-    print_result(json.loads(json_data['result']))
+    pretty_print.print_result(json.loads(json_data['result']))
