@@ -21,9 +21,10 @@ This project was made in Linux, and was tested in the Command Prompt on Windows 
 ## How to install
 ### Linux
 - Clone this repo to your pc: `git clone https://github.com/BWindey/DodonaCLI.git`
+- Move into the directory: `cd DodonaCLI`
 - Check if Python is installed: `python --version`, if not installed, please install first
 - Run `pip install -r requirements.txt`
-- Set an alias for it by appending this line to ~/.bashrc or ~/.bashprofile: `alias dodona=python3 '<absolute_path_to_DodonaCLI_folder>/main.py'`
+- Set an alias (optional but highly recommended) by appending this line to ~/.bashrc or ~/.bashprofile: `alias dodona=python3 '<absolute_path_to_DodonaCLI_folder>/main.py'`
 - Test if it works with `dodona --help`
 
 ### MacOS
@@ -31,7 +32,7 @@ This project was made in Linux, and was tested in the Command Prompt on Windows 
 - Move into the directory: `cd DodonaCLI`
 - Check if Python is installed: `python --version`, if not installed, please install first
 - Run `pip install -r requirements.txt`
-- Create alias by appending this line to ~/.zshrc: `alias dodona=python <absolute_path_to_DodonaCLI_folder>/main.py`
+- Create alias (optional but highly recommended) by appending this line to ~/.zshrc: `alias dodona=python <absolute_path_to_DodonaCLI_folder>/main.py`
 - Test if it works with `dodona --help`
 
 ### Windows Command Prompt
@@ -39,7 +40,7 @@ This project was made in Linux, and was tested in the Command Prompt on Windows 
 - Move into the directory: `cd DodonaCLI`
 - Check if Python is installed: `python --version`, if not installed, please install first
 - Run `pip install -r requirements.txt`
-- Create set_alias.bat in your homedirectory for permanent alias with the folowing lines:\
+- Create set_alias.bat in your homedirectory for permanent alias (optional but highly recommended) with the folowing lines:\
   ```
   @echo off
   doskey dodona=python "<absolute_path_to_DodonaCLI_folder>\main.py" $*
