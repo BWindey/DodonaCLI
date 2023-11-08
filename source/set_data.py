@@ -38,7 +38,7 @@ def post_solution(content, connection, headers, config):
     status = res.status
     if status == 422:
         pretty_console.console.print("\n[i]Patience, young padawan.\n"
-                      "A cooldown, Dodona servers have, to prevent DDOS attacks, hmm, yes.[/]\n")
+                                     "A cooldown, Dodona servers have, to prevent DDOS attacks, hmm, yes.[/]\n")
     if status != 200:
         print("Error connection to Dodona: " + str(res.status))
         print("Reason: " + res.reason)
