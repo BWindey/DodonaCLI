@@ -24,7 +24,8 @@ This project was made in Linux, and was tested in the Command Prompt on Windows 
 - Move into the directory: `cd DodonaCLI`
 - Check if Python is installed: `python --version`, if not installed, please install first
 - Run `pip install -r requirements.txt`
-- Set an alias (optional but highly recommended) by appending this line to ~/.bashrc or ~/.bashprofile: `alias dodona=python3 '<absolute_path_to_DodonaCLI_folder>/main.py'`
+- Make main.py executable `chmod +x main.py`
+- Set an alias (optional but highly recommended) by appending this line to ~/.bashrc or ~/.bashprofile: `alias dodona='<absolute_path_to_DodonaCLI_folder>/main.py'`
 - Test if it works with `dodona --help`
 
 ### MacOS
@@ -76,10 +77,12 @@ To display all the info you need to make your next selection or post your soluti
 
 ## Roadmap
 More features to maybe add in the future:
-- small tutorial
+- interactive tutorial
+- show and load previous submissions if they exist
+- use subcommands instead of flags
 - add indicator to series to mark if all their exercises are completely solved
 - user-settings (f.e. auto-download of files, language, formatting, ...)
 - figure out how to more easily view an exercise description, boilerplate and the code you're writing together
 - easy (automatic?) downloading of files mentioned in exercise description
-- caching to make it feel like a real command, blazingly fast! Currently you'll often have to wait a few hundred milliseconds for the API-call to return
+- caching to make it feel like a real command, very fast! Currently you'll often have to wait a few hundred milliseconds for the API-call to return
 - a python- or ed-like own terminal after running the `dodona` command to not have to repeat the command often. This seems complicated, but it might be possible.
