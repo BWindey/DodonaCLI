@@ -32,7 +32,7 @@ def courses_data(connection, headers):
     :param headers: Dict with extra info, mainly autorization needed
     :return: json object with info about available courses
     """
-    connection.request("GET", "/courses.json?tab=my", headers=headers)
+    connection.request("GET", "/courses?tab=my", headers=headers)
     data = handle_connection(connection)
 
     return json.loads(data)
@@ -46,7 +46,7 @@ def series_data(connection, headers, course_id):
     :param course_id: int id of the course to find series from
     :return: json object with info about available series
     """
-    connection.request("GET", "/courses/" + course_id + "/series.json", headers=headers)
+    connection.request("GET", "/courses/" + course_id + "/series", headers=headers)
     data = handle_connection(connection)
 
     return json.loads(data)
@@ -60,7 +60,7 @@ def exercises_data(connection, headers, series_id):
     :param series_id: int id of exercise-series
     :return: json object with info about available exercises
     """
-    connection.request("GET", "/series/" + series_id + "/activities.json", headers=headers)
+    connection.request("GET", "/series/" + series_id + "/activities", headers=headers)
     data = handle_connection(connection)
 
     return json.loads(data)
@@ -75,7 +75,7 @@ def exercise_data(connection, headers, course_id, exercise_id):
     :param exercise_id: int id of exercise
     :return: json object with info about exercise
     """
-    connection.request("GET", "/courses/" + course_id + "/activities/" + exercise_id + ".json", headers=headers)
+    connection.request("GET", "/courses/" + course_id + "/activities/" + exercise_id, headers=headers)
     data = handle_connection(connection)
 
     return json.loads(data)
