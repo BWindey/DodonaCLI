@@ -2,7 +2,7 @@ import json
 import os
 
 from . import set_data
-from . import tutorial
+from . import interactive_tutorial
 
 
 def handle_connection(connection):
@@ -104,7 +104,7 @@ def get_configs():
         answer = input("This may be your first time using DodonaCLI, do you wish to follow a short tutorial?")
 
         if answer.lower().startswith("yes"):
-            config = tutorial.start_tutorial(config)
+            config = interactive_tutorial.start_tutorial(config)
         else:
             TOKEN = input('API-Token not found! Enter your code here: ')
             config["TOKEN"] = TOKEN
