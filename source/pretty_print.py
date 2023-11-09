@@ -93,21 +93,35 @@ def print_exercise_data(json_data):
     display_data = []
 
     for field in json_data:
-        display_data.append((str(field['id']), field['name'], field['last_solution_is_best'], field['has_solution']))
+        display_data.append({
+            'id': str(field['id']),
+            'name': field['name'],
+            'last_solution_is_best': field['last_solution_is_best'],
+            'has_solution': field['has_solution'],
+            'has_correct_solution': field['has_correct_solution'],
+            'accepted': field['accepted']
+        })
 
     # Find the maximum length of all but the last element in all tuples to align them in the terminal
-    max_exercise_id_length = max(len(e[0]) for e in display_data)
-    max_exercise_name_length = max(len(e[1]) for e in display_data)
+    max_exercise_id_length = max(len(e['id']) for e in display_data)
+    max_exercise_name_length = max(len(e['name']) for e in display_data)
 
     # Print out all exercises in display_data with indicator about solution-status: solved, wrong or not yet solved
-    pretty_console.console.print('[u bright_blue]Exercises:[/]')
-    for e in display_data:
+    pretty_console.console.print('\n[u bright_blue]Exercises:[/]')
+    for exercise in display_data:
+        if not exercise['has_solution']:
+            solve_status = "[bold]NOT YET SOLVED[/]"
+        elif exercise['last_solution_is_best'] and exercise['has_correct_solution']:
+            solve_status = "[bold bright_green]SOLVED[/]"
+        else:
+            solve_status = "[bold bright_red]WRONG[/]"
+
         pretty_console.console.print(
-            f"{e[0].ljust(max_exercise_id_length)}: [bold]{e[1].ljust(max_exercise_name_length)}[/]\t" +
-            "[bold bright_green]SOLVED[/]" * (e[2] and e[3]) +
-            "[bold bright_red]WRONG[/]" * (not e[2] and e[3]) +
-            "[bold]NOT YET SOLVED[/]" * (not e[3])
+            f"\t{exercise['id'].ljust(max_exercise_id_length)}: "
+            f"[bold]{exercise['name'].ljust(max_exercise_name_length)}[/]\t"
+            + solve_status
         )
+    print()
 
 
 def print_exercise(json_data):
