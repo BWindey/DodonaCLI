@@ -78,11 +78,11 @@ def tutorial_select_course(config, connection, headers):
           "the course_id, or (distinct part of) the course_name")
     command = input("$ ")
 
-    while not command.rstrip().startswith("dodona --select") or not command.rstrip().startswith("dodona -s"):
+    while not command.rstrip().startswith("dodona --select") and not command.rstrip().startswith("dodona -s"):
         print("That was not the right command, please try again")
         command = input("$ ")
 
-    if command.split()[2] != "296" or command.split()[2].lower() not in "The Coder's Apprentice".lower():
+    if command.split()[2] != "296" and command.split()[2].lower() not in "The Coder's Apprentice".lower():
         print("Watch out, you used a wrong id or name to select \"The Coder's Apprentice\"!\n"
               "The tutorial will continue as if you selected it right, but pay attention next time.")
 
@@ -96,6 +96,7 @@ def tutorial_select_course(config, connection, headers):
         print("That was not the right command, please try again")
         command = input("$ ")
 
+    pretty_print.print_status(config)
     print("\n Fantastic, let's move on to selecting an exercise series.")
 
     return config
