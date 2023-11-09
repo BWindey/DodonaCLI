@@ -155,3 +155,10 @@ def print_result(json_results):
                     if not test['accepted']:
                         print("\t- " + test['description']['description'] + "\n\t\t" +
                               test['groups'][0]['description']['description'])
+
+
+def print_status(config):
+    print(f"\nStatus:\n"
+          f"\tCourse: {config['course_name']}\n"
+          f"\tSeries: {config['serie_name']}\n"
+          f"\tExercise: {config['exercise_name']}\n")

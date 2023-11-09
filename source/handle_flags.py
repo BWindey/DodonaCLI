@@ -152,7 +152,4 @@ def handle_uptop(config):
 
 def handle_status(config):
     # Print out current selection
-    print(f"\nStatus:\n"
-          f"\tCourse: {config['course_name']}\n"
-          f"\tSerie: {config['serie_name']}\n"
-          f"\tExercise: {config['exercise_name']}\n")
+    pretty_print.print_status(config)
