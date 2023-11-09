@@ -26,6 +26,7 @@ def start_tutorial(config):
     }
 
     config = tutorial_select_course(config, connection, headers)
+    config = tutorial_select_series(config, connection, headers)
 
     return config
 
@@ -75,7 +76,7 @@ def tutorial_select_course(config, connection, headers):
     pretty_print.print_courses_data(json_data)
 
     print("Select now \"The Coder's Apprenctice\" with `dodona --select` + "
-          "the course_id, or (distinct part of) the course_name")
+          "the courses id, or (distinct part of) the courses name")
     command = input("$ ")
 
     while not command.rstrip().startswith("dodona --select") and not command.rstrip().startswith("dodona -s"):
@@ -98,5 +99,47 @@ def tutorial_select_course(config, connection, headers):
 
     pretty_print.print_status(config)
     print("\n Fantastic, let's move on to selecting an exercise series.")
+
+    return config
+
+
+def tutorial_select_series(config, connection, headers):
+    print("\n Now use the command `dodona --display` to show the available exercise-series. "
+          "Alternatively, you can also use the short '-d' flag.")
+    command = input("$ ")
+
+    while command.rstrip() not in ("dodona --display", "dodona -d"):
+        print("That was not the right command, please try again")
+        command = input("$ ")
+
+    connection.request("GET", "/courses/" + str(config['course_id']) + '/series', headers=headers)
+    json_data = tutorial_handle_connection(config, connection)
+
+    pretty_print.print_series_data(json_data)
+
+    print("Select now \"2. Using Python\" with `dodona --select` + "
+          "the series' id, or (distinct part of) the series' name")
+    command = input("$ ")
+
+    while not command.rstrip().startswith("dodona --select") and not command.rstrip().startswith("dodona -s"):
+        print("That was not the right command, please try again")
+        command = input("$ ")
+
+    if command.split()[2] != "2592" and command.split()[2].lower() not in "2. Using Python".lower():
+        print("Watch out, you used a wrong id or name to select \"2. Using Python\"!\n"
+              "The tutorial will continue as if you selected it right, but pay attention next time.")
+
+    config['serie_id'] = 2592
+    config['serie_name'] = "2. Using Python"
+
+    print("\nThe exercise-series is now selected, use `dodona --status` to view your selection:")
+    command = input("$ ")
+
+    while not command.rstrip() == "dodona --status":
+        print("That was not the right command, please try again")
+        command = input("$ ")
+
+    pretty_print.print_status(config)
+    print("\n Fantastic, let's move on to selecting an exercise.")
 
     return config
