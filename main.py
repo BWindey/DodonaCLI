@@ -5,7 +5,8 @@ import http.client
 from source import handle_flags, get_data, interactive_tutorial
 
 
-@click.command(help="A Command Line Interface for Dodona. Finally you have no need to exit your terminal anymore!\n"
+@click.command(help="A 3rd party Command Line Interface for Dodona. "
+                    "Finally you have no need to exit your terminal anymore!\n"
                     "Use --help for more info about flags, or read the README on discord.",
                context_settings={"help_option_names": ["-h", "--help"]})
 @click.option('--display', '-d', is_flag=True,
