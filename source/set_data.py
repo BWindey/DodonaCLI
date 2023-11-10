@@ -53,7 +53,7 @@ def post_solution(content, connection, headers, config):
 
     print("Posting your solution, please wait while the servers evaluate your code.\n")
 
-    while json_data['status'] == "running":
+    while json_data['status'] in ("running", "queued"):
         time.sleep(0.3)
         connection.request("GET", "/submissions/" + str(json_data['id']) + ".json", headers=headers)
         res = connection.getresponse()
