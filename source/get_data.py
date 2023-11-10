@@ -101,7 +101,8 @@ def get_configs():
         # Create config dictionary
         config = {e: None for e in ["course_id", "course_name", "serie_id", "serie_name", "exercise_id", "exercise_name"]}
 
-        answer = input("This may be your first time using DodonaCLI, do you wish to follow a short tutorial?")
+        print("\nThis may be your first time using DodonaCLI, do you wish to follow a short tutorial?")
+        answer = input("(yes/no): ")
 
         if answer.lower().startswith("yes"):
             config = interactive_tutorial.start_tutorial(config)
