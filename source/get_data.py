@@ -1,8 +1,8 @@
 import json
 import os
 
-from .set_data import dump_config
-from .pretty_console import console
+from . import set_data
+from . import interactive_tutorial
 
 
 def handle_connection(connection):
@@ -32,7 +32,7 @@ def courses_data(connection, headers):
     :param headers: Dict with extra info, mainly autorization needed
     :return: json object with info about available courses
     """
-    connection.request("GET", "/courses.json?tab=my", headers=headers)
+    connection.request("GET", "/courses?tab=my", headers=headers)
     data = handle_connection(connection)
 
     return json.loads(data)
@@ -46,7 +46,7 @@ def series_data(connection, headers, course_id):
     :param course_id: int id of the course to find series from
     :return: json object with info about available series
     """
-    connection.request("GET", "/courses/" + course_id + "/series.json", headers=headers)
+    connection.request("GET", "/courses/" + course_id + "/series", headers=headers)
     data = handle_connection(connection)
 
     return json.loads(data)
@@ -60,7 +60,7 @@ def exercises_data(connection, headers, series_id):
     :param series_id: int id of exercise-series
     :return: json object with info about available exercises
     """
-    connection.request("GET", "/series/" + series_id + "/activities.json", headers=headers)
+    connection.request("GET", "/series/" + series_id + "/activities", headers=headers)
     data = handle_connection(connection)
 
     return json.loads(data)
@@ -75,7 +75,7 @@ def exercise_data(connection, headers, course_id, exercise_id):
     :param exercise_id: int id of exercise
     :return: json object with info about exercise
     """
-    connection.request("GET", "/courses/" + course_id + "/activities/" + exercise_id + ".json", headers=headers)
+    connection.request("GET", "/courses/" + course_id + "/activities/" + exercise_id, headers=headers)
     data = handle_connection(connection)
 
     return json.loads(data)
@@ -100,10 +100,19 @@ def get_configs():
     except FileNotFoundError:
         # Create config dictionary
         config = {e: None for e in ["course_id", "course_name", "serie_id", "serie_name", "exercise_id", "exercise_name"]}
-        TOKEN = console.input('[bold bright_red]API-Token not found![/] Enter your code here: ')
-        config["TOKEN"] = TOKEN
+
+        print("\nThis may be your first time using DodonaCLI, do you wish to follow a short tutorial?")
+        answer = input("(yes/no): ")
+
+        if answer.lower().startswith("yes"):
+            config = interactive_tutorial.start_tutorial(config)
+        else:
+            TOKEN = input('API-Token not found! Enter your code here: ')
+            config["TOKEN"] = TOKEN
 
         # Save configs
-        dump_config(config)
+        set_data.dump_config(config)
+
+        exit(0)
 
     return config
