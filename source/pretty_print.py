@@ -93,14 +93,23 @@ def print_exercise_data(json_data):
     display_data = []
 
     for field in json_data:
-        display_data.append({
-            'id': str(field['id']),
-            'name': field['name'],
-            'last_solution_is_best': field['last_solution_is_best'],
-            'has_solution': field['has_solution'],
-            'has_correct_solution': field['has_correct_solution'],
-            'accepted': field['accepted']
-        })
+        if field['type'] == "ContentPage":
+            display_data.append({
+                'type': "ContentPage",
+                'id': str(field['id']),
+                'name': field['name'],
+                'has_read': field['has_read']
+            })
+        elif field['type'] == "Exercise":
+            display_data.append({
+                'type': "Exercise",
+                'id': str(field['id']),
+                'name': field['name'],
+                'last_solution_is_best': field['last_solution_is_best'],
+                'has_solution': field['has_solution'],
+                'has_correct_solution': field['has_correct_solution'],
+                'accepted': field['accepted']
+            })
 
     # Find the maximum length of all but the last element in all tuples to align them in the terminal
     max_exercise_id_length = max(len(e['id']) for e in display_data)
@@ -109,12 +118,20 @@ def print_exercise_data(json_data):
     # Print out all exercises in display_data with indicator about solution-status: solved, wrong or not yet solved
     pretty_console.console.print('\n[u bright_blue]Exercises:[/]')
     for exercise in display_data:
-        if not exercise['has_solution']:
-            solve_status = "[bold]NOT YET SOLVED[/]"
-        elif exercise['last_solution_is_best'] and exercise['has_correct_solution']:
-            solve_status = "[bold bright_green]SOLVED[/]"
+        if exercise['type'] == "Exercise":
+            if not exercise['has_solution']:
+                solve_status = "[bold]NOT YET SOLVED[/]"
+            elif exercise['last_solution_is_best'] and exercise['has_correct_solution']:
+                solve_status = "[bold bright_green]SOLVED[/]"
+            else:
+                solve_status = "[bold bright_red]WRONG[/]"
+        elif exercise['type'] == "ContentPage":
+            if exercise['has_read']:
+                solve_status = "[bold bright_green]READ[/]"
+            else:
+                solve_status = "[bold]NOT YET READ[/]"
         else:
-            solve_status = "[bold bright_red]WRONG[/]"
+            solve_status = "[bold]SOLVE STATUS UNKNOWN"
 
         pretty_console.console.print(
             f"\t{exercise['id'].ljust(max_exercise_id_length)}: "
