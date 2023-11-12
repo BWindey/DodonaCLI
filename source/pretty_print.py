@@ -1,9 +1,12 @@
+import markdownify
 from bs4 import BeautifulSoup
+from rich.markdown import Markdown
 import re
 import shutil
-import subprocess
+import http.client
 import textwrap
 
+from . import get_data
 from . import pretty_console
 
 
@@ -142,36 +145,46 @@ def print_exercise_data(json_data):
     print()
 
 
-def print_exercise(json_data):
+def print_exercise(json_data, token: str):
     """
     Print out the exercise-description. Needs to call the Dodona-sandbox and convert HTML to text.
     Prints out a warning for potential incompleteness, which may be dangerous for tests and exams.
+    :param token: API-token as authorization
     :param json_data: json object with info about a Dodona exercise
     """
 
     # Print the HTML with warnings
     pretty_console.console.print(
-        "\n[u bold bright_red]WARNING:[/] the description may not be correct, "
+        "\n[bold bright_red]![/] [u bold bright_red]WARNING:[/] the description may not be correct, "
         "DO NOT rely on this for exams and tests!!\n"
-        "Instead, use this url: " + json_data['description_url']
+        "[bold bright_red]![/] Instead, use this url: " + json_data['description_url'] + '\n'
     )
 
     pretty_console.console.print("\nExpected programming language: " + json_data['programming_language']['name'] + '\n')
 
-    # Replace this:
-    description = subprocess.getoutput("lynx --dump " + json_data['description_url'])
-    with open("goal_description.md", "w") as dis_file:
-        dis_file.write(description)
+    # Make sandbox.dodona connection:
+    sandbox = http.client.HTTPSConnection("sandbox.dodona.be")
+    headers = {"Authorization": token}
 
-    # Make links appear a bit nicer
-    description = re.sub(r'\[(\d+)]([ \w-]+)\^(\1)', r'[\1: \2]', description, flags=re.DOTALL)
+    stripped_link = json_data['description_url'].replace("https://sandbox.dodona.be", "", 1)
+    sandbox.request("GET", stripped_link, headers=headers)
 
-    pretty_console.console.print(description)
+    data = get_data.handle_connection(sandbox).decode()
 
+    soup = BeautifulSoup(data, features="html.parser")
+    html_description = str(soup.find("div", {"class": "card-supporting-text"}))
+
+    md_description = markdownify.markdownify(html_description)
+
+    md = Markdown(md_description)
+
+    pretty_console.console.print(md)
+
+    # Print the HTML with warnings
     pretty_console.console.print(
-        "\n[u bold bright_red]WARNING:[/] the description may not be correct, "
+        "\n[bold bright_red]![/] [u bold bright_red]WARNING:[/] the description may not be correct, "
         "DO NOT rely on this for exams and tests!!\n"
-        "Instead, use this url: " + json_data['description_url'] + '\n'
+        "[bold bright_red]![/] Instead, use this url: " + json_data['description_url'] + '\n'
     )
 
 

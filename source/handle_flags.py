@@ -24,7 +24,7 @@ def handle_display(config, connection, headers):
     else:
         # Print exercise-description
         json_data = get_data.exercise_data(connection, headers, config['course_id'], config['exercise_id'])
-        pretty_print.print_exercise(json_data)
+        pretty_print.print_exercise(json_data, config['TOKEN'])
 
 
 def handle_select(select, config, connection, headers):
