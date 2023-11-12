@@ -86,7 +86,6 @@ To display all the info you need to make your next selection or exercise, use '-
 
 ## Roadmap
 More features to maybe add in the future:
-- interactive tutorial
 - remove lynx dependency for viewing exercise-description
 - potential collapsing of long pages (exercise-series, exercise-descriptions) or remind the user they can pipe it to less/more
 - show and load previous submissions if they exist
