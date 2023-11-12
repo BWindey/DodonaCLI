@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 import re
 import shutil
 import subprocess
@@ -150,20 +151,27 @@ def print_exercise(json_data):
 
     # Print the HTML with warnings
     pretty_console.console.print(
-        "\n[u bold bright_red]WARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
-        "Instead, use this url:[/] " + json_data['description_url']
+        "\n[u bold bright_red]WARNING:[/] the description may not be correct, "
+        "DO NOT rely on this for exams and tests!!\n"
+        "Instead, use this url: " + json_data['description_url']
     )
 
     pretty_console.console.print("\nExpected programming language: " + json_data['programming_language']['name'] + '\n')
 
+    # Replace this:
     description = subprocess.getoutput("lynx --dump " + json_data['description_url'])
+    with open("goal_description.md", "w") as dis_file:
+        dis_file.write(description)
+
+    # Make links appear a bit nicer
     description = re.sub(r'\[(\d+)]([ \w-]+)\^(\1)', r'[\1: \2]', description, flags=re.DOTALL)
 
     pretty_console.console.print(description)
 
     pretty_console.console.print(
-        "\n[u bold bright_red]WARNING: the description may not be correct, DO NOT rely on this for exams and tests!!\n"
-        "Instead, use this url:[/] " + json_data['description_url'] + '\n'
+        "\n[u bold bright_red]WARNING:[/] the description may not be correct, "
+        "DO NOT rely on this for exams and tests!!\n"
+        "Instead, use this url: " + json_data['description_url'] + '\n'
     )
 
 
