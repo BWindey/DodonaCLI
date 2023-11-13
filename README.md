@@ -12,16 +12,13 @@
 
 - DodonaCLI is an independent tool created by me, a student, and is not officially affiliated with the Dodona service or its team. Dodona, provided by the dedicated team at UGent University, offers an exceptional service, and this tool has been created as a complementary project. Only issues related to the Dodona website itsself should be directed to the official Dodona support channels. Issues with the CLI tool should be posted on this [project's Issues](https://github.com/BWindey/DodonaCLI/issues).
 
-
-- DodonaCLI currently uses 'lynx' to format the description, which might not work on Windows
-
 - Altough the exercise-description formatting is decent, do NOT rely on this for tests and exams! The printed description may be incomplete, or even incorrect. Please be aware of this!
 
 
 - All efforts to display text in an orderly fashion were made using a Linux GNOME-terminal. If it doesn't look good in your terminal, you probably are not running a GNOME-terminal. As this is open-source software, feel free to add terminal-detection to make things pretty for your terminal too, but this isn't feasible to do for me. 
 
 
-- This project was made in Linux, and was tested in the Command Prompt on Windows (viewing exercise descriptions is currently not supported, but working on it!) and on the zsh shell on MacOS. For those platforms you'll find an installation guide below. If you wish to use this in other terminals, you'll have to experiment yourself.
+- This project was made in Linux, and was tested in the Command Prompt on Windows and on the zsh shell on MacOS. For those platforms you'll find an installation guide below. If you wish to use this in other terminals, you'll have to experiment yourself.
 
 
 
@@ -31,9 +28,9 @@
 - Move into the directory: `cd DodonaCLI`
 - Check if Python is installed: `python --version`, if not installed, please install first
 - Run `pip install -r requirements.txt`
-- Install 'lynx' using your packagemanager
 - Make main.py executable `chmod +x main.py`
 - Set an alias (optional but highly recommended) by appending this line to ~/.bashrc or ~/.bashprofile: `alias dodona='<absolute_path_to_DodonaCLI_folder>/main.py'`
+- Refresh terminal with `source ~/.bashrc` or restart the terminal
 - Test if it works with `dodona --help`
 
 ### MacOS
@@ -41,8 +38,8 @@
 - Move into the directory: `cd DodonaCLI`
 - Check if Python is installed: `python --version`, if not installed, please install first
 - Run `pip install -r requirements.txt`
-- Install 'lynx' using your packagemanager
 - Create alias (optional but highly recommended) by appending this line to ~/.zshrc: `alias dodona=python <absolute_path_to_DodonaCLI_folder>/main.py`
+- Refresh terminal with `source ~/.zshrc` or restart the terminal
 - Test if it works with `dodona --help`
 
 ### Windows Command Prompt
@@ -86,7 +83,6 @@ To display all the info you need to make your next selection or exercise, use '-
 
 ## Roadmap
 More features to maybe add in the future:
-- remove lynx dependency for viewing exercise-description
 - potential collapsing of long pages (exercise-series, exercise-descriptions) or remind the user they can pipe it to less/more
 - show and load previous submissions if they exist
 - use subcommands instead of flags
