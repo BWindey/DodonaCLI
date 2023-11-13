@@ -59,16 +59,23 @@ def print_series_data(json_data):
         new_description = ''
 
         for line in description:
+            line = line.rstrip()
+
             # Convert Markdown links to Ansi links. TERMINAL DEPENDANT
             line = re.sub(r'{: target="_blank"}', '', line)
-            # line = re.sub(r'\[(.*?)\]\((.*?)\)', '\033]8;;\\2\033\\ \\1\033]8;;\033\\ ', line)
 
-            # Replace bold and italics in Markdown to use Ansi codes
-            line = re.sub(r'\*\*(.*?)\*\*', '\033[1m\\1\033[0m', line)
-            line = re.sub(r'_(.*?)_', '\033[3m\\1\033[0m', line)
+            # Replace Markdown bold to Rich Console bold
+            line = re.sub(r'\*\*(.*?)\*\*', r'[bold]\1[/bold]', line)
+
+            # Replace Markdown italics to Rich Console italics if it is not in a (link)
+            pattern = re.compile(r'([ ,][^ (]*)_(.*?)_([^ ]*[ ,.])')
+            line = pattern.sub(r'\1[i]\2[/i]\3', line)
+
+            # Replace Markdown titles to something that appears as a title in terminal
+            line = re.sub(r'##+ (.*)', r'[bold white]\1[/bold white]', line)
 
             # Split lines in multiple when they are too long for the terminal while keeping all lines indented.
-            if len(line.replace("**", "").replace("_", "")) > shutil.get_terminal_size().columns - 8:
+            if len(line.replace("[bold]", "").replace("[/bold]", "")) > shutil.get_terminal_size().columns - 8:
                 line = line.split(" ")
                 new_line = ''
                 line_size = 0
@@ -83,9 +90,10 @@ def print_series_data(json_data):
             new_description += line + '\n'
 
         new_description = textwrap.indent(new_description, '\t')
-        print(
+        pretty_console.console.print(
             f"{e[0].ljust(max_series_id_length)}: "
-            f"\033[1m{e[1].ljust(max_series_name_length)}\033[0m\n{new_description}")
+            f"[bold]{e[1].ljust(max_series_name_length)}[/]"
+            f"\n{new_description}")
 
 
 def print_exercise_data(json_data):

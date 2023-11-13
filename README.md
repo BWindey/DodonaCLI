@@ -96,3 +96,4 @@ More features to maybe add in the future:
 - easy (automatic?) downloading of files mentioned in exercise description
 - caching to make it feel like a real command, very fast! Currently you'll often have to wait a few hundred milliseconds for the API-call to return
 - a python- or ed-like own terminal after running the `dodona` command to not have to repeat the command often. This seems complicated, but it might be possible. Could maybe exists alongside the other option?
+- look into https://textual.textualize.io/getting_started/ to maybe use that??
