@@ -91,7 +91,7 @@ def handle_select(select, config, connection, headers):
                         print("\nBoilerplate code (can be found in boilerplate-file):\n")
                         print(textwrap.indent(boilerplate, '\t'))
 
-                        with open("../boilerplate", "w") as boilerplate_file:
+                        with open("boilerplate", "w") as boilerplate_file:
                             boilerplate_file.write(boilerplate)
                     break
 
