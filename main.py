@@ -1,7 +1,7 @@
 #!/bin/env python3
 import click
 
-from commands import display, select, status, up
+from commands import display, select, status, up, post
 
 
 @click.group(help="A 3rd party Command Line Interface for Dodona. "
@@ -19,6 +19,7 @@ main.add_command(display.display)
 main.add_command(select.select)
 main.add_command(status.status)
 main.add_command(up.up)
+main.add_command(post.post)
 
 
 if __name__ == "__main__":
