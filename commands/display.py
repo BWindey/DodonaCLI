@@ -1,10 +1,11 @@
 import click
 import http.client
 
-from source import get_data, handle_flags
+from source import get_data, pretty_print
 
 
-@click.command(help="Display info")
+@click.command(help="Display info based on the current selection. It will always display what you can select next, "
+                    "or an exercise description if you have selected up to an exercise.")
 def display():
     # Read configs in
     config = get_data.get_configs()
@@ -17,4 +18,23 @@ def display():
         "Authorization": config['TOKEN']
     }
 
-    handle_flags.handle_display(config, connection, headers)
+    # Display flag changes behaviour depending on the values in the config-dictionary.
+    if config['course_id'] is None:
+        # Print available courses
+        json_data = get_data.courses_data(connection, headers)
+        pretty_print.print_courses_data(json_data)
+
+    elif config['serie_id'] is None:
+        # Print available series
+        json_data = get_data.series_data(connection, headers, config['course_id'])
+        pretty_print.print_series_data(json_data)
+
+    elif config['exercise_id'] is None:
+        # Print available exercises
+        json_data = get_data.exercises_data(connection, headers, config['serie_id'])
+        pretty_print.print_exercise_data(json_data)
+
+    else:
+        # Print exercise-description
+        json_data = get_data.exercise_data(connection, headers, config['course_id'], config['exercise_id'])
+        pretty_print.print_exercise(json_data, config['TOKEN'])

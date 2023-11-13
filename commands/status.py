@@ -1,11 +1,11 @@
 import click
 
-from source import handle_flags, get_data
+from source import get_data, pretty_print
 
 
-@click.command(help="Display current selection")
+@click.command(help="Display your current selection. Selected course, series and exercise.")
 def status():
     # Read configs in
     config = get_data.get_configs()
 
-    handle_flags.handle_status(config)
+    pretty_print.print_status(config)

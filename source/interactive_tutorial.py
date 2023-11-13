@@ -6,7 +6,6 @@ import http.client
 import json
 import os
 
-from . import handle_flags
 from . import pretty_print
 from . import set_data
 
@@ -264,6 +263,7 @@ def tutorial_conclude(config: dict):
         print("That was not the right command, please try again")
         command = input("$ ")
 
-    config = handle_flags.handle_uptop(config)
+    for e in ('exercise_id', 'exercise_name', 'serie_id', 'serie_name', 'course_id', 'course_name'):
+        config[e] = None
 
     return config

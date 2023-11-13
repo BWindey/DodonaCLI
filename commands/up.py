@@ -3,7 +3,8 @@ import click
 from source import get_data, set_data
 
 
-@click.command(help="Deselect something")
+@click.command(help="Deselect default last selected thing. Can be used with an argument to deselect everything with "
+                    "'all' or 'top', or deselect 1, 2 or 3 levels.")
 @click.argument('amount', default='1',
                 type=click.Choice(['all', 'top', '1', '2', '3'], case_sensitive=False))
 def up(amount):
