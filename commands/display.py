@@ -1,8 +1,7 @@
 import click
 import http.client
 
-from source import get_data
-from source import handle_flags
+from source import get_data, handle_flags
 
 
 @click.command(help="Display info")
