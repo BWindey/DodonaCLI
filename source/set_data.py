@@ -59,9 +59,14 @@ def post_solution(content, connection, headers, config):
     waiting = rich.status.Status("Posting your solution, please wait while the servers evaluate your code.",
                                  spinner=select_spinner())
     waiting.start()
+    wait_interval = 0
 
     while json_data['status'] in ("running", "queued"):
-        time.sleep(0.3)
+        # Aks the servers for the result with an increasing interval, from 1s to 5s, as the website does
+        time.sleep(wait_interval)
+        if wait_interval < 5:
+            wait_interval += 1
+
         connection.request("GET", "/submissions/" + str(json_data['id']) + ".json", headers=headers)
         res = connection.getresponse()
         if res.status != 200:
