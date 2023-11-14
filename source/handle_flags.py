@@ -91,7 +91,7 @@ def handle_select(select, config, connection, headers):
                         print("\nBoilerplate code (can be found in boilerplate-file):\n")
                         print(textwrap.indent(boilerplate, '\t'))
 
-                        with open("../boilerplate", "w") as boilerplate_file:
+                        with open("boilerplate", "w") as boilerplate_file:
                             boilerplate_file.write(boilerplate)
                     break
 
@@ -110,7 +110,7 @@ def handle_select(select, config, connection, headers):
 def handle_post(post, config, connection, headers):
     # Post exercise to Dodona, does not work if there is no exercise selected
     if not config['exercise_id']:
-        print("No exercise selected!")
+        print("\nNo exercise selected!\n")
     else:
         with open(post, 'r') as infile:
             content = infile.read()

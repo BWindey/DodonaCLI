@@ -1,5 +1,8 @@
+from datetime import datetime
 import json
 import os
+import random
+import rich.status
 import time
 
 from . import pretty_print
@@ -39,9 +42,9 @@ def post_solution(content, connection, headers, config):
     if status == 422:
         pretty_console.console.print("\n[i]Patience, young padawan.\n"
                                      "A cooldown, Dodona servers have, to prevent DDOS attacks, hmm, yes.[/]\n")
-    if status != 200:
-        print("Error connection to Dodona: " + str(res.status))
-        print("Reason: " + res.reason)
+    elif status != 200:
+        print("\nError connection to Dodona: " + str(res.status))
+        print("Reason: " + res.reason + '\n')
         return
 
     # Read out the result
@@ -51,10 +54,19 @@ def post_solution(content, connection, headers, config):
     # The Dodona servers take some time to test the solution, so we ping them every 0.3s for an answer.
     json_data['status'] = "running"
 
-    print("Posting your solution, please wait while the servers evaluate your code.\n")
+    print()
+
+    waiting = rich.status.Status("Posting your solution, please wait while the servers evaluate your code.",
+                                 spinner=select_spinner())
+    waiting.start()
+    wait_interval = 0
 
     while json_data['status'] in ("running", "queued"):
-        time.sleep(0.3)
+        # Aks the servers for the result with an increasing interval, from 1s to 5s, as the website does
+        time.sleep(wait_interval)
+        if wait_interval < 5:
+            wait_interval += 1
+
         connection.request("GET", "/submissions/" + str(json_data['id']) + ".json", headers=headers)
         res = connection.getresponse()
         if res.status != 200:
@@ -65,7 +77,34 @@ def post_solution(content, connection, headers, config):
         data = res.read()
         json_data = json.loads(data)
 
+    waiting.stop()
     connection.close()
 
     # Print out the results
     pretty_print.print_result(json.loads(json_data['result']))
+    print()
+
+
+def select_spinner():
+    selection_spinners = ['arrow', 'balloon', 'balloon2', 'bouncingBar', 'boxBounce', 'boxBounce2', 'circle',
+                          'circleHalves', 'circleQuarters', 'clock', 'dots2', 'dots3', 'dots4', 'dots5', 'dots6',
+                          'dots7', 'dots8', 'dots8Bit', 'dots9', 'dots10', 'dots11', 'dots12', 'dqpb', 'flip',
+                          'hamburger', 'layer', 'line', 'line2', 'moon', 'pipe', 'point', 'runner', 'simpleDots',
+                          'simpleDotsScrolling', 'squareCorners']
+
+    christmas_spinner = 'christmas'
+
+    # Get the current date
+    current_date = datetime.now().date()
+
+    # Define the Christmas season range
+    christmas_start = datetime(current_date.year, 12, 11).date()
+    christmas_end = datetime(current_date.year, 1, 8).date()
+
+    # Check if the current date is within the Christmas season range
+    is_christmas_season = christmas_start <= current_date <= christmas_end
+
+    if is_christmas_season:
+        return christmas_spinner
+
+    return random.choice(selection_spinners)
