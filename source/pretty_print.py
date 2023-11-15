@@ -49,7 +49,7 @@ def print_series_data(json_data, force=False):
     for field in json_data:
         display_data.append((
             str(field['id']),
-            field['name'],
+            field['name'].strip(),
             field['description']))
 
     # Find the maximum length of all but the last element in all tuples to align them in the terminal
