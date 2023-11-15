@@ -37,63 +37,77 @@ def print_courses_data(json_data):
     pretty_console.console.print(all_courses_formatted)
 
 
-def print_series_data(json_data):
+def print_series_data(json_data, force=False):
     """
     Print out the exercise-series in json_data in a neat way
     :param json_data: json object with data about Dodona exercise-series
+    :param force: boolean to decide if the series description has to be printed, or only a link to it
     """
     # List of tuples where each tuple represents an exercise-series by id, name and description
     display_data = []
 
     for field in json_data:
-        display_data.append((str(field['id']), field['name'], field['description']))
+        display_data.append((
+            str(field['id']),
+            field['name'],
+            field['description']))
 
     # Find the maximum length of all but the last element in all tuples to align them in the terminal
     max_series_id_length = max(len(e[0]) for e in display_data)
     max_series_name_length = max(len(e[1]) for e in display_data)
 
+    # Newline for clarity
+    print()
     # Print out all the series in display_data while also handling the Markdown inside the series-description
     pretty_console.console.print("[u bright_blue]All series:[/]")
     for e in display_data:
-        description = e[2].split('\n')
-        new_description = ''
+        if force:
+            description = e[2].split('\n')
+            new_description = ''
 
-        for line in description:
-            line = line.rstrip()
+            for line in description:
+                line = line.rstrip()
 
-            # Convert Markdown links to Ansi links. TERMINAL DEPENDANT
-            line = re.sub(r'{: target="_blank"}', '', line)
+                # Remove pattern from links as they try to open the link in a new tab, not useful for terminal
+                line = re.sub(r'{: target="_blank"}', '', line)
 
-            # Replace Markdown bold to Rich Console bold
-            line = re.sub(r'\*\*(.*?)\*\*', r'[bold]\1[/bold]', line)
+                # Replace Markdown bold to Rich Console bold
+                line = re.sub(r'\*\*(.*?)\*\*', r'[bold]\1[/bold]', line)
 
-            # Replace Markdown italics to Rich Console italics if it is not in a (link)
-            pattern = re.compile(r'([ ,][^ (]*)_(.*?)_([^ ]*[ ,.])')
-            line = pattern.sub(r'\1[i]\2[/i]\3', line)
+                # Replace Markdown italics to Rich Console italics if it is not in a (link)
+                pattern = re.compile(r'([ ,][^ (]*)_(.*?)_([^ ]*[ ,.])')
+                line = pattern.sub(r'\1[i]\2[/i]\3', line)
 
-            # Replace Markdown titles to something that appears as a title in terminal
-            line = re.sub(r'##+ (.*)', r'[bold white]\1[/bold white]', line)
+                # Replace Markdown titles to something that appears as a title in terminal
+                line = re.sub(r'##+ (.*)', r'[bold white]\1[/bold white]', line)
 
-            # Split lines in multiple when they are too long for the terminal while keeping all lines indented.
-            if len(line.replace("[bold]", "").replace("[/bold]", "")) > shutil.get_terminal_size().columns - 8:
-                line = line.split(" ")
-                new_line = ''
-                line_size = 0
-                for word in line:
-                    if line_size + len(word) > shutil.get_terminal_size().columns - 8:
-                        new_line += '\n'
-                        line_size = 0
-                    new_line += word + ' '
-                    line_size += len(word + ' ')
-                line = new_line
+                # Split lines in multiple when they are too long for the terminal while keeping all lines indented.
+                if len(line.replace("[bold]", "").replace("[/bold]", "")) > shutil.get_terminal_size().columns - 8:
+                    line = line.split(" ")
+                    new_line = ''
+                    line_size = 0
+                    for word in line:
+                        if line_size + len(word) > shutil.get_terminal_size().columns - 8:
+                            new_line += '\n'
+                            line_size = 0
+                        new_line += word + ' '
+                        line_size += len(word + ' ')
+                    line = new_line
 
-            new_description += line + '\n'
+                new_description += line + '\n'
 
-        new_description = textwrap.indent(new_description, '\t')
-        pretty_console.console.print(
-            f"{e[0].ljust(max_series_id_length)}: "
-            f"[bold]{e[1].ljust(max_series_name_length)}[/]"
-            f"\n{new_description}")
+            new_description = textwrap.indent(new_description, '\t')
+            pretty_console.console.print(
+                f"{e[0].ljust(max_series_id_length)}: "
+                f"[bold]{e[1].ljust(max_series_name_length)}[/]"
+                f"\n{new_description}")
+        else:
+            pretty_console.console.print(
+                f"{e[0].ljust(max_series_id_length)}: "
+                f"[bold]{e[1].ljust(max_series_name_length)}[/]"
+            )
+    # Newline for clarity
+    print()
 
 
 def print_exercise_data(json_data):
@@ -117,9 +131,9 @@ def print_exercise_data(json_data):
                 'type': "Exercise",
                 'id': str(field['id']),
                 'name': field['name'],
-                'last_solution_is_best': field['last_solution_is_best'],
+                # 'last_solution_is_best': field['last_solution_is_best'],
                 'has_solution': field['has_solution'],
-                'has_correct_solution': field['has_correct_solution'],
+                # 'has_correct_solution': field['has_correct_solution'],
                 'accepted': field['accepted']
             })
 
@@ -131,17 +145,28 @@ def print_exercise_data(json_data):
     pretty_console.console.print('\n[u bright_blue]Exercises:[/]')
     for exercise in display_data:
         if exercise['type'] == "Exercise":
+            if exercise['accepted']:
+                solve_status = "[bold bright_green]SOLVED[/]"
+            elif exercise['has_solution']:
+                solve_status = "[bold bright_red]WRONG[/]"
+            else:
+                solve_status = "[bold]NOT YET SLVED[/]"
+
+            """
             if not exercise['has_solution']:
                 solve_status = "[bold]NOT YET SOLVED[/]"
             elif exercise['last_solution_is_best'] and exercise['has_correct_solution']:
                 solve_status = "[bold bright_green]SOLVED[/]"
             else:
                 solve_status = "[bold bright_red]WRONG[/]"
+            """
+
         elif exercise['type'] == "ContentPage":
             if exercise['has_read']:
                 solve_status = "[bold bright_green]READ[/]"
             else:
                 solve_status = "[bold]NOT YET READ[/]"
+
         else:
             solve_status = "[bold]SOLVE STATUS UNKNOWN"
 
@@ -153,47 +178,61 @@ def print_exercise_data(json_data):
     print()
 
 
-def print_exercise(json_data, token: str):
+def print_exercise(json_data, token: str, force=False):
     """
     Print out the exercise-description. Needs to call the Dodona-sandbox and convert HTML to text.
     Prints out a warning for potential incompleteness, which may be dangerous for tests and exams.
     :param token: API-token as authorization
     :param json_data: json object with info about a Dodona exercise
+    :param force: boolean to decide if the exercise description has to be printed, or only a link to it
     """
+    if json_data['type'] == 'ContentPage':
+        pretty_console.console.print(
+            "\nNo need to program anything this time, but you'll have to go read this and mark it as read:\n"
+            + json_data['url'].replace(".json", "") + '\n'
+        )
 
-    # Print the HTML with warnings
-    pretty_console.console.print(
-        "\n[bold bright_red]![/] [u bold bright_red]WARNING:[/] the description may not be correct, "
-        "DO NOT rely on this for exams and tests!!\n"
-        "[bold bright_red]![/] Instead, use this url: " + json_data['description_url'] + '\n'
-    )
+    elif not force:
+        pretty_console.console.print("\nYou can find the description at \n" + json_data['description_url'] + '\n')
 
-    pretty_console.console.print("\nExpected programming language: " + json_data['programming_language']['name'] + '\n')
+    else:
+        # Print the HTML with warnings
+        pretty_console.console.print(
+            "\n[bold bright_red]![/] [u bold bright_red]WARNING:[/] the description may not be correct, "
+            "DO NOT rely on this for exams and tests!!\n"
+            "[bold bright_red]![/] Instead, use this url: " + json_data['description_url'] + '\n'
+        )
 
-    # Make sandbox.dodona connection:
-    sandbox = http.client.HTTPSConnection("sandbox.dodona.be")
-    headers = {"Authorization": token}
+        pretty_console.console.print(
+            '\n'
+            "Expected programming language: " + json_data['programming_language']['name'] +
+            '\n'
+        )
 
-    stripped_link = json_data['description_url'].replace("https://sandbox.dodona.be", "", 1)
-    sandbox.request("GET", stripped_link, headers=headers)
+        # Make sandbox.dodona connection for exercise description:
+        sandbox = http.client.HTTPSConnection("sandbox.dodona.be")
+        headers = {"Authorization": token}
 
-    data = get_data.handle_connection(sandbox).decode()
+        stripped_link = json_data['description_url'].replace("https://sandbox.dodona.be", "", 1)
+        sandbox.request("GET", stripped_link, headers=headers)
 
-    soup = BeautifulSoup(data, features="html.parser")
-    html_description = str(soup.find("div", {"class": "card-supporting-text"}))
+        data = get_data.handle_connection(sandbox).decode()
 
-    md_description = markdownify.markdownify(html_description)
+        soup = BeautifulSoup(data, features="html.parser")
+        html_description = str(soup.find("div", {"class": "card-supporting-text"}))
 
-    md = Markdown(md_description)
+        md_description = markdownify.markdownify(html_description)
 
-    pretty_console.console.print(md)
+        md = Markdown(md_description)
 
-    # Print the HTML with warnings
-    pretty_console.console.print(
-        "\n[bold bright_red]![/] [u bold bright_red]WARNING:[/] the description may not be correct, "
-        "DO NOT rely on this for exams and tests!!\n"
-        "[bold bright_red]![/] Instead, use this url: " + json_data['description_url'] + '\n'
-    )
+        pretty_console.console.print(md)
+
+        # Print the HTML with warnings
+        pretty_console.console.print(
+            "\n[bold bright_red]![/] [u bold bright_red]WARNING:[/] the description may not be correct, "
+            "DO NOT rely on this for exams and tests!!\n"
+            "[bold bright_red]![/] Instead, use this url: " + json_data['description_url'] + '\n'
+        )
 
 
 def print_result(json_results):
