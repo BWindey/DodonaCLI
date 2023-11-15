@@ -6,8 +6,7 @@ import http.client
 import json
 import os
 
-from . import pretty_print
-from . import set_data
+from . import pretty_print, pretty_console, set_data
 
 
 def start_tutorial(config: dict):
@@ -23,8 +22,9 @@ def start_tutorial(config: dict):
     config['serie_id'], config['serie_name'], config['exercise_id'], config['exercise_name'] = None, None, None, None
 
     if "TOKEN" not in config:
-        print("\n\nBefore we begin, we'll need an API-token to authorize your connection with Dodona. "
-              "You can find it on your profile page on https://dodona.be")
+        pretty_console.console.print(
+            "\n\nBefore we begin, we'll need an API-token to authorize your connection with Dodona. "
+            "You can find it on your profile page on https://dodona.be")
 
         config = tutorial_get_api_token(config)
 
@@ -64,10 +64,10 @@ def tutorial_handle_connection(config: dict, connection: http.client.HTTPSConnec
             set_data.dump_config(config)
 
         else:
-            print("Error connecting to Dodona: " + str(status))
-            print("Reason: " + res.reason)
+            pretty_console.console.print("Error connecting to Dodona: " + str(status))
+            pretty_console.console.print("Reason: " + res.reason)
 
-        print("Tutorial will terminate due to error, you can start again with `dodona --tutorial`")
+        pretty_console.console.print("Tutorial will terminate due to error, you can start again with `dodona tutorial`")
         exit(-1)
 
     data = res.read()
@@ -77,12 +77,11 @@ def tutorial_handle_connection(config: dict, connection: http.client.HTTPSConnec
 
 
 def tutorial_select_course(config: dict, connection: http.client.HTTPSConnection, headers: dict):
-    print("\n\n\nUse the command `dodona --display` to show the available courses. "
-          "Alternatively, you can also use the short '-d' flag.")
+    pretty_console.console.print("\n\n\nUse the command `dodona display` to show the available courses.")
 
     command = input("$ ")
 
-    while command.rstrip() not in ("dodona --display", "dodona -d"):
+    while command.rstrip() != "dodona display":
         print("That was not the right command, please try again")
         command = input("$ ")
 
@@ -91,27 +90,28 @@ def tutorial_select_course(config: dict, connection: http.client.HTTPSConnection
 
     pretty_print.print_courses_data(json_data)
 
-    print("Select now \"The Coder's Apprenctice\" with `dodona --select` + "
-          "the courses id, or (distinct part of) the courses name")
+    pretty_console.console.print("Select now \"The Coder's Apprenctice\" with `dodona select` + "
+                                 "the courses id, or (distinct part of) the courses name")
     command = input("$ ")
 
-    while not command.rstrip().startswith("dodona --select") and not command.rstrip().startswith("dodona -s"):
+    while not command.rstrip().startswith("dodona select"):
         print("That was not the right command, please try again")
         command = input("$ ")
 
     if (len(command.split()) < 3 or
             command.split()[2] != "296" and command.split()[2].lower() not in "The Coder's Apprentice".lower()):
-
-        print("Watch out, you used a wrong id or name to select \"The Coder's Apprentice\"!\n"
-              "The tutorial will continue as if you selected it right, but pay attention next time.")
+        pretty_console.console.print(
+            "Watch out, you used a wrong id or name to select \"The Coder's Apprentice\"!\n"
+            "The tutorial will continue as if you selected it right, but pay attention next time."
+        )
 
     config['course_id'] = 296
     config['course_name'] = "The Coder's Apprentice"
 
-    print("\nThe course is now selected, use `dodona --status` to view your selection:")
+    pretty_console.console.print("\nThe course is now selected, use `dodona status` to view your selection:")
     command = input("$ ")
 
-    while not command.rstrip() == "dodona --status":
+    while not command.rstrip() == "dodona status":
         print("That was not the right command, please try again")
         command = input("$ ")
 
@@ -122,12 +122,11 @@ def tutorial_select_course(config: dict, connection: http.client.HTTPSConnection
 
 
 def tutorial_select_series(config: dict, connection: http.client.HTTPSConnection, headers: dict):
-    print("\n\n\nUse the command `dodona --display` to show the available exercise-series. "
-          "Alternatively, you can also use the short '-d' flag.")
+    pretty_console.console.print("\n\n\nUse the command `dodona display` to show the available exercise-series. ")
 
     command = input("$ ")
 
-    while command.rstrip() not in ("dodona --display", "dodona -d"):
+    while command.rstrip() != "dodona display":
         print("That was not the right command, please try again")
         command = input("$ ")
 
@@ -137,27 +136,28 @@ def tutorial_select_series(config: dict, connection: http.client.HTTPSConnection
     # To prevent the screen being blasted with a lot of text, only print out the first 6 exercise series
     pretty_print.print_series_data(json_data[:6])
 
-    print("Select now \"2. Using Python\" with `dodona --select` + "
-          "the series' id, or (distinct part of) the series' name")
+    pretty_console.console.print("Select now \"2. Using Python\" with `dodona select` + "
+                                 "the series' id, or (distinct part of) the series' name")
     command = input("$ ")
 
-    while not command.rstrip().startswith("dodona --select") and not command.rstrip().startswith("dodona -s"):
+    while not command.rstrip().startswith("dodona select"):
         print("That was not the right command, please try again")
         command = input("$ ")
 
     if (len(command.split()) < 3
             or command.split()[2] != "2592" and command.split()[2].lower() not in "2. Using Python".lower()):
-
-        print("Watch out, you used a wrong id or name to select \"2. Using Python\"!\n"
-              "The tutorial will continue as if you selected it right, but pay attention next time.")
+        pretty_console.console.print(
+            "Watch out, you used a wrong id or name to select \"2. Using Python\"!\n"
+            "The tutorial will continue as if you selected it right, but pay attention next time."
+        )
 
     config['serie_id'] = 2592
     config['serie_name'] = "2. Using Python"
 
-    print("\nThe exercise-series is now selected, use `dodona --status` to view your selection:")
+    pretty_console.console.print("\nThe exercise-series is now selected, use `dodona status` to view your selection:")
     command = input("$ ")
 
-    while not command.rstrip() == "dodona --status":
+    while not command.rstrip() == "dodona status":
         print("That was not the right command, please try again")
         command = input("$ ")
 
@@ -168,12 +168,11 @@ def tutorial_select_series(config: dict, connection: http.client.HTTPSConnection
 
 
 def tutorial_select_exercise(config: dict, connection: http.client.HTTPSConnection, headers: dict):
-    print("\n\n\nUse the command `dodona --display` to show the available exercises. "
-          "Alternatively, you can also use the short '-d' flag.")
+    pretty_console.console.print("\n\n\nUse the command `dodona display` to show the available exercises. ")
 
     command = input("$ ")
 
-    while command.rstrip() not in ("dodona --display", "dodona -d"):
+    while command.rstrip() != "dodona display":
         print("That was not the right command, please try again")
         command = input("$ ")
 
@@ -182,19 +181,20 @@ def tutorial_select_exercise(config: dict, connection: http.client.HTTPSConnecti
 
     pretty_print.print_exercise_data(json_data)
 
-    print("Select now \"Hello, World!\" with `dodona --select` + "
-          "the series' id, or (distinct part of) the series' name")
+    pretty_console.console.print("Select now \"Hello, World!\" with `dodona select` + "
+                                 "the series' id, or (distinct part of) the series' name")
     command = input("$ ")
 
-    while not command.rstrip().startswith("dodona --select") and not command.rstrip().startswith("dodona -s"):
+    while not command.rstrip().startswith("dodona select"):
         print("That was not the right command, please try again")
         command = input("$ ")
 
     if (len(command.split()) < 3 or
             command.split()[2] != "1399231809" and command.split()[2].lower() not in "Hello, World!".lower()):
-
-        print("Watch out, you used a wrong id or name to select \"2. Using Python\"!\n"
-              "The tutorial will continue as if you selected it right, but pay attention next time.")
+        pretty_console.console.print(
+            "Watch out, you used a wrong id or name to select \"2. Using Python\"!\n"
+            "The tutorial will continue as if you selected it right, but pay attention next time."
+        )
 
     config['exercise_id'] = 1399231809
     config['exercise_name'] = "Hello, World!"
@@ -204,12 +204,13 @@ def tutorial_select_exercise(config: dict, connection: http.client.HTTPSConnecti
         boilerplate.write(json_data[5]['boilerplate'])
     print(
         "\nThis exercise has some boilerplate code attached to it, you can view it in the boilerplate file, or here:\n"
-        " |\t" + json_data[5]['boilerplate'])
+        " |\t" + json_data[5]['boilerplate']
+    )
 
-    print("\nThe exercise is now selected, use `dodona --status` to view your selection:")
+    pretty_console.console.print("\nThe exercise is now selected, use `dodona status` to view your selection:")
     command = input("$ ")
 
-    while not command.rstrip() == "dodona --status":
+    while not command.rstrip() == "dodona status":
         print("That was not the right command, please try again")
         command = input("$ ")
 
@@ -220,12 +221,11 @@ def tutorial_select_exercise(config: dict, connection: http.client.HTTPSConnecti
 
 
 def tutorial_view_exercise(config: dict, connection: http.client.HTTPSConnection, headers: dict):
-    print("\n\n\nUse the command `dodona --display` to show the description of the exercise. "
-          "Alternatively, you can also use the short '-d' flag.")
+    pretty_console.console.print("\n\n\nUse the command `dodona display` to show the description of the exercise. ")
 
     command = input("$ ")
 
-    while command.rstrip() not in ("dodona --display", "dodona -d"):
+    while command.rstrip() != "dodona display":
         print("That was not the right command, please try again")
         command = input("$ ")
 
@@ -239,13 +239,14 @@ def tutorial_view_exercise(config: dict, connection: http.client.HTTPSConnection
 
 
 def tutorial_post_exercise(config: dict, connection: http.client.HTTPSConnection, headers: dict):
-    print("\n\n\nNow you can post the solution. You don't need to write any code for it, as it is already writtin in "
-          "the 'boilerplate'-file. You can post it by writing `dodona --post <SOLUTION_FILE_NAME>`, or '-p' for short."
-          "Replace <SOLUTION_FILE_NAME> with the correct file-name, in this case 'boilerplate'.")
+    pretty_console.console.print(
+        "\n\n\nNow you can post the solution. You don't need to write any code for it, as it is already writtin in "
+        "the 'boilerplate'-file. You can post it by writing `dodona post <SOLUTION_FILE_NAME>`."
+        "Replace <SOLUTION_FILE_NAME> with the correct file-name, in this case 'boilerplate'.")
 
     command = input("$ ")
 
-    while command.rstrip() not in ("dodona --post boilerplate", "dodona -p boilerplate"):
+    while command.rstrip() != "dodona post boilerplate":
         print("That was not the right command, please try again")
         command = input("$ ")
 
@@ -254,12 +255,13 @@ def tutorial_post_exercise(config: dict, connection: http.client.HTTPSConnection
 
 
 def tutorial_conclude(config: dict):
-    print("\nAlmost done, now deselect everything with `dodona --uptop` and you're ready to use DodonaCLI."
-          "\nRemember you can always use `dodona --help` or '-h' to view all available flags.")
+    pretty_console.console.print(
+        "\nAlmost done, now deselect everything with `dodona uptop` and you're ready to use DodonaCLI."
+        "\nRemember you can always use `dodona --help` to view all available commands and flags.")
 
     command = input("$ ")
 
-    while command.rstrip() != "dodona --uptop":
+    while command.rstrip() != "dodona uptop":
         print("That was not the right command, please try again")
         command = input("$ ")
 
