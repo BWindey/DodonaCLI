@@ -18,7 +18,7 @@
 - All efforts to display text in an orderly fashion were made using a Linux GNOME-terminal. If it doesn't look good in your terminal, you probably are not running a GNOME-terminal. As this is open-source software, feel free to add terminal-detection to make things pretty for your terminal too, but this isn't feasible to do for me. 
 
 
-- This project was made in Linux, and was tested in the Command Prompt on Windows and on the zsh shell on MacOS. For those platforms you'll find an installation guide below. If you wish to use this in other terminals, you'll have to experiment yourself.
+- This project was made in Linux, and was tested in the Command Prompt on Windows and on the zsh shell on macOS. For those platforms you'll find an installation guide below. If you wish to use this in other terminals, you'll have to experiment yourself.
 
 
 
@@ -83,13 +83,14 @@ To display all the info you need to make your next selection or exercise, use '-
 
 ## Roadmap
 More features to maybe add in the future:
-- potential collapsing of long pages (exercise-series, exercise-descriptions) or remind the user they can pipe it to less/more
 - show and load previous submissions if they exist
-- use subcommands instead of flags
 - add indicator to series to mark if all their exercises are completely solved
 - user-settings (f.e. auto-download of files, language, formatting, ...)
 - figure out how to more easily view an exercise description, boilerplate and the code you're writing together
 - easy (automatic?) downloading of files mentioned in exercise description
-- caching to make it feel like a real command, very fast! Currently you'll often have to wait a few hundred milliseconds for the API-call to return
-- a python- or ed-like own terminal after running the `dodona` command to not have to repeat the command often. This seems complicated, but it might be possible. Could maybe exists alongside the other option?
+
+**Not important, but valid ideas:**
+- potential collapsing of long pages (exercise-series, exercise-descriptions) or remind the user they can pipe it to less/more
+- caching to make it feel like a real command, very fast! Currently, you'll often have to wait a few hundred milliseconds for the API-call to return
+- a python- or ed-like own terminal after running the `dodona` command to not have to repeat the command often. This seems complicated, but it might be possible. Could maybe exist alongside the other option?
 - look into https://textual.textualize.io/getting_started/ to maybe use that??

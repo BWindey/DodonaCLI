@@ -99,7 +99,8 @@ def get_configs():
 
     except FileNotFoundError:
         # Create config dictionary
-        config = {e: None for e in ["course_id", "course_name", "serie_id", "serie_name", "exercise_id", "exercise_name"]}
+        config = {e: None
+                  for e in ["course_id", "course_name", "serie_id", "serie_name", "exercise_id", "exercise_name"]}
 
         print("\nThis may be your first time using DodonaCLI, do you wish to follow a short tutorial?")
         answer = input("(yes/no): ")
