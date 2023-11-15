@@ -150,7 +150,7 @@ def print_exercise_data(json_data):
             elif exercise['has_solution']:
                 solve_status = "[bold bright_red]WRONG[/]"
             else:
-                solve_status = "[bold]NOT YET SLVED[/]"
+                solve_status = "[bold]NOT YET SOLVED[/]"
 
             """
             if not exercise['has_solution']:
@@ -242,7 +242,7 @@ def print_result(json_results):
     """
     if json_results['accepted']:
         # Everything passed, well done!
-        pretty_console.console.print("[bold bright_green]All test passed![/] You can continue to next exercise.")
+        pretty_console.console.print("[bold bright_green]All tests passed![/] You can continue to next exercise.")
     else:
         # There were some problems, list them here
         for group in json_results['groups']:
