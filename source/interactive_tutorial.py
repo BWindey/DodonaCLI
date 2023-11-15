@@ -235,7 +235,7 @@ def tutorial_view_exercise(config: dict, connection: http.client.HTTPSConnection
                        headers=headers)
     json_data = tutorial_handle_connection(config, connection)
 
-    pretty_print.print_exercise(json_data)
+    pretty_print.print_exercise(json_data, config['TOKEN'])
 
 
 def tutorial_post_exercise(config: dict, connection: http.client.HTTPSConnection, headers: dict):
