@@ -261,3 +261,24 @@ def print_status(config):
           f"\tCourse: {config['course_name']}\n"
           f"\tSeries: {config['serie_name']}\n"
           f"\tExercise: {config['exercise_name']}\n")
+
+
+def print_submissions(json_data):
+    pretty_console.console.print(
+        "\n[u bright_blue]Most recent submissions:[/]"
+    )
+    for i, submission in enumerate(json_data):
+        if submission['accepted']:
+            accepted = "[bright_green]:heavy_check_mark:[/bright_green] "
+        else:
+            accepted = ":cross_mark:"
+
+        status = submission['status']
+        if submission['status'] in ("Memory limit exceeded", "Geheugenlimiet overschreden"):
+            status += "\tWow, how did you do that?"
+
+        pretty_console.console.print(
+            f"\t{accepted}  #{len(json_data) - i: <2}\t{status}"
+        )
+
+    print()

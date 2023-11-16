@@ -81,6 +81,18 @@ def exercise_data(connection, headers, course_id, exercise_id):
     return json.loads(data)
 
 
+def exercise_submissions(config, connection, headers):
+    course_id = config['course_id']
+    series_id = config['serie_id']
+    exercise_id = config['exercise_id']
+
+    connection.request("GET", f"/courses/{course_id}/series/{series_id}/activities/{exercise_id}/submissions",
+                       headers=headers)
+    data = handle_connection(connection)
+
+    return json.loads(data)
+
+
 def get_configs():
     """
     Get config data from config.json
