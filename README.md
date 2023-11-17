@@ -47,50 +47,48 @@
 - Move into the directory: `cd DodonaCLI`
 - Check if Python is installed: `python --version`, if not installed, please install first
 - Run `pip install -r requirements.txt`
-- Create set_alias.bat in your homedirectory for permanent alias (optional but highly recommended) with the folowing lines:\
+- Create set\_alias.bat in your homedirectory for permanent alias (optional but highly recommended) with the folowing lines:\
   ```
   @echo off
   doskey dodona=python "<absolute_path_to_DodonaCLI_folder>\main.py" $*
   ```
 - Open Register-editor (use the Windows search-bar if you don't know where it is)
-- Navigate to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor
-- Add a String Value with name 'AutoRun' and give it as value the absolute path to set_alias.bat
+- Navigate to HKEY\_LOCAL\_MACHINE\SOFTWARE\Microsoft\Command Processor
+- Add a String Value with name 'AutoRun' and give it as value the absolute path to set\_alias.bat
 - Test by opening a new command prompt and running `dodona --help`
 
 
 ## How to use
-There are 3 things you can do with Dodona: displaying info (`--display`), selecting (`--select`) and posting exercises (`--post`). The behaviour of displaying and selecting will depend on your current selection, which can be viewed with `dodona --status`. You can imagine it as a tree structure:
+There are 3 main things you can do with Dodona: displaying info (`dodona display`), selecting (`dodona select`) and posting exercises (`dodona post`). The behaviour of displaying and selecting will depend on your current selection, which can be viewed with `dodona status`. You can imagine it as a tree structure:
 - courses
   - exercise series
     - exercises
 
-If nothing is selected, you'll need to select a course first, then an exercise series, then an exercise. You can always see all your available options with `dodona --display`. Posting a solution will only work if you have selected an exercise, and can be done with `dodona --post <SOLUTION_FILE>`.
-This tree-like structure also explains the name of the deselect-flag: `--up` and `--uptop`. 
+If nothing is selected, you'll need to select a course first, then an exercise series, then an exercise. You can always see all your available options with `dodona display`. Posting a solution will only work if you have selected an exercise, and can be done with `dodona post <SOLUTION_FILE>`.
+This tree-like structure also explains the name of the deselect-flag: `up` and `uptop`. 
 
 The first time you use DodonaCLI, the program will ask you for an API-token, which you can generate on your Dodona-profile page. This will be stored in a file 'config.json' in the same directory as this python script. If you ever delete this file, you'll need to re-enter your API-token. You can either keep a back-up of your token somewhere else, or just generate a new token whenever you (accidently) deleted your old token.
 
 If there is some boilerplate-code associated with an exercise, it will get printed out to the terminal once you select the exercise. You can also find it in the file 'boilerplate'. You can use it to write your solution in, and post it, but be aware that this file gets overwritten when you select a new exercise that has boilerplate-code attached (not all do).
 
+When you want to use this tool seriously, you will probably want to have multiple terminal sessions open. For example I would want to have one to view the exercise description, and one to write my solution in vim. One way to achieve this is using 'tmux'. There are other ways to do this, but I'll explain how I use tmux to make an exercise:
+- open tmux with `tmux`
+- create new tmux window by typing ctrl + b with % or ". % opens a new one next to it, " opens a new one under it
+- display exercise in one window `dodona display`
+- move to other tmux window to use an editor to write my code in with ctrl + b and arrow keys to select a different window
 
-## All flags
-You can get info about all the flags by using the '--help' or '-h' flag. Here is a brief explanation.
-
-Most flags have a short and long version. Exceptions are '--uptop' and '--status', who have no short version. For other flags, the short version is always a single hyphen followed by the first letter of the long version.
-
-To display all the info you need to make your next selection or exercise, use '--display'. Selecting then happens with '--select', posting with '--post'. To deselect the current selection, use '--up', or '--uptop' to deselect everything. '--status' will give you an overview of what you have selected.
-
-
+## All subcommands
+You can get info about all subcommands and flags by using the '--help' flag after a (sub-) command. Here is a brief explanation.
 
 ## Roadmap
 More features to maybe add in the future:
 - show and load previous submissions if they exist
 - add indicator to series to mark if all their exercises are completely solved
 - user-settings (f.e. auto-download of files, language, formatting, ...)
-- figure out how to more easily view an exercise description, boilerplate and the code you're writing together
 - easy (automatic?) downloading of files mentioned in exercise description
 
 **Not important, but valid ideas:**
 - potential collapsing of long pages (exercise-series, exercise-descriptions) or remind the user they can pipe it to less/more
 - caching to make it feel like a real command, very fast! Currently, you'll often have to wait a few hundred milliseconds for the API-call to return
 - a python- or ed-like own terminal after running the `dodona` command to not have to repeat the command often. This seems complicated, but it might be possible. Could maybe exist alongside the other option?
-- look into https://textual.textualize.io/getting_started/ to maybe use that??
+- look into https://textual.textualize.io/getting\_started/ to maybe use that??
