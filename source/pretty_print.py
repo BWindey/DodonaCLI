@@ -252,8 +252,9 @@ def print_result(json_results):
                 print("Failed exercises:")
                 for test in group['groups']:
                     if not test['accepted']:
-                        print("\t- " + test['description']['description'] + "\n\t\t" +
-                              test['groups'][0]['description']['description'])
+                        pass
+                        # print("\t- " + test['groups'][0]['description'] + "\n\t\t" +
+                          #    test['groups'][0]['description']['description'])
 
 
 def print_status(config):
