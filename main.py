@@ -26,4 +26,5 @@ main.add_command(submission.sub)
 
 if __name__ == "__main__":
     # Main entry-point
+    # main(['post', '/home/bram/solution.java'])
     main()
