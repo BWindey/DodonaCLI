@@ -6,7 +6,7 @@
 3) [How to use](#how-to-use)
 4) [All flags](#all-flags)
 5) [Roadmap](#roadmap)
-
+6) [Docker?](#what-is-docker-doing-here)
 
 ## Disclaimers
 
@@ -91,4 +91,10 @@ More features to maybe add in the future:
 - potential collapsing of long pages (exercise-series, exercise-descriptions) or remind the user they can pipe it to less/more
 - caching to make it feel like a real command, very fast! Currently, you'll often have to wait a few hundred milliseconds for the API-call to return
 - a python- or ed-like own terminal after running the `dodona` command to not have to repeat the command often. This seems complicated, but it might be possible. Could maybe exist alongside the other option?
-- look into https://textual.textualize.io/getting\_started/ to maybe use that??
+- look into https://textual.textualize.io/getting_started/ to maybe use that??
+
+## What is Docker doing here
+Docker is a way for me to set up a clean environment to test out some experimental things that would affect more then just the python-source files. It will also allow me too to test out new release versions I push out, without the need to ask my friends if I can test it on their computer. 
+I would encourage anyone looking into helping this project seriously, to install Docker on your system and 'docker build' and 'run' the Dockerfile.
+
+It currently creates an Ubuntu environment with a 'tester'-user, has git, python, pip and vim installed, and has DodonaCLI cloned and an alias set. Perfect to start testing.
