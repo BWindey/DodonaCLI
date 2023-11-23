@@ -86,6 +86,7 @@ More features to maybe add in the future:
 - add indicator to series to mark if all their exercises are completely solved
 - user-settings (f.e. auto-download of files, language, formatting, ...)
 - easy (automatic?) downloading of files mentioned in exercise description
+- be able to mark as read via terminal for ContentPage
 
 **Not important, but valid ideas:**
 - potential collapsing of long pages (exercise-series, exercise-descriptions) or remind the user they can pipe it to less/more
