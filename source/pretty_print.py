@@ -250,17 +250,39 @@ def print_result(json_results):
         for group in json_results['groups']:
             print(group['description'] + ": " + str(group['badgeCount']) + " tests failed.")
 
-            if group['badgeCount'] > 0:
-                pass
-                # print("Failed exercises:")
-                # for test in group['groups']:
-                #  if not test['accepted']:
-                #     print("\t- " + test['description']['description'] + "\n\t\t" +
-                #          test['groups'][0]['description']['description'])
+            # API has changed and needs to change again in order to properly parse the results
+            # if group['badgeCount'] > 0:
+            #     print("Failed exercises:")
+            #     for test in group['groups']:
+            #         if not test['accepted']:
+            #             pass
+            #             print("\t- " + test['groups'][0]['description'] + "\n\t\t" +
+            #                   test['groups'][0]['description']['description'])
 
 
 def print_status(config):
-    print(f"\nStatus:\n"
-          f"\tCourse: {config['course_name']}\n"
-          f"\tSeries: {config['serie_name']}\n"
-          f"\tExercise: {config['exercise_name']}\n")
+    pretty_console.console.print(f"\n[u bright_blue]Status:[/]\n"
+                                 f"\t{'Course: '.ljust(10)}{config['course_name']}\n"
+                                 f"\t{'Series: '.ljust(10)}{config['serie_name']}\n"
+                                 f"\t{'Exercise: '.ljust(10)}{config['exercise_name']}\n")
+
+
+def print_submissions(json_data):
+    pretty_console.console.print(
+        "\n[u bright_blue]Most recent submissions:[/]"
+    )
+    for i, submission in enumerate(json_data[:10]):
+        if submission['accepted']:
+            accepted_emoji = "[bright_green]:heavy_check_mark:[/bright_green]"
+        else:
+            accepted_emoji = "[bright_red]:heavy_multiplication_x:[/bright_red]"
+
+        status = submission['status']
+        if submission['status'] in ("Memory limit exceeded", "Geheugenlimiet overschreden"):
+            status += "\n\t\t\tWow, how did you do that?"
+
+        pretty_console.console.print(
+            f"\t{accepted_emoji}  [link={submission['url'].rstrip('.json')}]#{len(json_data) - i: <2}[/link]\t{status}\t"
+        )
+
+    print()
