@@ -28,6 +28,7 @@
 - Move into the directory: `cd DodonaCLI`
 - Check if Python is installed: `python --version`, if not installed, please install first
 - Run `bash install.sh`
+- `source ~/.basrc` to finish
 - Test if it works with `dodona --help`
 
 ### MacOS
