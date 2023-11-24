@@ -1,4 +1,4 @@
-# Command Line Interface for [Dodona](https://dodona.be).
+# Command Line Interface for [Dodona](https://dodona.be)
 
 **Contents**:
 1) [Disclaimers](#disclaimers)
