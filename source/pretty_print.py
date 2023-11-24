@@ -245,6 +245,8 @@ def print_result(json_results):
         pretty_console.console.print("[bold bright_green]All tests passed![/] You can continue to next exercise.")
     else:
         # There were some problems, list them here
+        pretty_console.console.print("[bold bright_yellow]With the new feedback table, the API apparently updated, "
+                                     "so you can't view which tests failed for now. This is being worked on.[/]")
         for group in json_results['groups']:
             print(group['description'] + ": " + str(group['badgeCount']) + " tests failed.")
 
