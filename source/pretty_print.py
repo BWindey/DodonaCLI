@@ -271,16 +271,16 @@ def print_submissions(json_data):
     )
     for i, submission in enumerate(json_data[:10]):
         if submission['accepted']:
-            accepted = "[bright_green]:heavy_check_mark:[/bright_green] "
+            accepted_emoji = "[bright_green]:heavy_check_mark:[/bright_green]"
         else:
-            accepted = ":cross_mark:"
+            accepted_emoji = "[bright_red]:heavy_multiplication_x:[/bright_red]"
 
         status = submission['status']
         if submission['status'] in ("Memory limit exceeded", "Geheugenlimiet overschreden"):
-            status += "\tWow, how did you do that?"
+            status += "\n\t\t\tWow, how did you do that?"
 
         pretty_console.console.print(
-            f"\t{accepted}  #{len(json_data) - i: <2}\t{status}"
+            f"\t{accepted_emoji}  [link={submission['url'].rstrip('.json')}]#{len(json_data) - i: <2}[/link]\t{status}\t"
         )
 
     print()
