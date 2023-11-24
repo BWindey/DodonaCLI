@@ -27,10 +27,7 @@
 - Clone this repo to your pc: `git clone https://github.com/BWindey/DodonaCLI.git`
 - Move into the directory: `cd DodonaCLI`
 - Check if Python is installed: `python --version`, if not installed, please install first
-- Run `pip install -r requirements.txt`
-- Make main.py executable `chmod +x main.py`
-- Set an alias (optional but highly recommended) by appending this line to ~/.bashrc or ~/.bashprofile: `alias dodona='<absolute_path_to_DodonaCLI_folder>/main.py'`
-- Refresh terminal with `source ~/.bashrc` or restart the terminal
+- Run `bash install.sh`
 - Test if it works with `dodona --help`
 
 ### MacOS
