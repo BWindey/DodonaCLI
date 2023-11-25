@@ -10,7 +10,7 @@ from . import get_data
 from . import pretty_console
 
 
-def print_courses_data(json_data):
+def print_courses_data(json_data, title="Your courses:"):
     """
     Print out the courses in json_data in a neat way
     :param json_data: json object with data about Dodona courses
@@ -29,7 +29,7 @@ def print_courses_data(json_data):
     display_data = sorted(display_data, key=lambda x: x[1])
 
     # Print out all courses in display_data
-    pretty_console.console.print('\n[u bright_blue]Your courses:[/]')
+    pretty_console.console.print(f'\n[u bright_blue]{title}[/]')
     all_courses_formatted = ""
     for e in display_data:
         all_courses_formatted += (f'\t{e[0].ljust(max_course_id_length)}: '
