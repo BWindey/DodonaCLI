@@ -278,7 +278,7 @@ def print_submissions(json_data):
             accepted_emoji = "[bright_red]:heavy_multiplication_x:[/bright_red]"
 
         status = submission['status']
-        if submission['status'] in ("Memory limit exceeded", "Geheugenlimiet overschreden"):
+        if submission['status'] in ("memory limit exceeded", "geheugenlimiet overschreden"):
             status += "\n\t\t\tWow, how did you do that?"
 
         pretty_console.console.print(
