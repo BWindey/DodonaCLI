@@ -98,12 +98,12 @@ def print_series_data(json_data, force=False):
 
             new_description = textwrap.indent(new_description, '\t')
             pretty_console.console.print(
-                f"{e[0].ljust(max_series_id_length)}: "
+                f"\t{e[0].ljust(max_series_id_length)}: "
                 f"[bold]{e[1].ljust(max_series_name_length)}[/]"
                 f"\n{new_description}")
         else:
             pretty_console.console.print(
-                f"{e[0].ljust(max_series_id_length)}: "
+                f"\t{e[0].ljust(max_series_id_length)}: "
                 f"[bold]{e[1].ljust(max_series_name_length)}[/]"
             )
     # Newline for clarity
