@@ -14,6 +14,7 @@ def print_courses_data(json_data, title="Your courses:"):
     """
     Print out the courses in json_data in a neat way
     :param json_data: json object with data about Dodona courses
+    :param title: title to display above the courses-list
     """
     # List of tuples where each tuple represents a course by id, name and teacher
     display_data = []
@@ -282,7 +283,8 @@ def print_submissions(json_data):
             status += "\n\t\t\tWow, how did you do that?"
 
         pretty_console.console.print(
-            f"\t{accepted_emoji}  [link={submission['url'].rstrip('.json')}]#{len(json_data) - i: <2}[/link]\t{status}\t"
+            f"\t{accepted_emoji}  [link={submission['url'].rstrip('.json')}]#{len(json_data) - i: <2}[/link]"
+            f"\t{status}\t"
         )
 
     print()
