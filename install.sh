@@ -1,5 +1,3 @@
-#!/bin/bash
-
 if [[ $SHELL =~ "bash" ]]; then
 	pip install -r requirements.txt
 	chmod u+x main.py
@@ -11,7 +9,7 @@ elif [[ $SHELL =~ "zsh" ]]; then
 	pip install -r requirements.txt
 	chmod u+x main.py
 	echo "alias dodona=python3 $(realpath main.py) $*" >> ~/.zshrc
-	echo "source $(realpath completion_script.sh)" >> ~/.zshrc
+	# echo "source $(realpath completion_script.sh)" >> ~/.zshrc
 	source "${HOME}/.zshrc"
 
 else
