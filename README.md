@@ -85,6 +85,7 @@ More features to maybe add in the future:
 - user-settings (f.e. auto-download of files, language, formatting, ...)
 - easy (automatic?) downloading of files mentioned in exercise description
 - be able to mark as read via terminal for ContentPage
+- use links at top of solution-files to ignore the configs and straight post to right exercise, like the plugins
 
 **Not important, but valid ideas:**
 - potential collapsing of long pages (exercise-series, exercise-descriptions) or remind the user they can pipe it to less/more
