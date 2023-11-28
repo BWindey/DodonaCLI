@@ -4,9 +4,10 @@
 1) [Disclaimers](#disclaimers)
 2) [How to install](#how-to-install)
 3) [How to use](#how-to-use)
-4) [All flags](#all-flags)
-5) [Roadmap](#roadmap)
-6) [Docker?](#what-is-docker-doing-here)
+4) [How to update](#how-to-update)
+5) [All flags](#all-flags)
+6) [Roadmap](#roadmap)
+7) [Docker?](#what-is-docker-doing-here)
 
 ## Disclaimers
 
@@ -74,6 +75,9 @@ When you want to use this tool seriously, you will probably want to have multipl
 - create new tmux window by typing ctrl + b with % or ". % opens a new one next to it, " opens a new one under it
 - display exercise in one window `dodona display`
 - move to other tmux window to use an editor to write my code in with ctrl + b and arrow keys to select a different window
+
+## How to update
+Updating is simple: navigate to the folder you installed DodonaCLI in, and use `git pull`. It might be that there are new libraries installed, the program will ask no if you want to install them when you try to use the command. This will try installing everything from requirements.txt, so don't worry when a lot of info is printed out.
 
 ## All subcommands
 You can get info about all subcommands and flags by using the '--help' flag after a (sub-) command. Here is a brief explanation.
