@@ -1,8 +1,7 @@
 import json
 import os
 
-from . import set_data
-from . import interactive_tutorial
+from . import set_data, interactive_tutorial
 
 
 def handle_connection(connection):

@@ -1,12 +1,12 @@
-from datetime import datetime
 import json
 import os
 import random
 import rich.status
 import time
 
-from . import pretty_print
-from . import pretty_console
+from datetime import datetime
+
+from . import pretty_print, pretty_console
 
 
 def dump_config(config):

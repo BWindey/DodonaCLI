@@ -1,13 +1,13 @@
+import http.client
 import markdownify
-from bs4 import BeautifulSoup
-from rich.markdown import Markdown
 import re
 import shutil
-import http.client
 import textwrap
 
-from . import get_data
-from . import pretty_console
+from bs4 import BeautifulSoup
+from rich.markdown import Markdown
+
+from . import get_data, pretty_console
 
 
 def print_courses_data(json_data, title="Your courses:"):
