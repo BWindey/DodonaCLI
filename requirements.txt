@@ -1,4 +1,5 @@
 click
+click_default_group
 bs4
 rich
 markdownify
