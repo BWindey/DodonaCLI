@@ -1,5 +1,6 @@
-# Completion script for the Dodona command, needs to be sourced to work
+# Bash completion script for the Dodona command, needs to be sourced to work
 # Used https://www.gnu.org/software/gnuastro/manual/html_node/Bash-TAB-completion-tutorial.html
+
 # $1 = name of command -> dodona
 # $2 = current word being completed
 # $3 = word before word being completed
@@ -13,6 +14,9 @@ _dodona(){
 
 	elif [ "$3" == "dodona" ]; then
 		COMPREPLY=( $(compgen -W "display post select status sub tutorial up" -- "$2") )
+	
+	elif [ "$3" == "post" ]; then
+		COMPREPLY=( $(ls -Ap | grep -v "/" ) )
 	fi
 }
 
