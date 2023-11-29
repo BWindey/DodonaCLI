@@ -19,8 +19,7 @@ except ImportError as e:
 
     from click_default_group import DefaultGroup
 
-
-from source import get_data, pretty_print
+from dodonacli.source import pretty_print, get_data
 
 
 @click.group(help="Get submission data. Default = view",

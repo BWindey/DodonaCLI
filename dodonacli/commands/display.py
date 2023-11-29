@@ -1,7 +1,7 @@
 import click
 import http.client
 
-from source import get_data, pretty_print
+from dodonacli.source import pretty_print, get_data
 
 
 @click.command(help="Display info based on the current selection. It will always display what you can select next, "

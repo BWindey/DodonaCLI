@@ -1,7 +1,8 @@
 import click
 import http.client
 
-from source import get_data, set_data
+from dodonacli.source import set_data
+from dodonacli.source import get_data
 
 
 @click.command(help="Post a solution-file to Dodona. "

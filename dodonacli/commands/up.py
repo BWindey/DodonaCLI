@@ -1,6 +1,7 @@
 import click
 
-from source import get_data, set_data
+from dodonacli.source import set_data
+from dodonacli.source import get_data
 
 
 @click.command(help="Deselect default last selected thing. Can be used with an argument to deselect everything with "

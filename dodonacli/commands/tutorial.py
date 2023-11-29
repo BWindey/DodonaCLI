@@ -1,7 +1,8 @@
 import click
 
 
-from source import interactive_tutorial, get_data, set_data
+from dodonacli.source import set_data
+from dodonacli.source import get_data, interactive_tutorial
 
 
 @click.command(help="Start tutorial")

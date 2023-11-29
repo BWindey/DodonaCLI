@@ -11,7 +11,7 @@ from . import pretty_print, pretty_console
 
 def dump_config(config):
     script_directory = os.path.dirname(os.path.abspath(__file__))
-    config_file_path = os.path.join(script_directory, '../config.json')
+    config_file_path = os.path.join(script_directory, '../../config.json')
 
     with open(config_file_path, 'w') as config_file:
         json.dump(config, config_file)

@@ -1,6 +1,6 @@
 import click
 
-from source import get_data, pretty_print
+from dodonacli.source import pretty_print, get_data
 
 
 @click.command(help="Display your current selection. Selected course, series and exercise.")
