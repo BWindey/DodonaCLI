@@ -28,7 +28,7 @@ keywords = ["dodona", "cli"]
 
 
 [project.scripts]
-dodonacli = "dodonacli.main:main"
+dodona = "dodonacli.main:main"
 
 [project.urls]
 Homepage = "https://github.com/BWindey/DodonaCLI"
