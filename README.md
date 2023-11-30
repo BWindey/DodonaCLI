@@ -28,8 +28,7 @@
 - Clone this repo to your pc: `git clone https://github.com/BWindey/DodonaCLI.git`
 - Move into the directory: `cd DodonaCLI`
 - Check if Python is installed: `python --version`, if not installed, please install first
-- Run `bash install.sh`
-- `source ~/.basrc` to finish
+- `pip install .`
 - Test if it works with `dodona --help`
 
 ### MacOS
@@ -92,6 +91,7 @@ More features to maybe add in the future:
 - use links at top of solution-files to ignore the configs and straight post to right exercise, like the plugins
 
 **Not important, but valid ideas:**
+- (plugin) for syntax-checking before posting so you get a quicker response in case of a syntax error, depends on the type of exercise (bash, java, python, C, C++, R, ...)
 - potential collapsing of long pages (exercise-series, exercise-descriptions) or remind the user they can pipe it to less/more
 - caching to make it feel like a real command, very fast! Currently, you'll often have to wait a few hundred milliseconds for the API-call to return
 - a python- or ed-like own terminal after running the `dodona` command to not have to repeat the command often. This seems complicated, but it might be possible. Could maybe exist alongside the other option?
