@@ -245,11 +245,15 @@ def print_result(json_results):
         # Everything passed, well done!
         pretty_console.console.print("[bold bright_green]All tests passed![/] You can continue to next exercise.")
     else:
-        # There were some problems, list them here
-        for group in json_results['groups']:
-            print(group['description'] + ": " + str(group['badgeCount']) + " tests failed.")
+        try:
+            if json_results['status'] in ("memory limit exceeded", "test"):
+                print("\t" + json_results['description'])
+                return
 
-            try:
+            # There were some problems, list them here
+            for group in json_results['groups']:
+                print(group['description'] + ": " + str(group['badgeCount']) + " tests failed.")
+
                 if group['badgeCount'] > 0:
                     print("Failed exercises:")
                     for test in group['groups']:
@@ -257,8 +261,8 @@ def print_result(json_results):
                             pass
                             print("\t- " + test['groups'][0]['description'] + "\n\t\t" +
                                   test['groups'][0]['description']['description'])
-            except Exception as e:
-                print("Something went wrong trying to display the results: " + str(e))
+        except Exception as e:
+            print("\tSomething went wrong trying to display the results: " + str(e))
 
 
 def print_status(config):
