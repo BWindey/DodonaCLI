@@ -26,9 +26,9 @@
 ## How to install
 `pip install dodonacli`
 
+Alternatively, you can `git clone https://github.com/BWindey/DodonaCLI` and when inside the DodonaCLI do `pip install .`. This is mostly usefull for those wanting to change/add to the code.
 
-
-If you want to have tab-completion, this can be done when you're using bash. Download "dodonacli_completion_script.sh" from [github](https://github.com/BWindey/DodonaCLI/blob/master/completion_script.sh). 
+If you want to have tab-completion, this can be done when you're using bash. Download ["dodonacli_completion_script.sh" from github](https://github.com/BWindey/DodonaCLI/blob/master/completion_script.sh). 
 This is currently not supported (tested, tried, ...) for other shells then bash
 
 ## How to use
@@ -51,7 +51,10 @@ When you want to use this tool seriously, you will probably want to have multipl
 - move to other tmux window to use an editor to write my code in with ctrl + b and arrow keys to select a different window
 
 ## How to update
-Updating is simple: navigate to the folder you installed DodonaCLI in, and use `git pull`. It might be that there are new libraries installed, the program will ask no if you want to install them when you try to use the command. This will try installing everything from requirements.txt, so don't worry when a lot of info is printed out.
+Updating is simple: 
+`pip install DodonaCLI --update`
+
+Alternatively, if you installed it with cloning from GitHub, you can just `git pull` and `pip build .` again like you would install it.
 
 ## All subcommands
 You can get info about all subcommands and flags by using the '--help' flag after a (sub-) command. Here is a brief explanation.
