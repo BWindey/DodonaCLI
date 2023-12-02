@@ -24,37 +24,12 @@
 
 
 ## How to install
-### Linux
-- Clone this repo to your pc: `git clone https://github.com/BWindey/DodonaCLI.git`
-- Move into the directory: `cd DodonaCLI`
-- Check if Python is installed: `python --version`, if not installed, please install first
-- `pip install .`
-- Test if it works with `dodona --help`
+`pip install dodonacli`
 
-### MacOS
-- Clone this repo to your pc: `git clone https://github.com/BWindey/DodonaCLI.git`
-- Move into the directory: `cd DodonaCLI`
-- Check if Python is installed: `python --version`, if not installed, please install first
-- Run `pip install -r requirements.txt`
-- Create alias (optional but highly recommended) by appending this line to ~/.zshrc: `alias dodona=python <absolute_path_to_DodonaCLI_folder>/main.py`
-- Refresh terminal with `source ~/.zshrc` or restart the terminal
-- Test if it works with `dodona --help`
 
-### Windows Command Prompt
-- Clone this repo to your pc: `git clone https://github.com/BWindey/DodonaCLI.git`
-- Move into the directory: `cd DodonaCLI`
-- Check if Python is installed: `python --version`, if not installed, please install first
-- Run `pip install -r requirements.txt`
-- Create set\_alias.bat in your homedirectory for permanent alias (optional but highly recommended) with the folowing lines:\
-  ```
-  @echo off
-  doskey dodona=python "<absolute_path_to_DodonaCLI_folder>\main.py" $*
-  ```
-- Open Register-editor (use the Windows search-bar if you don't know where it is)
-- Navigate to HKEY\_LOCAL\_MACHINE\SOFTWARE\Microsoft\Command Processor
-- Add a String Value with name 'AutoRun' and give it as value the absolute path to set\_alias.bat
-- Test by opening a new command prompt and running `dodona --help`
 
+If you want to have tab-completion, this can be done when you're using bash. Download "dodonacli_completion_script.sh" from [github](https://github.com/BWindey/DodonaCLI/blob/master/completion_script.sh). 
+This is currently not supported (tested, tried, ...) for other shells then bash
 
 ## How to use
 There are 3 main things you can do with Dodona: displaying info (`dodona display`), selecting (`dodona select`) and posting exercises (`dodona post`). The behaviour of displaying and selecting will depend on your current selection, which can be viewed with `dodona status`. You can imagine it as a tree structure:
