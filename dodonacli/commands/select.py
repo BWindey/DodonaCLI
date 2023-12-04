@@ -2,7 +2,8 @@ import click
 import http.client
 import textwrap
 
-from source import get_data, pretty_console, set_data
+from dodonacli.source import set_data
+from dodonacli.source import pretty_console, get_data
 
 
 @click.command(help="Select based on id or name. Depends on current selection. If nothing is selected, "
@@ -90,7 +91,7 @@ def select(thing):
                     break
 
         if config['exercise_id'] is None:
-            print("Not a valid exercise id!")
+            print("Not a valid exercise id or -name!")
 
     else:
         # You can't select more when everything is already selected

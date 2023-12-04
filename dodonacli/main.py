@@ -1,7 +1,7 @@
-#!/bin/env python3
 import click
 
-from commands import display, select, status, up, post, tutorial, submission
+from dodonacli.commands import select, status, up, post
+from dodonacli.commands import tutorial, submission, display
 
 
 @click.group(help="A 3rd party Command Line Interface for Dodona. "
@@ -26,5 +26,5 @@ main.add_command(submission.sub)
 
 if __name__ == "__main__":
     # Main entry-point
-    # main(['post', '/home/bram/solution.java'])
     main()
+

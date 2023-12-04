@@ -1,4 +1,0 @@
-click
-bs4
-rich
-markdownify

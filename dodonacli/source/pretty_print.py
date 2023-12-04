@@ -1,19 +1,20 @@
+import http.client
 import markdownify
-from bs4 import BeautifulSoup
-from rich.markdown import Markdown
 import re
 import shutil
-import http.client
 import textwrap
 
-from . import get_data
-from . import pretty_console
+from bs4 import BeautifulSoup
+from rich.markdown import Markdown
+
+from . import get_data, pretty_console
 
 
-def print_courses_data(json_data):
+def print_courses_data(json_data, title="Your courses:"):
     """
     Print out the courses in json_data in a neat way
     :param json_data: json object with data about Dodona courses
+    :param title: title to display above the courses-list
     """
     # List of tuples where each tuple represents a course by id, name and teacher
     display_data = []
@@ -29,7 +30,7 @@ def print_courses_data(json_data):
     display_data = sorted(display_data, key=lambda x: x[1])
 
     # Print out all courses in display_data
-    pretty_console.console.print('\n[u bright_blue]Your courses:[/]')
+    pretty_console.console.print(f'\n[u bright_blue]{title}[/]')
     all_courses_formatted = ""
     for e in display_data:
         all_courses_formatted += (f'\t{e[0].ljust(max_course_id_length)}: '
@@ -98,12 +99,12 @@ def print_series_data(json_data, force=False):
 
             new_description = textwrap.indent(new_description, '\t')
             pretty_console.console.print(
-                f"{e[0].ljust(max_series_id_length)}: "
+                f"\t{e[0].ljust(max_series_id_length)}: "
                 f"[bold]{e[1].ljust(max_series_name_length)}[/]"
                 f"\n{new_description}")
         else:
             pretty_console.console.print(
-                f"{e[0].ljust(max_series_id_length)}: "
+                f"\t{e[0].ljust(max_series_id_length)}: "
                 f"[bold]{e[1].ljust(max_series_name_length)}[/]"
             )
     # Newline for clarity
@@ -244,20 +245,24 @@ def print_result(json_results):
         # Everything passed, well done!
         pretty_console.console.print("[bold bright_green]All tests passed![/] You can continue to next exercise.")
     else:
-        # There were some problems, list them here
-        pretty_console.console.print("[bold bright_yellow]With the new feedback table, the API apparently updated, "
-                                     "so you can't view which tests failed for now. This is being worked on.[/]")
-        for group in json_results['groups']:
-            print(group['description'] + ": " + str(group['badgeCount']) + " tests failed.")
+        try:
+            if json_results['status'] in ("memory limit exceeded", "test"):
+                print("\t" + json_results['description'])
+                return
 
-            # API has changed and needs to change again in order to properly parse the results
-            # if group['badgeCount'] > 0:
-            #     print("Failed exercises:")
-            #     for test in group['groups']:
-            #         if not test['accepted']:
-            #             pass
-            #             print("\t- " + test['groups'][0]['description'] + "\n\t\t" +
-            #                   test['groups'][0]['description']['description'])
+            # There were some problems, list them here
+            for group in json_results['groups']:
+                print(group['description'] + ": " + str(group['badgeCount']) + " tests failed.")
+
+                if group['badgeCount'] > 0:
+                    print("Failed exercises:")
+                    for test in group['groups']:
+                        if not test['accepted']:
+                            pass
+                            print("\t- " + test['groups'][0]['description'] + "\n\t\t" +
+                                  test['groups'][0]['description']['description'])
+        except Exception as e:
+            print("\tSomething went wrong trying to display the results: " + str(e))
 
 
 def print_status(config):
@@ -278,11 +283,12 @@ def print_submissions(json_data):
             accepted_emoji = "[bright_red]:heavy_multiplication_x:[/bright_red]"
 
         status = submission['status']
-        if submission['status'] in ("Memory limit exceeded", "Geheugenlimiet overschreden"):
+        if submission['status'] in ("memory limit exceeded", "geheugenlimiet overschreden"):
             status += "\n\t\t\tWow, how did you do that?"
 
         pretty_console.console.print(
-            f"\t{accepted_emoji}  [link={submission['url'].rstrip('.json')}]#{len(json_data) - i: <2}[/link]\t{status}\t"
+            f"\t{accepted_emoji}  [link={submission['url'].rstrip('.json')}]#{len(json_data) - i: <2}[/link]"
+            f"\t{status}\t"
         )
 
     print()

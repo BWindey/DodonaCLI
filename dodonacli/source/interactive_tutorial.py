@@ -88,7 +88,7 @@ def tutorial_select_course(config: dict, connection: http.client.HTTPSConnection
     connection.request("GET", "/courses?tab=featured", headers=headers)
     json_data = tutorial_handle_connection(config, connection)
 
-    pretty_print.print_courses_data(json_data)
+    pretty_print.print_courses_data(json_data, "Featured courses")
 
     pretty_console.console.print("Select now \"The Coder's Apprenctice\" with `dodona select` + "
                                  "the courses id, or (distinct part of) the courses name")
