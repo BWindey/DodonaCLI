@@ -1,4 +1,3 @@
-#!/bin/env python3
 import click
 
 from dodonacli.commands import select, status, up, post

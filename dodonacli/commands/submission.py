@@ -1,23 +1,7 @@
-import os
+import click
+import http.client
 
-try:
-    import click
-    import http.client
-
-    from click_default_group import DefaultGroup
-
-except ImportError as e:
-    answer = input("There were unmet dependencies: \n"
-                   + str(e)
-                   + '\nDo you want to install them automatically? [y/n]: ')
-    if not answer.lower().startswith('y'):
-        exit("Exited due to unmet dependencies")
-    os.system('pip install -r' + os.path.dirname(__file__)[:-8] + 'requirements.txt')
-
-    import click
-    import http.client
-
-    from click_default_group import DefaultGroup
+from click_default_group import DefaultGroup
 
 from dodonacli.source import pretty_print, get_data
 
@@ -28,11 +12,10 @@ def sub():
     pass
 
 
-@click.command(help="Load submission data")
-@click.option("-l", "--load", type=int, default=-1,
-              help="NOT WORKY YET Load a submission to the prev_submission file, and display more info about it. "
-                   "You can specify a number, else it takes the last submission for that exercise.")
+@click.command(help="NOT WORKY YET Load a submission to the prev_submission file, and display more info about it. "
+                    "You can specify a number, else it takes the last submission for that exercise.")
 def load():
+    print("Sorry, still working on this!")
     pass
 
 
