@@ -1,5 +1,7 @@
 # Command Line Interface for [Dodona](https://dodona.be)
 
+PyPI page: https://pypi.org/project/DodonaCLI/#description
+
 **Contents**:
 1) [Disclaimers](#disclaimers)
 2) [How to install](#how-to-install)
@@ -24,7 +26,7 @@
 
 
 ## How to install
-`pip install dodonacli`
+`pip install DodonaCLI`
 
 Alternatively, you can `git clone https://github.com/BWindey/DodonaCLI` and when inside the DodonaCLI folder, do `pip install -e .`. This is mostly usefull for those wanting to change/add to the code.
 
