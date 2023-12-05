@@ -1,5 +1,7 @@
 # Command Line Interface for [Dodona](https://dodona.be)
 
+PyPI page: https://pypi.org/project/DodonaCLI/#description
+
 **Contents**:
 1) [Disclaimers](#disclaimers)
 2) [How to install](#how-to-install)
@@ -24,9 +26,9 @@
 
 
 ## How to install
-`pip install dodonacli`
+`pip install DodonaCLI`
 
-Alternatively, you can `git clone https://github.com/BWindey/DodonaCLI` and when inside the DodonaCLI do `pip install .`. This is mostly usefull for those wanting to change/add to the code.
+Alternatively, you can `git clone https://github.com/BWindey/DodonaCLI` and when inside the DodonaCLI do `pip install .`. This is mostly usefull for those wanting to contribute to the code.
 
 If you want to have tab-completion, this can be done when you're using bash. Download ["dodonacli_completion_script.sh" from github](https://github.com/BWindey/DodonaCLI/blob/master/completion_script.sh). 
 This is currently not supported (tested, tried, ...) for other shells then bash
