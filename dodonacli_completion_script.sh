@@ -1,5 +1,5 @@
-# Bash completion script for the Dodona command, needs to be sourced to work
-# Used https://www.gnu.org/software/gnuastro/manual/html_node/Bash-TAB-completion-tutorial.html
+# Bash completion script for DodonaCLI, needs to be sourced to work
+# Used https://www.gnu.org/software/gnuastro/manual/html_node/Bash-TAB-completion-tutorial.html to help create this
 
 # $1 = name of command -> dodona
 # $2 = current word being completed
