@@ -26,10 +26,13 @@
 ## How to install
 `pip install dodonacli`
 
-Alternatively, you can `git clone https://github.com/BWindey/DodonaCLI` and when inside the DodonaCLI do `pip install .`. This is mostly usefull for those wanting to change/add to the code.
+Alternatively, you can `git clone https://github.com/BWindey/DodonaCLI` and when inside the DodonaCLI folder, do `pip install -e .`. This is mostly usefull for those wanting to change/add to the code.
 
 If you want to have tab-completion, this can be done when you're using bash. Download ["dodonacli_completion_script.sh" from github](https://github.com/BWindey/DodonaCLI/blob/master/completion_script.sh). 
 This is currently not supported (tested, tried, ...) for other shells then bash
+
+If you want to have a manual page, you can download ["dodonacli.1.gz"](https://github.com/BWindey/DodonaCLI/blob/master/man-page/dodonacli.1.gz") and save this in a folder included in `$(manpath)`. 
+
 
 ## How to use
 There are 3 main things you can do with Dodona: displaying info (`dodona display`), selecting (`dodona select`) and posting exercises (`dodona post`). The behaviour of displaying and selecting will depend on your current selection, which can be viewed with `dodona status`. You can imagine it as a tree structure:
