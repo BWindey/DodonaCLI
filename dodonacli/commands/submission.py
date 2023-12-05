@@ -12,9 +12,17 @@ def sub():
     pass
 
 
+def validate_positive_int(ctx, param, value):
+    if value is not None and value <= 0:
+        raise click.BadParameter('Number should be greater then 0')
+    return
+
+
 @click.command(help="NOT WORKY YET Load a submission to the prev_submission file, and display more info about it. "
                     "You can specify a number, else it takes the last submission for that exercise.")
-def load():
+@click.argument('number',
+                type=int, default=-1, callback=validate_positive_int)
+def load(number):
     print("Sorry, still working on this!")
     pass
 
