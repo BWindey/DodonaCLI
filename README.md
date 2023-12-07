@@ -30,7 +30,7 @@ PyPI page: https://pypi.org/project/DodonaCLI/#description
 
 Alternatively, you can `git clone https://github.com/BWindey/DodonaCLI` and when inside the DodonaCLI folder, do `pip install -e .`. This is mostly usefull for those wanting to change/add to the code.
 
-If you want to have tab-completion, this can be done when you're using bash. Download ["dodonacli_completion_script.sh" from github](https://github.com/BWindey/DodonaCLI/blob/master/completion_script.sh). 
+If you want to have tab-completion, this can be done when you're using bash. Download ["dodonacli_completion_script.sh" from github](https://github.com/BWindey/DodonaCLI/blob/master/dodonacli_completion_script.sh), and source it in your ~/.bashrc. 
 This is currently not supported (tested, tried, ...) for other shells then bash
 
 If you want to have a manual page, you can download ["dodonacli.1.gz"](https://github.com/BWindey/DodonaCLI/blob/master/man-page/dodonacli.1.gz") and save this in a folder included in `$(manpath)`. 
