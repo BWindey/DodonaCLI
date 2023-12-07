@@ -104,7 +104,7 @@ def select_spinner():
     christmas_end = datetime(current_date.year, 1, 8).date()
 
     # Check if the current date is within the Christmas season range
-    is_christmas_season = christmas_start <= current_date <= christmas_end
+    is_christmas_season = not christmas_start > current_date > christmas_end
 
     if is_christmas_season:
         return christmas_spinner
