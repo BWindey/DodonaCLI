@@ -1,4 +1,5 @@
 import http.client
+import json
 import markdownify
 import re
 import shutil
@@ -217,7 +218,7 @@ def print_exercise(json_data, token: str, force=False):
         stripped_link = json_data['description_url'].replace("https://sandbox.dodona.be", "", 1)
         sandbox.request("GET", stripped_link, headers=headers)
 
-        data = get_data.handle_connection(sandbox).decode()
+        data = get_data.handle_connection_response(sandbox).decode()
 
         soup = BeautifulSoup(data, features="html.parser")
         html_description = str(soup.find("div", {"class": "card-supporting-text"}))
@@ -272,7 +273,7 @@ def print_status(config):
                                  f"\t{'Exercise: '.ljust(10)}{config['exercise_name']}\n")
 
 
-def print_submissions(json_data):
+def print_exercise_submissions(json_data):
     pretty_console.console.print(
         "\n[u bright_blue]Most recent submissions:[/]"
     )
@@ -291,4 +292,31 @@ def print_submissions(json_data):
             f"\t{status}\t"
         )
 
+    print()
+
+
+def print_all_submissions(connection, headers, json_data):
+    pretty_console.console.print(
+        "\n[u bright_blue]Most recent submissions:[/]"
+    )
+
+    for i, submission in enumerate(json_data):
+        if submission['accepted']:
+            accepted_emoji = "[bright_green]:heavy_check_mark:[/bright_green]"
+        else:
+            accepted_emoji = "[bright_red]:heavy_multiplication_x:[/bright_red]"
+
+        status = submission['status']
+
+        exercise_link = submission['exercise'].replace("https://dodona.be/nl", "", 1)
+        connection.request("GET", exercise_link, headers=headers)
+        json_exercise_data = json.loads(get_data.handle_connection_response(connection))
+
+        exercise_name = json_exercise_data['name']
+
+        pretty_console.console.print(
+            f"\t{accepted_emoji}  [link={submission['url'].rstrip('.json')}]#{len(json_data) - i: <2}[/link]"
+            f"\t{status}"
+            f"\t\t\t{exercise_name}"
+        )
     print()
