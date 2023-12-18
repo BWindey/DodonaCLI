@@ -119,4 +119,4 @@ def save_submission_code(exer_name: str, sub_id: int, sub_code: str):
         code_file.write(sub_code)
 
     print(f"\nCode from your submission for {exer_name} is now saved in:\n"
-          f"\t{exer_name}_{sub_id}")
+          f"\t{exer_name}_{sub_id}\n")
