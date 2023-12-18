@@ -110,3 +110,13 @@ def select_spinner():
         return christmas_spinner
 
     return random.choice(selection_spinners)
+
+
+def save_submission_code(exer_name: str, sub_id: int, sub_code: str):
+    file_name = f"{exer_name}_{sub_id}"
+
+    with open(file_name, "w") as code_file:
+        code_file.write(sub_code)
+
+    print(f"\nCode from your submission for {exer_name} is now saved in:\n"
+          f"\t{exer_name}_{sub_id}")

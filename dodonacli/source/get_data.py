@@ -1,6 +1,7 @@
 import http.client
 import json
 import os
+import re
 import socket
 
 from . import set_data, interactive_tutorial
@@ -135,6 +136,25 @@ def all_submissions(connection: http.client.HTTPSConnection, headers: dict):
     data = handle_connection_response(connection)
 
     return json.loads(data)
+
+
+def submission_info(sub_id: int, connection: http.client.HTTPSConnection, headers: dict, config):
+    connection = handle_connection_request(
+        connection,
+        "GET",
+        f"/submissions/{sub_id}",
+        headers=headers
+    )
+    data = handle_connection_response(connection)
+    json_data = json.loads(data)
+
+    exercise_id = json_data['exercise'].split('/')[-1].replace('.json', '')
+
+    exercise = exercise_data(connection, headers, config['course_id'], exercise_id)
+
+    json_data['exercise_name'] = exercise['name']
+
+    return json_data
 
 
 def get_configs():
