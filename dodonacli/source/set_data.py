@@ -19,7 +19,7 @@ def dump_config(config):
 
 def post_solution(content, connection, headers, config):
     """
-    Post the solution in content to Dodona and print the results
+    Post the solution in content to Dodona and print the result
     :param content: str with the solution to post to Dodona
     :param connection: HTTPSConnection object that connects to www.dodona.be
     :param headers: dict with extra info for connection, mainly authorization needed
