@@ -15,12 +15,6 @@ def handle_connection_request(connection: http.client.HTTPSConnection, connectio
         print("Something went wrong trying to connect to Dodona. This is probably an internet connection problem.")
         exit(2)
 
-    except Exception as e:
-        print("Something went wrong trying to connect to Dodona. This is an unknown error, "
-              "please report it on GitHub: https://github.com/BWindey/DodonaCLI/Issues"
-              "\nThe error in question:\n" + str(e))
-        exit(3)
-
     return connection
 
 
@@ -198,6 +192,12 @@ def get_configs():
 
 
 def validate_config(config: dict):
+    """
+    Checks whether the config file contains all the necessary keys.
+    This is needed when an update introduces new keys.
+    :param config: Dictionary with the content of config.json
+    :return: Updated config dictionary
+    """
     keys_to_check = (
         "course_id",    "course_name",
         "serie_id",     "serie_name",
@@ -215,6 +215,11 @@ def validate_config(config: dict):
 
 
 def get_api_token(config: dict):
+    """
+    Asks the user for an API token and saves it
+    :param config: Dictionary with the content of config.json
+    :return: Updated config dictionary
+    """
     config['TOKEN'] = input("Paste your API-token here: ")
     set_data.dump_config(config)
 
