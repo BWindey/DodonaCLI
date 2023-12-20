@@ -83,12 +83,9 @@ Updating is simple:
 
 Alternatively, if you installed it with cloning from GitHub, you can just `git pull` and `pip build .` again like you would install it.
 
-## All subcommands
-You can get info about all subcommands and flags by using the '--help' flag after a (sub-) command. Here is a brief explanation.
 
 ## Roadmap
 More features to maybe add in the future:
-- show and load previous submissions if they exist
 - add indicator to series to mark if all their exercises are completely solved
 - user-settings (f.e. auto-download of files, language, formatting, ...)
 - easy (automatic?) downloading of files mentioned in exercise description

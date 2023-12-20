@@ -6,3 +6,4 @@ will automatically trigger a new package release. Releases require some thought 
 - [ ] Documentation updated
 - [ ] Config.json changes reflected in commands/get_data.validate_config
 - [ ] Version number updated in pyproject.toml
+- [ ] Completion script updated
