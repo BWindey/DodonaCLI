@@ -12,6 +12,9 @@ _dodona(){
 	elif [ "$3" == "display" ]; then
 		COMPREPLY=( $(compgen -W "-force" -- "$2") )
 
+	elif [ "$3" == "select" ]; then
+	  COMPREPLY=( $(compgen -W "-hidden" -- "$2") )
+
 	elif [ "$3" == "dodona" ]; then
 		COMPREPLY=( $(compgen -W "display post select status sub tutorial up" -- "$2") )
 	
