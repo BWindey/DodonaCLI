@@ -34,7 +34,12 @@ def display(force):
 
     elif config['exercise_id'] is None:
         # Print available exercises
-        json_data = get_data.exercises_data(connection, headers, config['serie_id'])
+        if config['serie_token'] is None:
+            serie_token = ""
+        else:
+            serie_token = "?token=" + config['serie_token']
+
+        json_data = get_data.exercises_data(connection, headers, config['serie_id'], serie_token)
         pretty_print.print_exercise_data(json_data)
 
     else:

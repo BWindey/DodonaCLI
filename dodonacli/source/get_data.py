@@ -65,18 +65,19 @@ def series_data(connection: http.client.HTTPSConnection, headers: dict, course_i
     return json.loads(data)
 
 
-def exercises_data(connection: http.client.HTTPSConnection, headers: dict, series_id: str):
+def exercises_data(connection: http.client.HTTPSConnection, headers: dict, series_id: str, serie_token: str = ""):
     """
     Get all exercises of exercise-serie
     :param connection: HTTPSConnection object to the main Dodona page
     :param headers: Dict with extra info, mainly autorization needed
     :param series_id: int id of exercise-series
+    :param serie_token: Token of a hidden series
     :return: json object with info about available exercises
     """
     connection = handle_connection_request(
         connection,
         "GET",
-        "/series/" + series_id + "/activities",
+        "/series/" + series_id + "/activities" + serie_token,
         headers=headers
     )
     data = handle_connection_response(connection)
@@ -199,9 +200,10 @@ def validate_config(config: dict):
     :return: Updated config dictionary
     """
     keys_to_check = (
-        "course_id",    "course_name",
-        "serie_id",     "serie_name",
-        "exercise_id",  "exercise_name"
+        "course_id", "course_name",
+        "serie_id", "serie_name",
+        "exercise_id", "exercise_name",
+        "serie_token"
     )
     for key in keys_to_check:
         if key not in config:
