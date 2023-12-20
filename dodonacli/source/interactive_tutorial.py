@@ -6,6 +6,7 @@ import http.client
 import json
 import os
 
+import dodonacli.source.get_data
 from . import pretty_print, pretty_console, set_data
 
 
@@ -26,7 +27,7 @@ def start_tutorial(config: dict):
             "\n\nBefore we begin, we'll need an API-token to authorize your connection with Dodona. "
             "You can find it on your profile page on https://dodona.be")
 
-        config = tutorial_get_api_token(config)
+        config = dodonacli.source.get_data.get_api_token(config)
 
     connection = http.client.HTTPSConnection("dodona.be")
     headers = {
@@ -46,13 +47,6 @@ def start_tutorial(config: dict):
     return config
 
 
-def tutorial_get_api_token(config: dict):
-    config['TOKEN'] = input("Paste your API-token here: ")
-    set_data.dump_config(config)
-
-    return config
-
-
 def tutorial_handle_connection(config: dict, connection: http.client.HTTPSConnection):
     res = connection.getresponse()
     status = res.status
@@ -60,7 +54,7 @@ def tutorial_handle_connection(config: dict, connection: http.client.HTTPSConnec
     if status != 200:
         if status == 401:
             print("Authorization didn't work, please re-enter your API-token and make sure it's correct.")
-            config = tutorial_get_api_token(config)
+            config = dodonacli.source.get_data.get_api_token(config)
             set_data.dump_config(config)
 
         else:

@@ -9,7 +9,8 @@ from dodonacli.commands import tutorial, submission, display
                   "Use --help for more info about flags, or read the README on discord.")
 def main():
     """
-    A Command Line Interface for Dodona. Finally, you have no need to exit your terminal anymore!
+    A Command Line Interface for Dodona.
+    Finally, you have no need to exit your terminal any more!
     Use --help for more info about flags, or read the README on discord.
     """
     pass
@@ -27,4 +28,3 @@ main.add_command(submission.sub)
 if __name__ == "__main__":
     # Main entry-point
     main()
-

@@ -1,0 +1,134 @@
+'\" t
+.TH DODONA 05/12/2023
+.SH NAME
+dodona \- a 3rd party Command Line Interface for Dodona
+
+.SH SYNOPSIS
+.B dodona
+[display|post|select|status|sub|tutorial|up] [--help]
+
+.SH DESCRIPTION
+This documents the usage of a Command Line Interface made for Dodona. 
+.B DodonaCLI
+connects to Dodona to enable you to read, submit and get feedback (if possible) on exercises. 
+You are able to switch courses, series and exercises, as long as you have acces to it on the official Dodona website.
+
+.SH SUBCOMMANDS
+.IP display
+Displays the courses/series/exercises you can select. When used while an exercise is selected, it will link you to the exercise page of the Dodona website. It can be used in combination with the flags
+.BR [-force|--force]
+to get more info.
+
+.IP post
+Posts the file given as an extra argument to the currently selected exercise. This will return if the tests are passed and if possible, extra information about the wrong tests.
+
+.IP select
+Select a course/series/exercise of those available when using 
+.BR dodona display .
+Requires an extra argument 
+.BR [id|name] 
+where name can be a distinct part of the cours/series/exercise
+
+.IP status
+Show the current selected course/series/exercise. If none are selected, 
+.B None 
+will be displayed.
+
+.IP sub
+Shows the last 10 submissions of the selected exercise and if they were correct or not.
+
+.IP tutorial
+Starts an interactive tutorial to learn how the command works.
+
+.IP up
+Goes deselects the current course/series/exercise and goes to the layer above. Optional arguments are [all|top|1|2|3]. [all|top]: deselect everyting, [1|2|3]: deselect n layers, if you are less or equal to n layers deep, it deselects everything.
+
+.IP \-\-help
+Can be uses with every option to get an help page for the command, if you use 
+.B dodona
+or
+.B dodona --help
+you get the help page of the main command.
+
+.SH EXAMPLES
+.PP
+dodona tutorial
+.RS 4
+starts the tutorial and connects to Dodona if you are a first time user.
+.RE
+
+.PP 
+dodona display
+.RS 4
+Shows the available cources
+.RE
+
+.PP
+dodona select 1234
+.RS 4
+Select the course with id '1234'
+.RE
+
+.PP
+dodona display
+.RS 4
+Shows the available series
+.RE
+
+.PP
+dodona select Pyt
+.RS 4
+Matches the series with 'Pyt' in it's name if it's the only one
+.RE
+
+.PP dodona select 'Exercise 1'
+.RS 4
+Selects  the exercise with the name: "Exercise 1"
+.RE
+
+.PP 
+dodona post test.py
+.RS 4
+Submits the document test.py to the currently selected exercise
+.RE
+
+.PP
+dodona sub
+.RS 4
+Shows the last submissions.
+.RE
+
+.PP
+dodona up 2
+.RS 4
+Goes up 2 layers, in this case it would deselect the current exercise and series.
+.RE
+
+.SH AUTHOR
+.PP
+DodonaCLI: Bram Windey (windey.bram@gmail.com)
+
+Man-page: Kiandro De Waegenaere & Bram windey
+
+.SH COPYRIGHT
+MIT License
+
+Copyright (c) 2023 Bram Windey
+.PP
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+.PP
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+.PP
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

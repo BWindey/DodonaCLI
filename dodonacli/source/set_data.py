@@ -19,7 +19,7 @@ def dump_config(config):
 
 def post_solution(content, connection, headers, config):
     """
-    Post the solution in content to Dodona and print the results
+    Post the solution in content to Dodona and print the result
     :param content: str with the solution to post to Dodona
     :param connection: HTTPSConnection object that connects to www.dodona.be
     :param headers: dict with extra info for connection, mainly authorization needed
@@ -104,9 +104,19 @@ def select_spinner():
     christmas_end = datetime(current_date.year, 1, 8).date()
 
     # Check if the current date is within the Christmas season range
-    is_christmas_season = christmas_start <= current_date <= christmas_end
+    is_christmas_season = not christmas_start > current_date > christmas_end
 
     if is_christmas_season:
         return christmas_spinner
 
     return random.choice(selection_spinners)
+
+
+def save_submission_code(exer_name: str, sub_id: int, sub_code: str):
+    file_name = f"{exer_name}_{sub_id}"
+
+    with open(file_name, "w") as code_file:
+        code_file.write(sub_code)
+
+    print(f"\nCode from your submission for {exer_name} is now saved in:\n"
+          f"\t{exer_name}_{sub_id}\n")

@@ -1,10 +1,24 @@
+import http.client
 import json
 import os
+import socket
 
 from . import set_data, interactive_tutorial
 
 
-def handle_connection(connection):
+def handle_connection_request(connection: http.client.HTTPSConnection, connection_type: str,
+                              link: str, headers: dict) -> http.client.HTTPSConnection:
+    try:
+        connection.request(connection_type, link, headers=headers)
+
+    except socket.gaierror:
+        print("Something went wrong trying to connect to Dodona. This is probably an internet connection problem.")
+        exit(2)
+
+    return connection
+
+
+def handle_connection_response(connection: http.client.HTTPSConnection) -> bytes:
     """
     Handle response from Dodona connection
     Terminates program if there was a problem with the connection
@@ -24,20 +38,20 @@ def handle_connection(connection):
     return data
 
 
-def courses_data(connection, headers):
+def courses_data(connection: http.client.HTTPSConnection, headers: dict):
     """
     Get registred courses of user
     :param connection: HTTPSConnection object to the main Dodona page
     :param headers: Dict with extra info, mainly autorization needed
     :return: json object with info about available courses
     """
-    connection.request("GET", "/courses?tab=my", headers=headers)
-    data = handle_connection(connection)
+    connection = handle_connection_request(connection, "GET", "/courses?tab=my", headers)
+    data = handle_connection_response(connection)
 
     return json.loads(data)
 
 
-def series_data(connection, headers, course_id):
+def series_data(connection: http.client.HTTPSConnection, headers: dict, course_id: str):
     """
     Get all exercise-series of course
     :param connection: HTTPSConnection object to the main Dodona page
@@ -45,13 +59,13 @@ def series_data(connection, headers, course_id):
     :param course_id: int id of the course to find series from
     :return: json object with info about available series
     """
-    connection.request("GET", "/courses/" + course_id + "/series", headers=headers)
-    data = handle_connection(connection)
+    connection = handle_connection_request(connection, "GET", "/courses/" + course_id + "/series", headers=headers)
+    data = handle_connection_response(connection)
 
     return json.loads(data)
 
 
-def exercises_data(connection, headers, series_id):
+def exercises_data(connection: http.client.HTTPSConnection, headers: dict, series_id: str):
     """
     Get all exercises of exercise-serie
     :param connection: HTTPSConnection object to the main Dodona page
@@ -59,13 +73,18 @@ def exercises_data(connection, headers, series_id):
     :param series_id: int id of exercise-series
     :return: json object with info about available exercises
     """
-    connection.request("GET", "/series/" + series_id + "/activities", headers=headers)
-    data = handle_connection(connection)
+    connection = handle_connection_request(
+        connection,
+        "GET",
+        "/series/" + series_id + "/activities",
+        headers=headers
+    )
+    data = handle_connection_response(connection)
 
     return json.loads(data)
 
 
-def exercise_data(connection, headers, course_id, exercise_id):
+def exercise_data(connection: http.client.HTTPSConnection, headers: dict, course_id: str, exercise_id: str):
     """
     Get exercise-info for selected exercise
     :param connection: HTTPSConnection object to the main Dodona page
@@ -74,22 +93,61 @@ def exercise_data(connection, headers, course_id, exercise_id):
     :param exercise_id: int id of exercise
     :return: json object with info about exercise
     """
-    connection.request("GET", "/courses/" + course_id + "/activities/" + exercise_id, headers=headers)
-    data = handle_connection(connection)
+    connection = handle_connection_request(
+        connection, "GET",
+        "/courses/" + course_id + "/activities/" + exercise_id,
+        headers=headers
+    )
+    data = handle_connection_response(connection)
 
     return json.loads(data)
 
 
-def exercise_submissions(config, connection, headers):
+def exercise_submissions(config: dict, connection: http.client.HTTPSConnection, headers: dict):
     course_id = config['course_id']
     series_id = config['serie_id']
     exercise_id = config['exercise_id']
 
-    connection.request("GET", f"/courses/{course_id}/series/{series_id}/activities/{exercise_id}/submissions",
-                       headers=headers)
-    data = handle_connection(connection)
+    connection = handle_connection_request(
+        connection,
+        "GET",
+        f"/courses/{course_id}/series/{series_id}/activities/{exercise_id}/submissions",
+        headers=headers
+    )
+    data = handle_connection_response(connection)
 
     return json.loads(data)
+
+
+def all_submissions(connection: http.client.HTTPSConnection, headers: dict):
+    connection = handle_connection_request(
+        connection,
+        "GET",
+        "/submissions",
+        headers=headers
+    )
+    data = handle_connection_response(connection)
+
+    return json.loads(data)
+
+
+def submission_info(sub_id: int, connection: http.client.HTTPSConnection, headers: dict, config):
+    connection = handle_connection_request(
+        connection,
+        "GET",
+        f"/submissions/{sub_id}",
+        headers=headers
+    )
+    data = handle_connection_response(connection)
+    json_data = json.loads(data)
+
+    exercise_id = json_data['exercise'].split('/')[-1].replace('.json', '')
+
+    exercise = exercise_data(connection, headers, config['course_id'], exercise_id)
+
+    json_data['exercise_name'] = exercise['name']
+
+    return json_data
 
 
 def get_configs():
@@ -97,16 +155,19 @@ def get_configs():
     Get config data from config.json
     :return: json object with config data
     """
-    # Get path of the config-file. This is a bit more complicated because this file exists at the same directory as
-    # the python files, but the command may be executed from anywhere with the apropriate alias set.
-    # Thus, first te path to the directory of the python files is retrieved, then the config-file-name is appended
+    # Get the path of the config-file.
+    # This is a bit more complicated because this file exists in the same directory as
+    # the python files, but the command may be executed from anywhere with the appropriate alias set.
+    # Thus, first the path to the directory of the python files is retrieved; then the config-file-name is appended
     script_directory = os.path.dirname(os.path.abspath(__file__))
     config_file_path = os.path.join(script_directory, '../../config.json')
 
-    # First try to open, if unable to open, create new config-file and ask user for a token
+    # First try to open, if unable to open, create a new config-file and ask user for a token
     try:
         with open(config_file_path, "r") as file:
             config = json.load(file)
+
+            config = validate_config(config)
 
     except FileNotFoundError:
         # Create config dictionary
@@ -126,5 +187,40 @@ def get_configs():
         set_data.dump_config(config)
 
         exit(0)
+
+    return config
+
+
+def validate_config(config: dict):
+    """
+    Checks whether the config file contains all the necessary keys.
+    This is needed when an update introduces new keys.
+    :param config: Dictionary with the content of config.json
+    :return: Updated config dictionary
+    """
+    keys_to_check = (
+        "course_id",    "course_name",
+        "serie_id",     "serie_name",
+        "exercise_id",  "exercise_name"
+    )
+    for key in keys_to_check:
+        if key not in config:
+            config[key] = None
+
+    if "TOKEN" not in config:
+        print("API token not found.")
+        config = get_api_token(config)
+
+    return config
+
+
+def get_api_token(config: dict):
+    """
+    Asks the user for an API token and saves it
+    :param config: Dictionary with the content of config.json
+    :return: Updated config dictionary
+    """
+    config['TOKEN'] = input("Paste your API-token here: ")
+    set_data.dump_config(config)
 
     return config
