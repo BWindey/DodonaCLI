@@ -1,7 +1,6 @@
 import http.client
 import json
 import os
-import re
 import socket
 
 from . import set_data, interactive_tutorial
@@ -174,6 +173,8 @@ def get_configs():
         with open(config_file_path, "r") as file:
             config = json.load(file)
 
+            config = validate_config(config)
+
     except FileNotFoundError:
         # Create config dictionary
         config = {e: None
@@ -192,5 +193,29 @@ def get_configs():
         set_data.dump_config(config)
 
         exit(0)
+
+    return config
+
+
+def validate_config(config: dict):
+    keys_to_check = (
+        "course_id",    "course_name",
+        "serie_id",     "serie_name",
+        "exercise_id",  "exercise_name"
+    )
+    for key in keys_to_check:
+        if key not in config:
+            config[key] = None
+
+    if "TOKEN" not in config:
+        print("API token not found.")
+        config = get_api_token(config)
+
+    return config
+
+
+def get_api_token(config: dict):
+    config['TOKEN'] = input("Paste your API-token here: ")
+    set_data.dump_config(config)
 
     return config
