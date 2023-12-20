@@ -1,5 +1,6 @@
 import click
 import http.client
+import json
 import textwrap
 
 from dodonacli.source import set_data
@@ -10,9 +11,8 @@ from dodonacli.source import pretty_console, get_data
                     "it will try to select a course, then an exercise-series, then an exercise. Will not work "
                     "with invalid id's or names.")
 @click.option("--hidden", "-hidden",
-              help="Access a hidden series using a URL as argument of this option. "
-                   "Only available when trying to select a serie",
-              is_flag=True, default=False)
+              help="Access a hidden series. Only available when trying to select a series.\n\n\t"
+                   "Usage: dodona select --hidden <TOKEN> <SERIES_ID>")
 @click.argument('thing')
 def select(thing, hidden):
     # Read configs in
@@ -31,7 +31,7 @@ def select(thing, hidden):
 
     elif config['serie_id'] is None:
         if hidden:
-            config = select_hidden_series(connection, headers, thing, config)
+            config = select_hidden_series(connection, headers, thing, hidden, config)
         else:
             config = select_series(connection, headers, thing, config)
 
@@ -95,31 +95,43 @@ def select_series(connection: http.client.HTTPSConnection, headers: dict,
 
 
 def select_hidden_series(connection: http.client.HTTPSConnection, headers: dict,
-                         thing: str, config: dict):
+                         series_id: str, series_token: str, config: dict):
     # https://dodona.be/nl/series/30841/?token=Gd2EF
-    if not thing.isnumeric():
-        print("Well this won't work without a valid ID. Please try again")
+
+    if not series_id.isnumeric():
+        print("Well this won't work without a valid ID (only numeric characters). Please try again")
         return config
-    link = f"/series/{thing}/activities"
+
+    link = f"/series/{series_id}?token={series_token}"
     connection = get_data.handle_connection_request(connection, "GET", link, headers)
 
     res = connection.getresponse()
 
-    if res.status == 200:
-        pretty_console.console.print(f"\nHidden series [bold]\"{thing}\"[/] selected.\n")
-        config['serie_id'] = thing
-    else:
+    if res.status != 200:
         print("Something went wrong trying to select the hidden series.\n"
               "Check if you got the right series-id (seen in /series/<serie_id> in the link you got).\n"
               "\tResponse code: " + str(res.status) +
               "\n\tReason: " + str(res.reason))
+        return config
+
+    json_data = json.loads(res.read())
+    config['serie_id'] = series_id
+    config['serie_name'] = json_data['name']
+    config['serie_token'] = series_token
+
+    pretty_console.console.print(f"\nSerie [bold]\"{json_data['name']}\"[/] selected.\n")
 
     return config
 
 
 def select_exercise(connection: http.client.HTTPSConnection, headers: dict,
-                    thing: str, config: dict):
-    data_exercises = get_data.exercises_data(connection, headers, config['serie_id'])
+                    thing: str, config: dict) -> dict:
+    if config['serie_token'] is None:
+        serie_token = ""
+    else:
+        serie_token = "?token=" + config['serie_token']
+
+    data_exercises = get_data.exercises_data(connection, headers, config['serie_id'], serie_token)
 
     exercises = {str(exercise['id']): (exercise['name'], i) for i, exercise in enumerate(data_exercises)}
 

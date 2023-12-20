@@ -31,6 +31,7 @@ def up(amount):
             elif config.get('serie_id') is not None:
                 config['serie_id'] = None
                 config['serie_name'] = None
+                config['serie_token'] = None
                 print("Deselected series.")
             elif config.get('course_id') is not None:
                 config['course_id'] = None
