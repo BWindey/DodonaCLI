@@ -7,19 +7,20 @@
 
 _dodona(){
 	if [ "$3" == "sub" ]; then
-		COMPREPLY=( $(compgen -W "load display" -- "$2")  )
+		COMPREPLY=( $(compgen -W "load display --help" -- "$2")  )
 
 	elif [ "$3" == "display" ]; then
-		COMPREPLY=( $(compgen -W "-force" -- "$2") )
+		COMPREPLY=( $(compgen -W "--force --help" -- "$2") )
 
 	elif [ "$3" == "select" ]; then
-	  COMPREPLY=( $(compgen -W "-hidden" -- "$2") )
+	  COMPREPLY=( $(compgen -W "--hidden --help" -- "$2") )
 
 	elif [ "$3" == "dodona" ]; then
-		COMPREPLY=( $(compgen -W "display post select status sub tutorial up" -- "$2") )
+		COMPREPLY=( $(compgen -W "display post select status sub tutorial up --help" -- "$2") )
 	
 	elif [ "$3" == "post" ]; then
 		COMPREPLY=( $(compgen -f -- "$2" | grep -vF ".swp") )
+        COMPREPLY+=( $(compgen -W "--help") )
 	fi
 }
 
