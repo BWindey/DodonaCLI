@@ -19,7 +19,7 @@ _dodona(){
 		COMPREPLY=( $(compgen -W "display post select status sub tutorial up" -- "$2") )
 	
 	elif [ "$3" == "post" ]; then
-		COMPREPLY=( $(ls -Ap | grep -v "/" | grep "^$2" | grep -vF ".swp") )
+		COMPREPLY=( $(compgen -f -- "$2" | grep -vF ".swp") )
 	fi
 }
 
