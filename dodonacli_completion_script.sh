@@ -20,7 +20,7 @@ _dodona(){
 	
 	elif [ "$3" == "post" ]; then
 		COMPREPLY=( $(compgen -f -- "$2" | grep -vF ".swp") )
-        COMPREPLY+=( $(compgen -W "--help") )
+        COMPREPLY+=( $(compgen -W "--help" -- "$2") )
     
     else
         COMPREPLY=( $(compgen -W "--help") )
