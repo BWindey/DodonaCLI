@@ -37,7 +37,7 @@ and source it in your ~/.bashrc.
 This is currently not supported (tested, tried, ...) for other shells than bash.
 If you know how to support your platform, please reach out to me.
 
-There is also a manual page. You can download ["dodonacli.1.gz"](https://github.com/BWindey/DodonaCLI/blob/master/man-page/dodonacli.1.gz") and save this in a folder included in `$(manpath)`. 
+There is also a manual page. You can download ["dodonacli.1.gz"](https://github.com/BWindey/DodonaCLI/blob/master/man-page/dodonacli.1.gz) and save this in a folder included in `$(manpath)`. 
 
 
 ## How to use
