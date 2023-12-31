@@ -31,12 +31,13 @@ Alternatively, you can `git clone https://github.com/BWindey/DodonaCLI` and when
 do `pip install -e .`.
 This is mostly useful for those wanting to change/add to the code.
 
-If you want to have tab-completion, this can be done when you’re using bash.
-Download ["dodonacli_completion_script.sh" from GitHub](https://github.com/BWindey/DodonaCLI/blob/master/dodonacli_completion_script.sh),
+Tab-completion is supported for bash. You can 
+download ["dodonacli_completion_script.sh" from GitHub](https://github.com/BWindey/DodonaCLI/blob/master/dodonacli_completion_script.sh),
 and source it in your ~/.bashrc. 
-This is currently not supported (tested, tried, ...) for other shells than bash
+This is currently not supported (tested, tried, ...) for other shells than bash.
+If you know how to support your platform, please reach out to me.
 
-If you want to have a manual page, you can download ["dodonacli.1.gz"](https://github.com/BWindey/DodonaCLI/blob/master/man-page/dodonacli.1.gz") and save this in a folder included in `$(manpath)`. 
+There is also a manual page. You can download ["dodonacli.1.gz"](https://github.com/BWindey/DodonaCLI/blob/master/man-page/dodonacli.1.gz") and save this in a folder included in `$(manpath)`. 
 
 
 ## How to use
@@ -68,20 +69,41 @@ You can use it to write your solution in, and post it,
 but be aware that this file gets overwritten when you select a new exercise that has boilerplate-code attached
 (not all do).
 
-When you want to use this tool seriously, you will probably want to have multiple terminal sessions open.
-For example, I would want to have one to view the exercise description, and one to write my solution in vim.
-One way to achieve this is using 'tmux'.
-There are other ways to do this, but I’ll explain how I use tmux to make an exercise:
-- open tmux with `tmux`
-- create a new tmux window by typing ctrl + b with % or ". % opens a new one next to it, " opens a new one under it
-- display exercise in one window `dodona display`
-- move to another tmux window to use an editor to write my code in with ctrl + b and arrow keys to select a different window
+
+## Flags that could be important
+There currently are 3 flags that can be important when working with non-standard exercises. 
+- --force
+- --hidden
+- --other
+
+They are all context-specific. A short explanation can be found in the help-pages, a slightly longer one here:
+
+### Force 
+This flag is used in combination with the `display` command, when viewing exercise-series and exercise-descriptions. 
+It will do its best to render the html and markdown of the web-page in your terminal. 
+You'll quickly see why this is hidden behind this flag: the formatting can be aweful. 
+For some exercise-descriptions this can however be a nice addition, and in the future the formatting-"engine" can improve.
+
+
+### Hidden 
+This flag is used in combination with the `select` command, when selecting an exercise-series that is hidden. 
+Series can be hidden when they are used in tests or exams, and to get to them you'll receive a link to it from your 
+teachers. This link will be of the form ".../series/<SERIES-ID>/?token=<TOKEN>". 
+The only correct syntax to then select that hidden series with DodonaCLI is:
+    ```dodona select --hidden <TOKEN> <SERIES-ID>```
+
+
+### Other 
+This flag is used in combination with the `select` command, when selecting a course you're not registered for.
+This allows you for example to select courses from previous years to try out those old tests or exams.
+You cannot find these courses when using `display`, so you'll need the correct course-id to select it, not the course-name.
+
 
 ## How to update
 Updating is simple: 
 `pip install DodonaCLI --update`
 
-Alternatively, if you installed it with cloning from GitHub, you can just `git pull` and `pip build .` again like you would install it.
+Alternatively, if you installed it with cloning from GitHub, you can `git pull` and `pip build .` again like you would install it.
 
 
 ## Roadmap
@@ -91,10 +113,9 @@ More features to maybe add in the future:
 - easy (automatic?) downloading of files mentioned in exercise description
 - be able to mark as read via terminal for ContentPage
 - use links at top of solution files to ignore the configs and straight post to right exercise, like the plugins
+- implement a `dodona next` command to immediatly select the next course/series/exercise, depending on the current selection.
 
 **Not important, but valid ideas:**
 - (plugin) for syntax-checking before posting, so you get a quicker response in case of a syntax error, depends on the type of exercise (bash, java, python, C, C++, R, ...)
-- potential collapsing of long pages (exercise-series, exercise-descriptions) or remind the user they can pipe it to less/more
 - caching to make it feel like a real command, very fast! Currently, you’ll often have to wait a few hundred milliseconds for the API call to return
-- a python- or ed-like own terminal after running the `dodona` command to not have to repeat the command often. This seems complicated, but it might be possible. Could maybe exist alongside the other option?
 - look into https://textual.textualize.io/getting_started/ to maybe use that??
