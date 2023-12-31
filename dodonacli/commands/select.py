@@ -19,7 +19,7 @@ from dodonacli.source import pretty_console, get_data
             "\n\nUsage: dodona select --hidden <TOKEN> <SERIES_ID>")
 
 @click.option("--other", "-other",
-        help="Select a course that you're not registred for. Only works with "
+        help="Select a course that you're not registered for. Only works with "
             "an id, not a name.",
         is_flag=True, default=False)
 
@@ -62,14 +62,14 @@ def select(thing, hidden, other):
 def select_course(connection: http.client.HTTPSConnection, headers: dict,
                   thing: str, config: dict, other: bool):
     if not other:
-        return select_registred_course(connection, headers, thing, config)
+        return select_registered_course(connection, headers, thing, config)
     else:
-        return select_unregistred_course(connection, headers, thing, config)
+        return select_unregistered_course(connection, headers, thing, config)
 
 
-def select_registred_course(connection:http.client.HTTPSConnection,
+def select_registered_course(connection:http.client.HTTPSConnection,
                             headers: dict, thing: str, config: dict) -> dict:
-    # Get all registred courses to check if a valid course was selected
+    # Get all registered courses to check if a valid course was selected
     data_courses = get_data.courses_data(connection, headers)
     courses = {str(course['id']): course['name'] for course in data_courses}
 
@@ -99,7 +99,7 @@ def select_registred_course(connection:http.client.HTTPSConnection,
     return config
 
 
-def select_unregistred_course(connection: http.client.HTTPSConnection,
+def select_unregistered_course(connection: http.client.HTTPSConnection,
                               headers: dict, thing: str, config: dict) -> dict:
     # Has to be an id, because it's not possible to match against names 
     if not thing.isnumeric():

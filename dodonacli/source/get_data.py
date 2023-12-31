@@ -40,7 +40,7 @@ def handle_connection_response(connection: http.client.HTTPSConnection) -> bytes
 
 def courses_data(connection: http.client.HTTPSConnection, headers: dict):
     """
-    Get registred courses of user
+    Get registered courses of user
     :param connection: HTTPSConnection object to the main Dodona page
     :param headers: Dict with extra info, mainly autorization needed
     :return: json object with info about available courses
