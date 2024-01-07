@@ -1,6 +1,6 @@
 import click
 
-from dodonacli.commands import select, status, up, post
+from dodonacli.commands import select, status, up, post, cli_next
 from dodonacli.commands import tutorial, submission, display
 
 
@@ -23,6 +23,7 @@ main.add_command(up.up)
 main.add_command(post.post)
 main.add_command(tutorial.tutorial)
 main.add_command(submission.sub)
+main.add_command(cli_next.cli_next)
 
 
 if __name__ == "__main__":
