@@ -8,21 +8,18 @@ from dodonacli.source import pretty_console, get_data
 
 
 @click.command(
-        help="Select based on id or name. Depends on current selection. " 
-            "If nothing is selected, it will try to select a course, "
-            "then an exercise-series, then an exercise. "
-            "Will not work with invalid id's or names without flag.")
-
+    help="Select based on id or name. Depends on current selection. "
+         "If nothing is selected, it will try to select a course, "
+         "then an exercise-series, then an exercise. "
+         "Will not work with invalid id's or names without flag.")
 @click.option("--hidden", "-hidden",
-        help="Access a hidden series. Only available when trying to select "
-            "exercise series."
-            "\n\nUsage: dodona select --hidden <TOKEN> <SERIES_ID>")
-
+              help="Access a hidden series. Only available when trying to select "
+                   "exercise series."
+                   "\n\nUsage: dodona select --hidden <TOKEN> <SERIES_ID>")
 @click.option("--other", "-other",
-        help="Select a course that you're not registered for. Only works with "
-            "an id, not a name.",
-        is_flag=True, default=False)
-
+              help="Select a course that you're not registered for. Only works with "
+                   "an id, not a name.",
+              is_flag=True, default=False)
 @click.argument('thing')
 def select(thing, hidden, other):
     # Read configs in
@@ -42,7 +39,7 @@ def select(thing, hidden, other):
     elif config['serie_id'] is None:
         if hidden:
             config = select_hidden_series(
-                    connection, headers, thing, hidden, config)
+                connection, headers, thing, hidden, config)
         else:
             config = select_series(connection, headers, thing, config)
 
@@ -52,7 +49,7 @@ def select(thing, hidden, other):
     else:
         # You can't select more when everything is already selected
         print("There is already an exercise selected, please remove selection "
-            "with --up or -u to select a new exercise first.")
+              "with --up or -u to select a new exercise first.")
 
     # Save selections in config file
     set_data.dump_config(config)
@@ -67,8 +64,8 @@ def select_course(connection: http.client.HTTPSConnection, headers: dict,
         return select_unregistered_course(connection, headers, thing, config)
 
 
-def select_registered_course(connection:http.client.HTTPSConnection,
-                            headers: dict, thing: str, config: dict) -> dict:
+def select_registered_course(connection: http.client.HTTPSConnection,
+                             headers: dict, thing: str, config: dict) -> dict:
     # Get all registered courses to check if a valid course was selected
     data_courses = get_data.courses_data(connection, headers)
     courses = {str(course['id']): course['name'] for course in data_courses}
@@ -79,7 +76,7 @@ def select_registered_course(connection:http.client.HTTPSConnection,
         config['course_name'] = courses[thing]
 
         pretty_console.console.print(
-                f"\nCourse [bold]\"{courses[thing]}\"[/] selected.\n")
+            f"\nCourse [bold]\"{courses[thing]}\"[/] selected.\n")
     else:
         for course in courses.items():
             if thing.lower() in course[1].lower():
@@ -87,8 +84,8 @@ def select_registered_course(connection:http.client.HTTPSConnection,
                 config['course_name'] = course[1]
 
                 pretty_console.console.print(
-                        f"\nCourse [bold]\"{courses[course[0]]}\" [/] selected.\n")
-                
+                    f"\nCourse [bold]\"{courses[course[0]]}\" [/] selected.\n")
+
                 # We found it, we can stop searching
                 break
 
@@ -100,16 +97,16 @@ def select_registered_course(connection:http.client.HTTPSConnection,
 
 
 def select_unregistered_course(connection: http.client.HTTPSConnection,
-                              headers: dict, thing: str, config: dict) -> dict:
+                               headers: dict, thing: str, config: dict) -> dict:
     # Has to be an id, because it's not possible to match against names 
     if not thing.isnumeric():
         print("The selection needs to be an id (all numbers). "
               "It's not possible to match by name.")
         return config
-    
+
     link = f"/courses/{thing}"
     connection = get_data.handle_connection_request(
-            connection, "GET", link, headers)
+        connection, "GET", link, headers)
 
     res = connection.getresponse()
 
@@ -121,11 +118,11 @@ def select_unregistered_course(connection: http.client.HTTPSConnection,
         return config
 
     json_data = json.loads(res.read())
-    config['course_id'] = thing 
+    config['course_id'] = thing
     config['course_name'] = json_data['name']
 
     pretty_console.console.print(
-            f"\nCourse [bold]\"{json_data['name']}\"[/] selected.\n")
+        f"\nCourse [bold]\"{json_data['name']}\"[/] selected.\n")
 
     return config
 
@@ -140,7 +137,7 @@ def select_series(connection: http.client.HTTPSConnection, headers: dict,
         config['serie_id'] = thing
         config['serie_name'] = series[thing]
         pretty_console.console.print(
-                "\nSeries [bold]\"" + series[thing] + "\"[/] selected.\n")
+            "\nSeries [bold]\"" + series[thing] + "\"[/] selected.\n")
     else:
         for serie in series.items():
             if thing.lower() in serie[1].lower():
@@ -159,12 +156,12 @@ def select_hidden_series(connection: http.client.HTTPSConnection, headers: dict,
                          series_id: str, series_token: str, config: dict):
     if not series_id.isnumeric():
         print("Well this won't work without a valid ID "
-            "(only numeric characters). Please try again.")
+              "(only numeric characters). Please try again.")
         return config
 
     link = f"/series/{series_id}?token={series_token}"
     connection = get_data.handle_connection_request(
-            connection, "GET", link, headers)
+        connection, "GET", link, headers)
 
     res = connection.getresponse()
 
@@ -182,7 +179,7 @@ def select_hidden_series(connection: http.client.HTTPSConnection, headers: dict,
     config['serie_token'] = series_token
 
     pretty_console.console.print(
-            f"\nSerie [bold]\"{json_data['name']}\"[/] selected.\n")
+        f"\nSerie [bold]\"{json_data['name']}\"[/] selected.\n")
 
     return config
 
@@ -195,16 +192,16 @@ def select_exercise(connection: http.client.HTTPSConnection, headers: dict,
         serie_token = "?token=" + config['serie_token']
 
     data_exercises = get_data.exercises_data(
-            connection, headers, config['serie_id'], serie_token)
+        connection, headers, config['serie_id'], serie_token)
 
-    exercises = {str(exercise['id']): (exercise['name'], i) 
+    exercises = {str(exercise['id']): (exercise['name'], i)
                  for i, exercise in enumerate(data_exercises)}
 
     if thing.isnumeric() and thing in exercises:
         config['exercise_id'] = thing
         config['exercise_name'] = exercises[thing]
         pretty_console.console.print(
-                "\nExercise [bold]\"" + exercises[thing] + "\"[/] selected.\n")
+            "\nExercise [bold]\"" + exercises[thing] + "\"[/] selected.\n")
     else:
         for exercise in exercises.items():
             exercise_id, (exercise_name, number) = exercise
@@ -212,10 +209,10 @@ def select_exercise(connection: http.client.HTTPSConnection, headers: dict,
                 config['exercise_id'] = exercise_id
                 config['exercise_name'] = exercise_name
                 pretty_console.console.print(
-                        "\nExercise [bold]\"" 
-                        + exercises[exercise_id][0] 
-                        + "\"[/] selected.\n"
-                    )
+                    "\nExercise [bold]\""
+                    + exercises[exercise_id][0]
+                    + "\"[/] selected.\n"
+                )
                 boilerplate = data_exercises[number].get("boilerplate")
                 if boilerplate is not None and boilerplate.strip() != "":
                     print(
@@ -230,4 +227,3 @@ def select_exercise(connection: http.client.HTTPSConnection, headers: dict,
         print("Not a valid exercise id or -name!")
 
     return config
-
