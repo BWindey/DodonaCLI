@@ -123,7 +123,6 @@ More features to maybe add in the future:
 - user-settings (f.e. auto-download of files, language, formatting, ...)
 - easy (automatic?) downloading of files mentioned in exercise description
 - be able to mark as read via terminal for ContentPage
-- use links at top of solution files to ignore the configs and straight post to right exercise, like the plugins
 - implement a `dodona next` command to immediatly select the next course/series/exercise, depending on the current selection.
 
 **Not important, but valid ideas:**

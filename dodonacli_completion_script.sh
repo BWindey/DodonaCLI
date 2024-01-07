@@ -19,8 +19,10 @@ _dodona(){
 		COMPREPLY=( $(compgen -W "display post select status sub tutorial up --help" -- "$2") )
 	
 	elif [ "$3" == "post" ]; then
-		COMPREPLY=( $(compgen -f -- "$2" | grep -vF ".swp") )
-        COMPREPLY+=( $(compgen -W "--help" -- "$2") )
+        COMPREPLY=( $(compgen -f -- "$2" | grep -vF ".swp") $(compgen -W "--help --link -l" -- "$2" ))
+
+    elif [ "$3" == "-l" ] || [ "$3" == "--use-link" ]; then
+        COMPREPLY=( $(compgen -f -- "$2") )
     
     else
         COMPREPLY=( $(compgen -W "--help") )
