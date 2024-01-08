@@ -6,8 +6,8 @@ PyPI page: https://pypi.org/project/DodonaCLI/#description
 1) [Disclaimers](#disclaimers)
 2) [How to install](#how-to-install)
 3) [How to use](#how-to-use)
-4) [How to update](#how-to-update)
-5) [All flags](#all-subcommands)
+4) [Flags that could be important](#flags-that-could-be-important)
+5) [How to update](#how-to-update)
 6) [Roadmap](#roadmap)
 
 ## Disclaimers
@@ -37,7 +37,7 @@ and source it in your ~/.bashrc.
 This is currently not supported (tested, tried, ...) for other shells than bash.
 If you know how to support your platform, please reach out to me.
 
-There is also a manual page. You can download ["dodonacli.1.gz"](https://github.com/BWindey/DodonaCLI/blob/master/man-page/dodonacli.1.gz") and save this in a folder included in `$(manpath)`. 
+There is also a manual page. You can download ["dodonacli.1.gz"](https://github.com/BWindey/DodonaCLI/blob/master/man-page/dodonacli.1.gz) and save this in a folder included in `$(manpath)`. 
 
 
 ## How to use
@@ -54,6 +54,7 @@ If nothing is selected, you’ll need to select a course first, then an exercise
 You can always see all your available options with `dodona display`.
 Posting a solution will only work if you have selected an exercise, and can be done with `dodona post <SOLUTION_FILE>`.
 This tree-like structure also explains the name of the deselect-flag: `up` and `uptop`. 
+To select the next exercise, you don’t need to go up and select the new one, you can use the `next` command.
 
 The first time you use DodonaCLI, the program will ask you for an API token,
 which you can generate on your Dodona-profile page.
@@ -71,39 +72,50 @@ but be aware that this file gets overwritten when you select a new exercise that
 
 
 ## Flags that could be important
-There currently are 3 flags that can be important when working with non-standard exercises. 
+There currently are four flags that can be important when working with non-standard exercises. 
 - --force
 - --hidden
 - --other
+- --use-link
 
 They are all context-specific. A short explanation can be found in the help-pages, a slightly longer one here:
 
 ### Force 
 This flag is used in combination with the `display` command, when viewing exercise-series and exercise-descriptions. 
 It will do its best to render the html and markdown of the web-page in your terminal. 
-You'll quickly see why this is hidden behind this flag: the formatting can be aweful. 
-For some exercise-descriptions this can however be a nice addition, and in the future the formatting-"engine" can improve.
+You’ll quickly see why this is hidden behind this flag: the formatting can be aweful. 
+For some exercise-descriptions, this can, however, be a nice addition,
+and in the future the formatting-"engine" can improve.
 
 
 ### Hidden 
 This flag is used in combination with the `select` command, when selecting an exercise-series that is hidden. 
-Series can be hidden when they are used in tests or exams, and to get to them you'll receive a link to it from your 
+Series can be hidden when they are used in tests or exams, and to get to them, you’ll receive a link to it from your 
 teachers. This link will be of the form ".../series/<SERIES-ID>/?token=<TOKEN>". 
 The only correct syntax to then select that hidden series with DodonaCLI is:
     ```dodona select --hidden <TOKEN> <SERIES-ID>```
 
 
 ### Other 
-This flag is used in combination with the `select` command, when selecting a course you're not registered for.
-This allows you for example to select courses from previous years to try out those old tests or exams.
-You cannot find these courses when using `display`, so you'll need the correct course-id to select it, not the course-name.
+This flag is used in combination with the `select` command, when selecting a course you’re not registered for.
+This allows you, for example, to select courses from previous years to try out those old tests or exams.
+You cannot find these courses when using `display`,
+so you’ll need the correct course-id to select it, not the course-name.
+
+### Use-link
+This flag is used in combination with the `post` command,
+when posting a solution-file to a link provided at the first line of the solution-file.
+The link has to include "/courses/<COURSE-ID>" and "/activities/<ACTIVITIES-ID"
+to know which exercise to submit your solution to.
+It also has to start with "https:<!-- comment to prevent link from appearing as real link-->//dodona.be/".
+This link is not included in the solution submitted to the Dodona servers; it is stripped out.
 
 
 ## How to update
 Updating is simple: 
 `pip install DodonaCLI --update`
 
-Alternatively, if you installed it with cloning from GitHub, you can `git pull` and `pip build .` again like you would install it.
+Alternatively, if you installed it with cloning from GitHub, you can `git pull`.
 
 
 ## Roadmap
@@ -112,7 +124,6 @@ More features to maybe add in the future:
 - user-settings (f.e. auto-download of files, language, formatting, ...)
 - easy (automatic?) downloading of files mentioned in exercise description
 - be able to mark as read via terminal for ContentPage
-- use links at top of solution files to ignore the configs and straight post to right exercise, like the plugins
 - implement a `dodona next` command to immediatly select the next course/series/exercise, depending on the current selection.
 
 **Not important, but valid ideas:**

@@ -1,3 +1,4 @@
+import datetime
 import http.client
 import json
 import os
@@ -212,6 +213,9 @@ def validate_config(config: dict):
     if "TOKEN" not in config:
         print("API token not found.")
         config = get_api_token(config)
+
+    if "date_update_checked" not in config:
+        config['date_update_checked'] = datetime.datetime.now().strftime("%Y-%m-%d")
 
     return config
 

@@ -19,6 +19,13 @@ Displays the courses/series/exercises you can select. When used while an exercis
 .BR [-force|--force]
 to force the web-pages content in your terminal. This formatting is often quite broken, so don't rely on this for tests.
 
+.IP next
+Selects the next course/series/exercise. This subcommand is equivalent to using 'up + select' and can be a nice time-saver. It is possible to go to the next unsolved exercise by appending the 
+.BR [-u|--unsolved]
+flag. It is also possible to reverse the order in which it cycles with the
+.BR [-r|--reverse]
+flag.
+
 .IP post
 Posts the file given as an extra argument to the currently selected exercise. This will return if the tests are passed and if possible, extra information about the wrong tests.
 
@@ -44,7 +51,7 @@ Starts an interactive tutorial to learn how the CLI works.
 Deselects the current course/series/exercise and goes to the layer above. Optional arguments are [all|top|1|2|3], which indicate how many "levels" you'll deselect.
 
 .IP \-\-help
-Can be uses with every option to get an help page for the command, if you use 
+Can be used with every option to get an help page for the command, if you use 
 .B dodona
 or
 .B dodona --help
