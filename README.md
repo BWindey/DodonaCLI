@@ -54,6 +54,7 @@ If nothing is selected, you’ll need to select a course first, then an exercise
 You can always see all your available options with `dodona display`.
 Posting a solution will only work if you have selected an exercise, and can be done with `dodona post <SOLUTION_FILE>`.
 This tree-like structure also explains the name of the deselect-flag: `up` and `uptop`. 
+To select the next exercise, you don’t need to go up and select the new one, you can use the `next` command.
 
 The first time you use DodonaCLI, the program will ask you for an API token,
 which you can generate on your Dodona-profile page.
@@ -114,7 +115,7 @@ This link is not included in the solution submitted to the Dodona servers; it is
 Updating is simple: 
 `pip install DodonaCLI --update`
 
-Alternatively, if you installed it with cloning from GitHub, you can `git pull` and `pip build .` again like you would install it.
+Alternatively, if you installed it with cloning from GitHub, you can `git pull`.
 
 
 ## Roadmap
