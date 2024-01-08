@@ -30,4 +30,4 @@ main.add_command(cli_next.cli_next)
 
 if __name__ == "__main__":
     # Main entry-point
-    main(["display"])
+    main()

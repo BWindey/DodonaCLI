@@ -8,7 +8,8 @@ from dodonacli.source import get_data, pretty_print, set_data
 # is a Python built-in. The command, however, will still be called
 # with 'next', as click provides the 'name=' argument
 @click.command(name="next",
-               help="Move to the next type of what you have selected. "
+               help="WARING: might overwrite 'boilerplate' file! "
+                    "Move to the next type of what you have selected. "
                     "It loops around to the beginning if the current selection "
                     "is at the end of the 'list'. If some boilerplate is attached "
                     "to the next exercise, it will put that in a file.")
@@ -73,11 +74,14 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     if not unsolved:
         next_id = id_list[(last_id_index + 1 - (2 * reverse)) % len(id_list)]
     else:
-        i = 0
+        i = 1
         while next_id == -1 and i < len(id_list):
             if not exercises_dict[id_list[(last_id_index + i * (-1) ** reverse) % len(id_list)]]['accepted']:
                 next_id = id_list[(last_id_index + i * (-1) ** reverse) % len(id_list)]
             i += 1
+        if next_id == -1:
+            print("\nYou already solved everything, there is no unsolved exercise to go to!\n")
+            return config
 
     # Store new exercise
     config['exercise_id'] = str(next_id)
