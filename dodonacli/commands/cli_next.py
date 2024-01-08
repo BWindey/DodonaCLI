@@ -80,7 +80,7 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
             i += 1
 
     # Store new exercise
-    config['exercise_id'] = next_id
+    config['exercise_id'] = str(next_id)
     config['exercise_name'] = exercises_dict[next_id]['name']
 
     next_id_index = id_list.index(int(next_id))
