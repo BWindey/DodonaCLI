@@ -112,11 +112,15 @@ def print_series_data(json_data, force=False):
     print()
 
 
-def print_exercise_data(json_data):
+def print_exercise_data(json_data, prefixes=None):
     """
     Print out the exercises in json_data in a neat way
     :param json_data: json object with data about Dodona exercises in a series
+    :param prefixes: dictionary with a prefix for each id in json_data
     """
+    if prefixes is None:
+        prefixes = {}
+
     # List of tuples where each tuple represents an exercise by id, name, solved and has_attempt
     display_data = []
 
@@ -173,7 +177,7 @@ def print_exercise_data(json_data):
             solve_status = "[bold]SOLVE STATUS UNKNOWN"
 
         pretty_console.console.print(
-            f"\t{exercise['id'].ljust(max_exercise_id_length)}: "
+            (prefixes.get(exercise['id']) or "\t") + f"{exercise['id'].ljust(max_exercise_id_length)}: "
             f"[bold]{exercise['name'].ljust(max_exercise_name_length)}[/]\t"
             + solve_status
         )

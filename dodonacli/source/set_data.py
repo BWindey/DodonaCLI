@@ -17,20 +17,21 @@ def dump_config(config):
         json.dump(config, config_file)
 
 
-def post_solution(content, connection, headers, config):
+def post_solution(content, connection, headers, course_id, exercise_id):
     """
     Post the solution in content to Dodona and print the result
     :param content: str with the solution to post to Dodona
     :param connection: HTTPSConnection object that connects to www.dodona.be
     :param headers: dict with extra info for connection, mainly authorization needed
-    :param config: dict with configs from config-file
+    :param course_id:
+    :param exercise_id:
     """
     # Make dict with info needed to post the solution and dump it in a json object
     payload = {
         "submission": {
             "code": content,
-            "course_id": config['course_id'],
-            "exercise_id": config['exercise_id']
+            "course_id": course_id,
+            "exercise_id": exercise_id
         }
     }
     json_payload = json.dumps(payload)

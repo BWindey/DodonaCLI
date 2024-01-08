@@ -341,7 +341,7 @@ in this case 'boilerplate'.
         command = input("$ ")
 
     with open('boilerplate', 'r') as solution_file:
-        set_data.post_solution(solution_file.read(), connection, headers, config)
+        set_data.post_solution(solution_file.read(), connection, headers, config['course_id'], config['exercise_id'])
 
 
 def tutorial_conclude(config: dict) -> dict:
