@@ -39,7 +39,8 @@ def select(thing, hidden, other):
     elif config['serie_id'] is None:
         if hidden:
             config = select_hidden_series(
-                connection, headers, thing, hidden, config)
+                connection, headers, thing, hidden, config
+            )
         else:
             config = select_series(connection, headers, thing, config)
 
@@ -185,45 +186,47 @@ def select_hidden_series(connection: http.client.HTTPSConnection, headers: dict,
 
 
 def select_exercise(connection: http.client.HTTPSConnection, headers: dict,
-                    thing: str, config: dict) -> dict:
+                    selection: str, config: dict) -> dict:
+    # Token for hidden series
     if config['serie_token'] is None:
         serie_token = ""
     else:
         serie_token = "?token=" + config['serie_token']
 
     data_exercises = get_data.exercises_data(
-        connection, headers, config['serie_id'], serie_token)
+        connection, headers, config['serie_id'], serie_token
+    )
 
-    exercises = {str(exercise['id']): (exercise['name'], i)
-                 for i, exercise in enumerate(data_exercises)}
+    selected_exercise = {}
 
-    if thing.isnumeric() and thing in exercises:
-        config['exercise_id'] = thing
-        config['exercise_name'] = exercises[thing][0]
-        pretty_console.console.print(
-            "\nExercise [bold]\"" + exercises[thing] + "\"[/] selected.\n")
+    if selection.isnumeric() and selection in [exercise['id'] for exercise in data_exercises]:
+        selected_exercise = [exercise for exercise in data_exercises if exercise['id'] == selection]
+
     else:
-        for exercise in exercises.items():
-            exercise_id, (exercise_name, number) = exercise
-            if thing.lower() in exercise_name.lower():
-                config['exercise_id'] = exercise_id
-                config['exercise_name'] = exercise_name
-                pretty_console.console.print(
-                    "\nExercise [bold]\""
-                    + exercises[exercise_id][0]
-                    + "\"[/] selected.\n"
-                )
-                boilerplate = data_exercises[number].get("boilerplate")
-                if boilerplate is not None and boilerplate.strip() != "":
-                    print(
-                        "\nBoilerplate code (copy in boilerplate-file):\n")
-                    print(textwrap.indent(boilerplate, '\t'))
-
-                    with open("boilerplate", "w") as boilerplate_file:
-                        boilerplate_file.write(boilerplate)
+        for exercise in data_exercises:
+            if selection.lower() in exercise['name'].lower():
+                selected_exercise = exercise
                 break
 
-    if config['exercise_id'] is None:
-        print("Not a valid exercise id or -name!")
+    if selected_exercise == {}:
+        print("\nNot a valid exercise-id or -name.\n")
+        return config
+
+    # Store selection
+    config['exercise_id'] = selected_exercise['id']
+    config['exercise_name'] = selected_exercise['name']
+    # Programming language may not exist (f.e. for ContentPage)
+    programming_language = selected_exercise.get('programming_language')
+    if programming_language:
+        config['programming_language'] = programming_language['name']
+
+    pretty_console.console.print(f"\nExercise [bold]{selected_exercise['name']}[/] selected.")
+
+    boilerplate = selected_exercise.get('boilerplate')
+    if boilerplate and boilerplate.strip() != "":
+        print("\nBoilerplate code (copy in boilerplate-file):\n")
+        print(textwrap.indent(boilerplate, '\t'))
+        with open("boilerplate." + programming_language['extension'], "w") as boilerplate_file:
+            boilerplate_file.write(boilerplate)
 
     return config
