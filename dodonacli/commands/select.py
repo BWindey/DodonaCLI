@@ -199,7 +199,7 @@ def select_exercise(connection: http.client.HTTPSConnection, headers: dict,
 
     if thing.isnumeric() and thing in exercises:
         config['exercise_id'] = thing
-        config['exercise_name'] = exercises[thing]
+        config['exercise_name'] = exercises[thing][0]
         pretty_console.console.print(
             "\nExercise [bold]\"" + exercises[thing] + "\"[/] selected.\n")
     else:
