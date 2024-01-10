@@ -1,8 +1,7 @@
 import click
 import http.client
 
-from dodonacli.source import set_data
-from dodonacli.source import get_data
+from dodonacli.source import set_data, get_data, syntax_checker
 
 
 @click.command(help="Post a solution-file to Dodona. "
@@ -12,8 +11,12 @@ from dodonacli.source import get_data
               help="Post your solutionfile to the link at the first line of your solutionfile. "
                    "This is inspired by plugins for editors as VSCode for Dodona.",
               is_flag=True, default=False)
+@click.option("-c", "--check",
+              help="Check the file you provided if the syntax is valid for the programming language "
+                   "associated with the exercise.",
+              is_flag=True, default=False)
 @click.argument('file', type=click.Path(exists=True, file_okay=True, dir_okay=False, resolve_path=True))
-def post(file, use_link):
+def post(file, use_link, check):
     # Read configs in
     config = get_data.get_configs()
 
@@ -24,6 +27,10 @@ def post(file, use_link):
         "Accept": "application/json",
         "Authorization": config['TOKEN']
     }
+
+    if check:
+        if not syntax_checker.check_syntax(file, config['programming_language']):
+            return
 
     # Check for the link at the top of the file
     if use_link:
