@@ -120,7 +120,6 @@ More features to maybe add in the future:
 - user-settings (f.e. auto-download of files, language, formatting, ...)
 - easy (automatic?) downloading of files mentioned in exercise description
 - be able to mark as read via terminal for ContentPage
-- implement a `dodona next` command to immediatly select the next course/series/exercise, depending on the current selection.
 
 **Not important, but valid ideas:**
 - (plugin) for syntax-checking before posting, so you get a quicker response in case of a syntax error, depends on the type of exercise (bash, java, python, C, C++, R, ...)
