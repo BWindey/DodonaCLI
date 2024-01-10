@@ -39,20 +39,27 @@ def print_courses_data(json_data, title="Your courses:"):
     pretty_console.console.print(all_courses_formatted)
 
 
-def print_series_data(json_data, force=False):
+def print_series_data(json_data, force=False, prefixes=None):
     """
     Print out the exercise-series in json_data in a neat way
     :param json_data: json object with data about Dodona exercise-series
     :param force: boolean to decide if the series description has to be printed, or only a link to it
+    :param prefixes: dictionary with a prefix for each id in json_data
     """
+    if prefixes is None:
+        prefixes = {}
+
     # List of tuples where each tuple represents an exercise-series by id, name and description
     display_data = []
 
     for field in json_data:
-        display_data.append((
-            str(field['id']),
-            field['name'].strip(),
-            field['description']))
+        display_data.append(
+            (
+                str(field['id']),
+                field['name'].strip(),
+                field['description']
+            )
+        )
 
     # Find the maximum length of all but the last element in all tuples to align them in the terminal
     max_series_id_length = max(len(e[0]) for e in display_data)
@@ -62,15 +69,15 @@ def print_series_data(json_data, force=False):
     print()
     # Print out all the series in display_data while also handling the Markdown inside the series-description
     pretty_console.console.print("[u bright_blue]All series:[/]")
-    for e in display_data:
+    for series in display_data:
         if force:
-            description = e[2].split('\n')
+            description = series[2].split('\n')
             new_description = ''
 
             for line in description:
                 line = line.rstrip()
 
-                # Remove pattern from links as they try to open the link in a new tab, not useful for terminal
+                # Remove target pattern from links as they try to open the link in a new tab, not useful for terminal
                 line = re.sub(r'{: target="_blank"}', '', line)
 
                 # Replace Markdown bold to Rich Console bold
@@ -100,13 +107,13 @@ def print_series_data(json_data, force=False):
 
             new_description = textwrap.indent(new_description, '\t')
             pretty_console.console.print(
-                f"\t{e[0].ljust(max_series_id_length)}: "
-                f"[bold]{e[1].ljust(max_series_name_length)}[/]"
+                f"\t{series[0].ljust(max_series_id_length)}: "
+                f"[bold]{series[1].ljust(max_series_name_length)}[/]"
                 f"\n{new_description}")
         else:
             pretty_console.console.print(
-                f"\t{e[0].ljust(max_series_id_length)}: "
-                f"[bold]{e[1].ljust(max_series_name_length)}[/]"
+                (prefixes.get(series[0]) or "\t") + f"{series[0].ljust(max_series_id_length)}: "
+                f"[bold]{series[1].ljust(max_series_name_length)}[/]"
             )
     # Newline for clarity
     print()
