@@ -14,14 +14,10 @@ PyPI page: https://pypi.org/project/DodonaCLI/#description
 
 - DodonaCLI is an independent tool created by me, a student, and is not officially affiliated with the Dodona service or its team. Dodona, provided by the dedicated team at UGent University, offers an exceptional service, and this tool has been created as a complementary project. Only issues related to the Dodona website itself should be directed to the official Dodona support channels. Issues with the CLI tool should be posted on this [project’s Issues](https://github.com/BWindey/DodonaCLI/issues).
 
-- Although the exercise-description formatting is decent, do NOT rely on this for tests and exams! The printed description may be incomplete, or even incorrect. Please be aware of this!
+- Although the exercise-description formatting is mostly useable, do NOT rely on this for tests and exams! The printed description may be incomplete, or even incorrect. Please be aware of this!
 
 
-- All efforts to display text in an orderly fashion were made using a Linux GNOME-terminal. If it doesn’t look good in your terminal, you probably are not running a GNOME-terminal. As this is open-source software, feel free to add terminal-detection to make things pretty for your terminal too, but this isn’t feasible to do for me. 
-
-
-- This project was made on Linux, and was tested in the Command Prompt on Windows and on the zsh shell on macOS. For those platforms, you’ll find an installation guide below. If you wish to use this in other terminals, you’ll have to experiment yourself.
-
+- I did my best to format the output of DodonaCLI in a nice manner. If this is not the case for your terminal, please reach out via the [Issues](https://github.com/BWindey/DodonaCLI/issues) to see if we can fix that. I use the Alacritty and Gnome terminal, so if you’re using those, you can be mostly sure that what you see is intended.
 
 
 ## How to install
@@ -124,7 +120,6 @@ More features to maybe add in the future:
 - user-settings (f.e. auto-download of files, language, formatting, ...)
 - easy (automatic?) downloading of files mentioned in exercise description
 - be able to mark as read via terminal for ContentPage
-- implement a `dodona next` command to immediatly select the next course/series/exercise, depending on the current selection.
 
 **Not important, but valid ideas:**
 - (plugin) for syntax-checking before posting, so you get a quicker response in case of a syntax error, depends on the type of exercise (bash, java, python, C, C++, R, ...)

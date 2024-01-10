@@ -36,12 +36,10 @@ def cli_next(reverse, unsolved):
         config = get_next_exercise(config, connection, headers, reverse, unsolved)
 
     elif config.get('serie_id') is not None:
-        print("\nThis isn't implemented yet (for series and courses)."
-              "\nI wanted to get the 'next' command already available if you have exams in the coming period.\n")
+        config = get_next_series(config, connection, headers, reverse, unsolved)
 
     elif config.get('course_id') is not None:
-        print("\nThis isn't implemented yet (for series and courses)."
-              "\nI wanted to get the 'next' command already available if you have exams in the coming period.\n")
+        config = get_next_course(config, connection, headers, reverse, unsolved)
 
     else:
         print("\nCan't select a next course when non are selected.\n")
@@ -59,12 +57,12 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     # Calculate some needed values
     id_list = [exercise['id'] for exercise in exercise_data_json]
     previous_id = config['exercise_id']
-    last_id_index = id_list.index(int(previous_id))
+    previous_id_index = id_list.index(int(previous_id))
 
     exercises_dict = {exercise['id']: {
         'name': exercise['name'],
-        'boilerplate': exercise['boilerplate'] or "",
-        'accepted': exercise['accepted'],
+        'boilerplate': exercise.get('boilerplate') or "",
+        'accepted': exercise.get('accepted') or exercise.get('has_read'),
         'description_url': exercise['description_url']
     } for exercise in exercise_data_json
     }
@@ -72,12 +70,12 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     # Find the next exercise (loop back to front if it was the last)
     next_id = -1
     if not unsolved:
-        next_id = id_list[(last_id_index + 1 - (2 * reverse)) % len(id_list)]
+        next_id = id_list[(previous_id_index + 1 - (2 * reverse)) % len(id_list)]
     else:
         i = 1
         while next_id == -1 and i < len(id_list):
-            if not exercises_dict[id_list[(last_id_index + i * (-1) ** reverse) % len(id_list)]]['accepted']:
-                next_id = id_list[(last_id_index + i * (-1) ** reverse) % len(id_list)]
+            if not exercises_dict[id_list[(previous_id_index + i * (-1) ** reverse) % len(id_list)]]['accepted']:
+                next_id = id_list[(previous_id_index + i * (-1) ** reverse) % len(id_list)]
             i += 1
         if next_id == -1:
             print("\nYou already solved everything, there is no unsolved exercise to go to!\n")
@@ -87,25 +85,12 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     config['exercise_id'] = str(next_id)
     config['exercise_name'] = exercises_dict[next_id]['name']
 
-    next_id_index = id_list.index(int(next_id))
-
-    # Visual arrow representation of the jump:
-    prefixes = {}
-    if next_id_index > last_id_index:
-        prefixes[str(next_id)] = "   \u2570\u2B9E\t"
-        prefixes[str(previous_id)] = "   \u256D\u2500\t"
-        for e in id_list[last_id_index + 1:next_id_index]:
-            prefixes[str(e)] = "   \u2502\t"
-    else:
-        prefixes[str(next_id)] = "   \u256D\u2B9E\t"
-        prefixes[str(previous_id)] = "   \u2570\u2500\t"
-        for e in id_list[next_id_index + 1:last_id_index]:
-            prefixes[str(e)] = "   \u2502\t"
+    prefixes = make_visual_representation(previous_id, previous_id_index, next_id, id_list)
 
     pretty_print.print_exercise_data(exercise_data_json, prefixes)
 
     # Handle potential boilerplate.
-    # I decided to not print the boilerplate, it felt too clunky.
+    # I decided to not print the boilerplate (as a 'select' would do), it felt too clunky here.
     boilerplate = exercises_dict[next_id]['boilerplate']
     if boilerplate is not None and boilerplate.strip() != "":
         print("\nBoilerplate code is put in 'boilerplate'-file\n")
@@ -113,3 +98,91 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
             boilerplate_file.write(boilerplate)
 
     return config
+
+
+def get_next_series(config, connection, headers, reverse, unsolved):
+    # Get all series of selected course
+    series_data_json = get_data.series_data(
+        connection, headers, config['course_id']
+    )
+
+    # Take only necessary info from the large json
+    # Series have an order, so sort them so the order is guarenteed
+    series_list = [
+        {'id': series['id'], 'name': series['name'], 'order': series['order']}
+        for series in series_data_json
+    ]
+    series_list.sort(key=lambda x: x['order'])
+
+    # Using the sorted list here to keep ensuring the same order
+    id_list = [series['id'] for series in series_list]
+    previous_id = config['serie_id']
+    previous_id_index = id_list.index(int(previous_id))
+
+    # Find the next series (loop back to front if it was the last)
+    # If series ever get a solved/unsolved status support in API, this can get
+    # the same logic found in get_next_exercise()
+    if unsolved:
+        print("\nUnsolved flag not supported yet for series and courses.\n")
+    next_id = id_list[(previous_id_index + 1 - (2 * reverse)) % len(id_list)]
+
+    # Store new series
+    config['serie_id'] = str(next_id)
+    config['serie_name'] = [
+        series['name'] for series in series_list if series['id'] == next_id
+    ][0]
+
+    prefixes = make_visual_representation(previous_id, previous_id_index, next_id, id_list)
+
+    pretty_print.print_series_data(series_data_json, prefixes=prefixes)
+
+    return config
+
+
+def get_next_course(config, connection, headers, reverse, unsolved):
+    # Get all registred courses
+    course_data_json = get_data.courses_data(connection, headers)
+
+    # Simplified data
+    # courses_dict = {course['id']: course['name'] for course in course_data_json}
+
+    id_list = [course['id'] for course in course_data_json]
+    previous_id = config['course_id']
+    previous_id_index = id_list.index(int(previous_id))
+
+    # Find the next course (loop back to front if it was the last)
+    # If courses get more data that indicates if it's completely solved,
+    # then this will get the same logic found in get_next_exercise()
+    if unsolved:
+        print("\nUnsolved flag not supported yet for series and courses.\n")
+    next_id = id_list[(previous_id_index + 1 - (2 * reverse)) % len(id_list)]
+
+    # Store new course
+    config['course_id'] = str(next_id)
+    config['course_name'] = [
+        course['name'] for course in course_data_json if course['id'] == next_id
+    ][0]
+
+    prefixes = make_visual_representation(previous_id, previous_id_index, next_id, id_list)
+    pretty_print.print_courses_data(course_data_json, prefixes=prefixes)
+
+    return config
+
+
+def make_visual_representation(previous_id, previous_id_index, next_id, id_list) -> dict:
+    next_id_index = id_list.index(int(next_id))
+
+    # Visual arrow representation of the jump:
+    prefixes = {}
+    if next_id_index > previous_id_index:
+        prefixes[str(next_id)] = "   \u2570\u2B9E\t"
+        prefixes[str(previous_id)] = "   \u256D\u2500\t"
+        for e in id_list[previous_id_index + 1:next_id_index]:
+            prefixes[str(e)] = "   \u2502\t"
+    else:
+        prefixes[str(next_id)] = "   \u256D\u2B9E\t"
+        prefixes[str(previous_id)] = "   \u2570\u2500\t"
+        for e in id_list[next_id_index + 1:previous_id_index]:
+            prefixes[str(e)] = "   \u2502\t"
+
+    return prefixes

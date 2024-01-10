@@ -27,6 +27,9 @@ _dodona(){
     elif [ "$3" == "-l" ] || [ "$3" == "--use-link" ]; then
         COMPREPLY=( $(compgen -f -- "$2") )
 
+    elif [ "$3" == "up" ]; then
+        COMPREPLY=( $(compgen -W "all top 1 2 3" -- "$2") )
+
     else
         COMPREPLY=( $(compgen -W "--help") )
     fi
