@@ -62,6 +62,7 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     exercises_dict = {exercise['id']: {
         'name': exercise['name'],
         'boilerplate': exercise.get('boilerplate') or "",
+        'programming_language': exercise.get('programming_language') or None,
         'accepted': exercise.get('accepted') or exercise.get('has_read'),
         'description_url': exercise['description_url']
     } for exercise in exercise_data_json
@@ -84,6 +85,8 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     # Store new exercise
     config['exercise_id'] = str(next_id)
     config['exercise_name'] = exercises_dict[next_id]['name']
+    if exercises_dict[next_id]['programming_language']:
+        config['programming_langugage'] = exercises_dict['programming_language']['name']
 
     prefixes = make_visual_representation(previous_id, previous_id_index, next_id, id_list)
 
@@ -94,7 +97,7 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     boilerplate = exercises_dict[next_id]['boilerplate']
     if boilerplate is not None and boilerplate.strip() != "":
         print("\nBoilerplate code is put in 'boilerplate'-file\n")
-        with open("boilerplate", "w") as boilerplate_file:
+        with open("boilerplate." + exercises_dict['programming_language']['extension'], "w") as boilerplate_file:
             boilerplate_file.write(boilerplate)
 
     return config

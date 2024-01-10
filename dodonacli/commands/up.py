@@ -29,6 +29,7 @@ def up(amount):
             if config.get('exercise_id') is not None:
                 config['exercise_id'] = None
                 config['exercise_name'] = None
+                config['programming_language'] = None
                 print("Deselected exercise.")
             elif config.get('serie_id') is not None:
                 config['serie_id'] = None
