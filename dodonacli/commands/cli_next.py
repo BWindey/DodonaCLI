@@ -50,7 +50,6 @@ def cli_next(reverse, unsolved):
 
 
 def get_next_exercise(config, connection, headers, reverse, unsolved):
-    # TODO: can break with ContentPage exercises
     # Get all exercises of selected series
     exercise_data_json = get_data.exercises_data(
         connection, headers, config['serie_id'], config['serie_token'] or ""
@@ -64,7 +63,7 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     exercises_dict = {exercise['id']: {
         'name': exercise['name'],
         'boilerplate': exercise.get('boilerplate') or "",
-        'accepted': exercise['accepted'],
+        'accepted': exercise.get('accepted') or exercise.get('has_read'),
         'description_url': exercise['description_url']
     } for exercise in exercise_data_json
     }
