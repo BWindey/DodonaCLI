@@ -39,8 +39,7 @@ def cli_next(reverse, unsolved):
         config = get_next_series(config, connection, headers, reverse, unsolved)
 
     elif config.get('course_id') is not None:
-        print("\nThis isn't implemented yet (for series and courses)."
-              "\nI wanted to get the 'next' command already available if you have exams in the coming period.\n")
+        config = get_next_course(config, connection, headers, reverse, unsolved)
 
     else:
         print("\nCan't select a next course when non are selected.\n")
@@ -91,7 +90,7 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     pretty_print.print_exercise_data(exercise_data_json, prefixes)
 
     # Handle potential boilerplate.
-    # I decided to not print the boilerplate (as a select would do), it felt too clunky here.
+    # I decided to not print the boilerplate (as a 'select' would do), it felt too clunky here.
     boilerplate = exercises_dict[next_id]['boilerplate']
     if boilerplate is not None and boilerplate.strip() != "":
         print("\nBoilerplate code is put in 'boilerplate'-file\n")
@@ -124,7 +123,7 @@ def get_next_series(config, connection, headers, reverse, unsolved):
     # If series ever get a solved/unsolved status support in API, this can get
     # the same logic found in get_next_exercise()
     if unsolved:
-        print("\nUnsolved flag not supported for series and courses.\n")
+        print("\nUnsolved flag not supported yet for series and courses.\n")
     next_id = id_list[(previous_id_index + 1 - (2 * reverse)) % len(id_list)]
 
     # Store new series
@@ -136,6 +135,36 @@ def get_next_series(config, connection, headers, reverse, unsolved):
     prefixes = make_visual_representation(previous_id, previous_id_index, next_id, id_list)
 
     pretty_print.print_series_data(series_data_json, prefixes=prefixes)
+
+    return config
+
+
+def get_next_course(config, connection, headers, reverse, unsolved):
+    # Get all registred courses
+    course_data_json = get_data.courses_data(connection, headers)
+
+    # Simplified data
+    # courses_dict = {course['id']: course['name'] for course in course_data_json}
+
+    id_list = [course['id'] for course in course_data_json]
+    previous_id = config['course_id']
+    previous_id_index = id_list.index(int(previous_id))
+
+    # Find the next course (loop back to front if it was the last)
+    # If courses get more data that indicates if it's completely solved,
+    # then this will get the same logic found in get_next_exercise()
+    if unsolved:
+        print("\nUnsolved flag not supported yet for series and courses.\n")
+    next_id = id_list[(previous_id_index + 1 - (2 * reverse)) % len(id_list)]
+
+    # Store new course
+    config['course_id'] = str(next_id)
+    config['course_name'] = [
+        course['name'] for course in course_data_json if course['id'] == next_id
+    ][0]
+
+    prefixes = make_visual_representation(previous_id, previous_id_index, next_id, id_list)
+    pretty_print.print_courses_data(course_data_json, prefixes=prefixes)
 
     return config
 

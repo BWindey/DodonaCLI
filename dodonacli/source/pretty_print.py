@@ -11,12 +11,16 @@ from rich.markdown import Markdown
 from . import get_data, pretty_console
 
 
-def print_courses_data(json_data, title="Your courses:"):
+def print_courses_data(json_data, title="Your courses:", prefixes=None):
     """
     Print out the courses in json_data in a neat way
     :param json_data: json object with data about Dodona courses
     :param title: title to display above the courses-list
+    :param prefixes: dictionary with a prefix for each id in json_data
     """
+    if prefixes is None:
+        prefixes = {}
+
     # List of tuples where each tuple represents a course by id, name and teacher
     display_data = []
 
@@ -32,11 +36,11 @@ def print_courses_data(json_data, title="Your courses:"):
 
     # Print out all courses in display_data
     pretty_console.console.print(f'\n[u bright_blue]{title}[/]')
-    all_courses_formatted = ""
-    for e in display_data:
-        all_courses_formatted += (f'\t{e[0].ljust(max_course_id_length)}: '
-                                  f'[bold]{e[1].ljust(max_course_name_length)}[/]\tby {e[2]}\n')
-    pretty_console.console.print(all_courses_formatted)
+    for course in display_data:
+        pretty_console.console.print(
+            (prefixes.get(course[0]) or "\t") + f"{course[0].ljust(max_course_id_length)}: "
+            f"[bold]{course[1].ljust(max_course_name_length)}[/]\tby {course[2]}"
+        )
 
 
 def print_series_data(json_data, force=False, prefixes=None):
