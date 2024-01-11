@@ -86,7 +86,7 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     config['exercise_id'] = str(next_id)
     config['exercise_name'] = exercises_dict[next_id]['name']
     if exercises_dict[next_id]['programming_language']:
-        config['programming_langugage'] = exercises_dict['programming_language']['name']
+        config['programming_langugage'] = exercises_dict[next_id]['programming_language']['name']
 
     prefixes = make_visual_representation(previous_id, previous_id_index, next_id, id_list)
 
@@ -96,8 +96,9 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     # I decided to not print the boilerplate (as a 'select' would do), it felt too clunky here.
     boilerplate = exercises_dict[next_id]['boilerplate']
     if boilerplate is not None and boilerplate.strip() != "":
-        print("\nBoilerplate code is put in 'boilerplate'-file\n")
-        with open("boilerplate." + exercises_dict['programming_language']['extension'], "w") as boilerplate_file:
+        file_extension = exercises_dict[next_id]['programming_language']['extension']
+        print(f"\nBoilerplate code is put in 'boilerplate.{file_extension}'-file\n")
+        with open(f"boilerplate.{file_extension}", "w") as boilerplate_file:
             boilerplate_file.write(boilerplate)
 
     return config
