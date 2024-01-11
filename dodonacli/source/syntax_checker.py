@@ -8,17 +8,17 @@ def check_syntax(file: str, language: str) -> bool:
 
 
 def check_bash_syntax(file: str) -> bool:
-    # TODO: "bash -n" doesn't always mark errors,
-    #   while "shellcheck" incorrectly flags some things as errors (check Tandenstokers)
-    #   Find good alternative
     try:
-        subprocess.run(['bash', '-n', file], check=True)
+        subprocess.run(['shellcheck', file], check=True)
         return True
     except subprocess.CalledProcessError as cpe:
         print(f"Syntax Error in Bash script: {cpe}")
         return False
     except FileNotFoundError:
-        print("Couldn't find the file you specified")
+        # This will only occur if shellcheck isn't installed.
+        # Click will detect that the user gave an invalid file before this function is called
+        print("\nTo check the syntax, 'shellcheck' is called with your file. It appears however, that "
+              "shellcheck isn't installed on your system. Please install it: https://www.shellcheck.net/")
         return False
     except Exception as e:
         print("No idea what's going wrong, but something definitly is going wrong:\n" + str(e))
