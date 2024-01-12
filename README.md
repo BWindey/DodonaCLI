@@ -8,7 +8,8 @@ PyPI page: https://pypi.org/project/DodonaCLI/#description
 3) [How to use](#how-to-use)
 4) [Flags that could be important](#flags-that-could-be-important)
 5) [How to update](#how-to-update)
-6) [Roadmap](#roadmap)
+6) [Help, DodonaCLI freezes](#help-dodonacli-freezes)
+7) [Roadmap](#roadmap)
 
 ## Disclaimers
 
@@ -114,12 +115,22 @@ Updating is simple:
 Alternatively, if you installed it with cloning from GitHub, you can `git pull`.
 
 
+## Help, DodonaCLI freezes
+Since I just got this situation, I wanted to tell you how I fixed it.
+The problem laid by the fact that my computer had suddenly decided to use IPv6 instead of IPv4.
+Lots of internet services still don’t support IPv6, and Dodona seems to be no exception.
+I will look into forcing DodonaCLI to always use IPv4, but for now you can disable IPv6 on your pc.
+I can’t really give you an easy tutorial to do that, you’ll have to do some research on the internet.
+Also try `wget` with --inet6-only and --inet4-only to see if this is indeed the issue.
+
+
 ## Roadmap
 More features to maybe add in the future:
 - add indicator to series to mark if all their exercises are completely solved
 - user-settings (f.e. auto-download of files, language, formatting, ...)
 - easy (automatic?) downloading of files mentioned in exercise description
 - be able to mark as read via terminal for ContentPage
+- fix IPv4/6
 
 **Not important, but valid ideas:**
 - (plugin) for syntax-checking before posting, so you get a quicker response in case of a syntax error, depends on the type of exercise (bash, java, python, C, C++, R, ...)
