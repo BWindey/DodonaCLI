@@ -86,7 +86,7 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     config['exercise_id'] = str(next_id)
     config['exercise_name'] = exercises_dict[next_id]['name']
     if exercises_dict[next_id]['programming_language']:
-        config['programming_langugage'] = exercises_dict[next_id]['programming_language']['name']
+        config['programming_language'] = exercises_dict[next_id]['programming_language']['name']
 
     prefixes = make_visual_representation(previous_id, previous_id_index, next_id, id_list)
 
