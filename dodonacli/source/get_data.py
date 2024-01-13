@@ -161,8 +161,8 @@ def get_configs():
     # This is a bit more complicated because this file exists in the same directory as
     # the python files, but the command may be executed from anywhere with the appropriate alias set.
     # Thus, first the path to the directory of the python files is retrieved; then the config-file-name is appended
-    script_directory = os.path.dirname(os.path.abspath(__file__))
-    config_file_path = os.path.join(script_directory, '../../config.json')
+    config_home_directory = os.getenv("XDG_CONFIG_HOME", default=os.getenv("HOME") + "/.config/")
+    config_file_path = os.path.join(config_home_directory, "dodonacli.json")
 
     # First try to open, if unable to open, create a new config-file and ask user for a token
     try:
