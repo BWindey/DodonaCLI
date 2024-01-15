@@ -219,7 +219,7 @@ def select_exercise(connection: http.client.HTTPSConnection, headers: dict,
         return config
 
     # Store selection
-    config['exercise_id'] = selected_exercise['id']
+    config['exercise_id'] = str(selected_exercise['id'])
     config['exercise_name'] = selected_exercise['name']
     # Programming language may not exist (f.e. for ContentPage)
     programming_language = selected_exercise.get('programming_language')
