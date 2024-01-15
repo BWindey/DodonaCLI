@@ -24,12 +24,12 @@ def validate_positive_int(ctx, param, value):
 @click.argument('number',
                 type=int, default=0, callback=validate_positive_int)
 def load(number):
-    # Execute check in the background
-    check_update_thread = threading.Thread(target=check_for_update.check_for_update(), name="Update-checker")
-    check_update_thread.start()
-
     # Read configs in
     config = get_data.get_configs()
+
+    # Execute check in the background
+    check_update_thread = threading.Thread(target=check_for_update.check_for_update, name="Update-checker")
+    check_update_thread.start()
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
@@ -57,7 +57,7 @@ def load(number):
 @click.command(help="View subimmision data")
 def view():
     # Execute check in the background
-    check_update_thread = threading.Thread(target=check_for_update.check_for_update(), name="Update-checker")
+    check_update_thread = threading.Thread(target=check_for_update.check_for_update, name="Update-checker")
     check_update_thread.start()
 
     # Read configs in

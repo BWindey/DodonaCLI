@@ -15,12 +15,12 @@ from dodonacli.source import set_data, get_data, check_for_update
               is_flag=True, default=False)
 @click.argument('file', type=click.Path(exists=True, file_okay=True, dir_okay=False, resolve_path=True))
 def post(file, use_link):
-    # Execute check in the background
-    check_update_thread = threading.Thread(target=check_for_update.check_for_update(), name="Update-checker")
-    check_update_thread.start()
-
     # Read configs in
     config = get_data.get_configs()
+
+    # Execute check in the background
+    check_update_thread = threading.Thread(target=check_for_update.check_for_update, name="Update-checker")
+    check_update_thread.start()
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")

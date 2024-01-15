@@ -22,12 +22,12 @@ from dodonacli.source import get_data, pretty_print, set_data, check_for_update
                    "Currently only available for exercises, not series or courses.",
               is_flag=True, default=False)
 def cli_next(reverse, unsolved):
-    # Execute check in the background
-    check_update_thread = threading.Thread(target=check_for_update.check_for_update(), name="Update-checker")
-    check_update_thread.start()
-
     # Read configs in
     config = get_data.get_configs()
+
+    # Execute check in the background
+    check_update_thread = threading.Thread(target=check_for_update.check_for_update, name="Update-checker")
+    check_update_thread.start()
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")

@@ -11,12 +11,12 @@ from dodonacli.source import pretty_print, get_data, check_for_update
               help="Force display (with possible mistakes) the exercise (-series) description to display.",
               is_flag=True, default=False)
 def display(force):
-    # Execute check in the background
-    check_update_thread = threading.Thread(target=check_for_update.check_for_update(), name="Update-checker")
-    check_update_thread.start()
-
     # Read configs in
     config = get_data.get_configs()
+
+    # Execute check in the background
+    check_update_thread = threading.Thread(target=check_for_update.check_for_update, name="Update-checker")
+    check_update_thread.start()
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")

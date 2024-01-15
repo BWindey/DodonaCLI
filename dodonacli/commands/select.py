@@ -22,12 +22,12 @@ from dodonacli.source import set_data, pretty_console, get_data, check_for_updat
               is_flag=True, default=False)
 @click.argument('thing')
 def select(thing, hidden, other):
-    # Execute check in the background
-    check_update_thread = threading.Thread(target=check_for_update.check_for_update(), name="Update-checker")
-    check_update_thread.start()
-
     # Read configs in
     config = get_data.get_configs()
+
+    # Execute check in the background
+    check_update_thread = threading.Thread(target=check_for_update.check_for_update, name="Update-checker")
+    check_update_thread.start()
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
