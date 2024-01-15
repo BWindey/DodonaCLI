@@ -2,9 +2,9 @@ import click
 import http.client
 import json
 import textwrap
+import threading
 
-from dodonacli.source import set_data
-from dodonacli.source import pretty_console, get_data
+from dodonacli.source import set_data, pretty_console, get_data, check_for_update
 
 
 @click.command(
@@ -22,6 +22,10 @@ from dodonacli.source import pretty_console, get_data
               is_flag=True, default=False)
 @click.argument('thing')
 def select(thing, hidden, other):
+    # Execute check in the background
+    check_update_thread = threading.Thread(target=check_for_update.check_for_update(), name="Update-checker")
+    check_update_thread.start()
+
     # Read configs in
     config = get_data.get_configs()
 
@@ -54,6 +58,8 @@ def select(thing, hidden, other):
 
     # Save selections in config file
     set_data.dump_config(config)
+
+    check_update_thread.join()
     return
 
 
