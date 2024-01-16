@@ -18,7 +18,9 @@ def check_syntax(file: str, language: str) -> bool:
 
 def check_bash_syntax(file: str) -> bool:
     try:
-        subprocess.run(['shellcheck', file], check=True)
+        # Exclude:
+        # SC2001: See if you can use ${variable//search/replace} instead.
+        subprocess.run(['shellcheck', '-e', 'SC2001', file], check=True)
         return True
     except subprocess.CalledProcessError as cpe:
         print(f"Syntax Error in Bash script: {str(cpe)}")

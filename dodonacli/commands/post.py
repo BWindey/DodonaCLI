@@ -7,7 +7,7 @@ from dodonacli.source import set_data, get_data, syntax_checker
 @click.command(help="Post a solution-file to Dodona. "
                     "The file has to be in your current working directory, and this only works "
                     "if there is a selected exercise.")
-@click.option("-l", "--use_link",
+@click.option("-l", "--use-link",
               help="Post your solutionfile to the link at the first line of your solutionfile. "
                    "This is inspired by plugins for editors as VSCode for Dodona.",
               is_flag=True, default=False)
