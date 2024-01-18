@@ -1,7 +1,8 @@
 import click
 import http.client
+import threading
 
-from dodonacli.source import get_data, pretty_print, set_data
+from dodonacli.source import get_data, pretty_print, set_data, check_for_update
 
 
 # Function and file have to be called cli_next, as next
@@ -23,6 +24,10 @@ from dodonacli.source import get_data, pretty_print, set_data
 def cli_next(reverse, unsolved):
     # Read configs in
     config = get_data.get_configs()
+
+    # Execute check in the background
+    check_update_thread = threading.Thread(target=check_for_update.check_for_update, name="Update-checker")
+    check_update_thread.start()
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
@@ -46,6 +51,8 @@ def cli_next(reverse, unsolved):
         return
 
     set_data.dump_config(config)
+
+    check_update_thread.join()
 
 
 def get_next_exercise(config, connection, headers, reverse, unsolved):

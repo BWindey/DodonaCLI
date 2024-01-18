@@ -15,7 +15,7 @@ def main():
     Finally, you have no need to exit your terminal any more!
     Use --help for more info about flags, or read the README on discord.
     """
-    check_for_update.check_for_update()
+    pass
 
 
 main.add_command(display.display)

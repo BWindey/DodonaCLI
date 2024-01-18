@@ -2,9 +2,9 @@ import click
 import http.client
 import json
 import textwrap
+import threading
 
-from dodonacli.source import set_data
-from dodonacli.source import pretty_console, get_data
+from dodonacli.source import set_data, pretty_console, get_data, check_for_update
 
 
 @click.command(
@@ -24,6 +24,10 @@ from dodonacli.source import pretty_console, get_data
 def select(thing, hidden, other):
     # Read configs in
     config = get_data.get_configs()
+
+    # Execute check in the background
+    check_update_thread = threading.Thread(target=check_for_update.check_for_update, name="Update-checker")
+    check_update_thread.start()
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
@@ -54,6 +58,8 @@ def select(thing, hidden, other):
 
     # Save selections in config file
     set_data.dump_config(config)
+
+    check_update_thread.join()
     return
 
 
@@ -213,7 +219,7 @@ def select_exercise(connection: http.client.HTTPSConnection, headers: dict,
         return config
 
     # Store selection
-    config['exercise_id'] = selected_exercise['id']
+    config['exercise_id'] = str(selected_exercise['id'])
     config['exercise_name'] = selected_exercise['name']
     # Programming language may not exist (f.e. for ContentPage)
     programming_language = selected_exercise.get('programming_language')
