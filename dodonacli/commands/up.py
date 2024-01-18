@@ -15,7 +15,7 @@ def up(amount):
     config = get_data.get_configs()
 
     if str(amount).lower().strip() in ('all', 'top'):
-        for e in ('exercise_id', 'exercise_name', 'serie_id', 'serie_name', 'course_id', 'course_name'):
+        for e in ('exercise_id', 'exercise_name', 'serie_id', 'serie_name', 'serie_token', 'course_id', 'course_name'):
             config[e] = None
         print("\nDeselected everything.\n")
 
