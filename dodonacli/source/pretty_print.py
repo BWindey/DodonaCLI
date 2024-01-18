@@ -31,9 +31,6 @@ def print_courses_data(json_data, title="Your courses:", prefixes=None):
     max_course_id_length = max(len(e[0]) for e in display_data)
     max_course_name_length = max(len(e[1]) for e in display_data)
 
-    # Sort the courses by name
-    display_data = sorted(display_data, key=lambda x: x[1])
-
     # Print out all courses in display_data
     pretty_console.console.print(f'\n[u bright_blue]{title}[/]')
     for course in display_data:
