@@ -14,7 +14,8 @@ from dodonacli.source import set_data, get_data, check_for_update, syntax_checke
               is_flag=True, default=False)
 @click.option("-c", "--check",
               help="Check the file you provided if the syntax is valid for the programming language "
-                   "associated with the exercise.",
+                   "associated with the exercise. Currently supported languages: bash, python, java, "
+                   "javascript.",
               is_flag=True, default=False)
 @click.argument('file', type=click.Path(exists=True, file_okay=True, dir_okay=False, resolve_path=True))
 def post(file, use_link, check):
@@ -33,9 +34,6 @@ def post(file, use_link, check):
         "Authorization": config['TOKEN']
     }
 
-    if check:
-        if not syntax_checker.check_syntax(file, config['programming_language']):
-            return
 
     # Check for the link at the top of the file
     if use_link:
@@ -48,6 +46,7 @@ def post(file, use_link, check):
                 return
             link = link[link_index:]
 
+            # Find course-id and exercises-id in the link
             course_id_index_start = link.find("/courses/") + len("/courses/")
             course_id_index_stop = link.find("/", course_id_index_start)
             course_id = link[course_id_index_start:course_id_index_stop]
@@ -59,6 +58,11 @@ def post(file, use_link, check):
             # We can read the content of the file now as the file-pointer is already at the 2nd line
             content = solutionfile.read()
     else:
+        # Syntax check not available with link at top of file
+        if check:
+            if not syntax_checker.check_syntax(file, config['programming_language']):
+                return
+
         with open(file, 'r') as solutionfile:
             content = solutionfile.read()
         course_id = config['course_id']
