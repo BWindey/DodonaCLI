@@ -129,11 +129,11 @@ More features to maybe add in the future:
 - add indicator to series to mark if all their exercises are completely solved
 - user-settings (f.e. auto-download of files, language, formatting, ...)
 - easy (automatic?) downloading of files mentioned in exercise description
-- improve the rendering (can't be worse than the current state XD)
+- improve the rendering (can’t be worse than the current state XD)
 - fix IPv4/6
-- get exercise-names via html-parsing for submissions list to only need 1 API call. Am I salty about that not being just field in the API, yes I am! Glad you noticed. Html-parsing isn't a hobby of mine after all
 
 **Not important, but valid ideas:**
 - (plugin) for syntax-checking before posting, so you get a quicker response in case of a syntax error, depends on the type of exercise (bash, java, python, C, C++, R, ...)
 - caching to make it feel like a real command, very fast! Currently, you’ll often have to wait a few hundred milliseconds for the API call to return
 - look into https://textual.textualize.io/getting_started/ to maybe use that??
+- get exercise-names via html-parsing for submissions list to only need 1 API call. Am I salty about that not being just field in the API, yes I am! Glad you noticed. Html-parsing isn’t a hobby of mine after all
