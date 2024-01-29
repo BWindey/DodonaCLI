@@ -158,13 +158,16 @@ def get_config_home():
     Returns the path of the config home, this directory stores the config.json file
     :return: The path to the config directory
     """
-    match platform.system():
-        case "Linux":
-            platform_config_path = os.getenv("XDG_CONFIG_HOME", default=os.getenv("HOME") + "/.config/")
-        case "Darwin": # aka macOS
-            platform_config_path = os.path.join(os.getenv("HOME"), "Library/Application Support")
-        case "Windows":
-            platform_config_path = os.getenv("APPDATA")
+    # The case switch syntax was introduced in python 3.10
+    system = platform.system()
+    if system == "Linux":
+        platform_config_path = os.getenv("XDG_CONFIG_HOME", default=os.getenv("HOME") + "/.config/")
+    elif system == "Darwin": # aka macOS
+        platform_config_path = os.path.join(os.getenv("HOME"), "Library/Application Support")
+    elif system == "Windows":
+        platform_config_path = os.getenv("APPDATA")
+    else:
+        return os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../config.json")
     return os.path.join(platform_config_path, "DodonaCLI")
 
 def get_configs():
