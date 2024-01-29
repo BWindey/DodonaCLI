@@ -6,12 +6,15 @@ import time
 
 from datetime import datetime
 
-from . import pretty_print, pretty_console
+from . import pretty_print, pretty_console, get_data
 
 
 def dump_config(config):
-    config_home_directory = os.getenv("XDG_CONFIG_HOME", default=os.getenv("HOME") + "/.config/")
-    config_file_path = os.path.join(config_home_directory, "dodonacli.json")
+    config_home = get_data.get_config_home()
+    config_file_path = os.path.join(config_home, "config.json")
+
+    if not os.path.exists(config_home):
+        os.makedirs(config_home)
 
     with open(config_file_path, 'w') as config_file:
         json.dump(config, config_file)

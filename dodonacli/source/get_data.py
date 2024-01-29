@@ -3,6 +3,7 @@ import http.client
 import json
 import os
 import socket
+import platform
 
 from . import set_data, interactive_tutorial
 
@@ -152,24 +153,42 @@ def submission_info(sub_id: int, connection: http.client.HTTPSConnection, header
     return json_data
 
 
+def get_config_home():
+    """
+    Returns the path of the config home, this directory stores the config.json file
+    :return: The path to the config directory
+    """
+    match platform.system():
+        case "Linux":
+            platform_config_path = os.getenv("XDG_CONFIG_HOME", default=os.getenv("HOME") + "/.config/")
+        case "Darwin": # aka macOS
+            platform_config_path = os.path.join(os.getenv("HOME"), "Library/Application Support")
+        case "Windows":
+            platform_config_path = os.getenv("APPDATA")
+    return os.path.join(platform_config_path, "DodonaCLI")
+
 def get_configs():
     """
     Get config data from config.json
     :return: json object with config data
     """
     # Get the path of the config-file.
-    # This is a bit more complicated because this file exists in the same directory as
-    # the python files, but the command may be executed from anywhere with the appropriate alias set.
-    # Thus, first the path to the directory of the python files is retrieved; then the config-file-name is appended
-    config_home_directory = os.getenv("XDG_CONFIG_HOME", default=os.getenv("HOME") + "/.config/")
-    config_file_path = os.path.join(config_home_directory, "dodonacli.json")
+    config_file_path = os.path.join(get_config_home(), "config.json")
+
+    # fallback to the old path
+    just_migrated = False
+    if not os.path.exists(config_file_path):
+        config_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../config.json")
+        just_migrated = True
 
     # First try to open, if unable to open, create a new config-file and ask user for a token
     try:
         with open(config_file_path, "r") as file:
             config = json.load(file)
-
             config = validate_config(config)
+            if just_migrated:
+                set_data.dump_config(config)
+                print("config.json has been migrated, the old file is at", os.path.abspath(config_file_path))
 
     except FileNotFoundError:
         # Create config dictionary
@@ -230,3 +249,5 @@ def get_api_token(config: dict):
     set_data.dump_config(config)
 
     return config
+
+
