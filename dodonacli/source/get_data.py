@@ -176,17 +176,17 @@ def get_configs():
     config_file_path = os.path.join(get_config_home(), "config.json")
 
     # fallback to the old path
-    just_migrated = False
+    needs_migration = False
     if not os.path.exists(config_file_path):
         config_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../config.json")
-        just_migrated = True
+        needs_migration = True
 
     # First try to open, if unable to open, create a new config-file and ask user for a token
     try:
         with open(config_file_path, "r") as file:
             config = json.load(file)
             config = validate_config(config)
-            if just_migrated:
+            if needs_migration:
                 set_data.dump_config(config)
                 print("config.json has been migrated, the old file is at", os.path.abspath(config_file_path))
 
