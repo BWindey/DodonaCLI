@@ -1,8 +1,9 @@
 import click
 import http.client
+import threading
 
-from dodonacli.source import set_data
-from dodonacli.source import get_data
+
+from dodonacli.source import set_data, get_data, check_for_update
 
 
 @click.command(help="Post a solution-file to Dodona. "
@@ -16,6 +17,10 @@ from dodonacli.source import get_data
 def post(file, use_link):
     # Read configs in
     config = get_data.get_configs()
+
+    # Execute check in the background
+    check_update_thread = threading.Thread(target=check_for_update.check_for_update, name="Update-checker")
+    check_update_thread.start()
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
@@ -57,3 +62,5 @@ def post(file, use_link):
         print("\nNo exercise selected! If you want to use a link at the top of your file, use the -l flag.\n")
     else:
         set_data.post_solution(content, connection, headers, course_id, exercise_id)
+
+    check_update_thread.join()

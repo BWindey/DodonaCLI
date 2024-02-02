@@ -226,7 +226,7 @@ def validate_config(config: dict):
         "course_id", "course_name",
         "serie_id", "serie_name",
         "exercise_id", "exercise_name",
-        "serie_token"
+        "serie_token", "programming_language"
     )
     for key in keys_to_check:
         if key not in config:

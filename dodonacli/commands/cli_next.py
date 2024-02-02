@@ -1,7 +1,8 @@
 import click
 import http.client
+import threading
 
-from dodonacli.source import get_data, pretty_print, set_data
+from dodonacli.source import get_data, pretty_print, set_data, check_for_update
 
 
 # Function and file have to be called cli_next, as next
@@ -23,6 +24,10 @@ from dodonacli.source import get_data, pretty_print, set_data
 def cli_next(reverse, unsolved):
     # Read configs in
     config = get_data.get_configs()
+
+    # Execute check in the background
+    check_update_thread = threading.Thread(target=check_for_update.check_for_update, name="Update-checker")
+    check_update_thread.start()
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
@@ -47,6 +52,8 @@ def cli_next(reverse, unsolved):
 
     set_data.dump_config(config)
 
+    check_update_thread.join()
+
 
 def get_next_exercise(config, connection, headers, reverse, unsolved):
     # Get all exercises of selected series
@@ -62,6 +69,7 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     exercises_dict = {exercise['id']: {
         'name': exercise['name'],
         'boilerplate': exercise.get('boilerplate') or "",
+        'programming_language': exercise.get('programming_language') or None,
         'accepted': exercise.get('accepted') or exercise.get('has_read'),
         'description_url': exercise['description_url']
     } for exercise in exercise_data_json
@@ -84,6 +92,8 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     # Store new exercise
     config['exercise_id'] = str(next_id)
     config['exercise_name'] = exercises_dict[next_id]['name']
+    if exercises_dict[next_id]['programming_language']:
+        config['programming_language'] = exercises_dict[next_id]['programming_language']['name']
 
     prefixes = make_visual_representation(previous_id, previous_id_index, next_id, id_list)
 
@@ -93,8 +103,9 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     # I decided to not print the boilerplate (as a 'select' would do), it felt too clunky here.
     boilerplate = exercises_dict[next_id]['boilerplate']
     if boilerplate is not None and boilerplate.strip() != "":
-        print("\nBoilerplate code is put in 'boilerplate'-file\n")
-        with open("boilerplate", "w") as boilerplate_file:
+        file_extension = exercises_dict[next_id]['programming_language']['extension']
+        print(f"\nBoilerplate code is put in 'boilerplate.{file_extension}'-file\n")
+        with open(f"boilerplate.{file_extension}", "w") as boilerplate_file:
             boilerplate_file.write(boilerplate)
 
     return config

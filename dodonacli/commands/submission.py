@@ -1,9 +1,10 @@
 import click
 import http.client
+import threading
 
 from click_default_group import DefaultGroup
 
-from dodonacli.source import get_data, pretty_print, set_data
+from dodonacli.source import get_data, pretty_print, set_data, check_for_update
 
 
 @click.group(help="Get submission data. Default = view",
@@ -26,6 +27,10 @@ def load(number):
     # Read configs in
     config = get_data.get_configs()
 
+    # Execute check in the background
+    check_update_thread = threading.Thread(target=check_for_update.check_for_update, name="Update-checker")
+    check_update_thread.start()
+
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
     headers = {
@@ -44,11 +49,17 @@ def load(number):
     submission_info = get_data.submission_info(submission['id'], connection, headers, config)
     set_data.save_submission_code(submission_info['exercise_name'], submission_info['id'], submission_info['code'])
 
+    check_update_thread.join()
+
     return
 
 
 @click.command(help="View subimmision data")
 def view():
+    # Execute check in the background
+    check_update_thread = threading.Thread(target=check_for_update.check_for_update, name="Update-checker")
+    check_update_thread.start()
+
     # Read configs in
     config = get_data.get_configs()
 
@@ -66,6 +77,8 @@ def view():
     else:
         json_data = get_data.all_submissions(connection, headers)
         pretty_print.print_all_submissions(connection, headers, json_data)
+
+    check_update_thread.join()
 
 
 sub.add_command(load)
