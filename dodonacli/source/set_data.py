@@ -6,12 +6,15 @@ import time
 
 from datetime import datetime
 
-from . import pretty_print, pretty_console
+from . import pretty_print, pretty_console, get_data
 
 
 def dump_config(config):
-    script_directory = os.path.dirname(os.path.abspath(__file__))
-    config_file_path = os.path.join(script_directory, '../../config.json')
+    config_home = get_data.get_config_home()
+    config_file_path = os.path.join(config_home, "config.json")
+
+    if not os.path.exists(config_home):
+        os.makedirs(config_home)
 
     with open(config_file_path, 'w') as config_file:
         json.dump(config, config_file)
