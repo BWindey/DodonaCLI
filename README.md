@@ -117,23 +117,21 @@ Alternatively, if you installed it with cloning from GitHub, you can `git pull`.
 
 ## Help, DodonaCLI freezes
 Since I just got this situation, I wanted to tell you how I fixed it.
-The problem laid by the fact that my computer had suddenly decided to use IPv6 instead of IPv4.
-Lots of internet services still don’t support IPv6, and Dodona seems to be no exception.
-I will look into forcing DodonaCLI to always use IPv4, but for now you can disable IPv6 on your pc.
-I can’t really give you an easy tutorial to do that, you’ll have to do some research on the internet.
-Also try `wget` with --inet6-only and --inet4-only to see if this is indeed the issue.
+My computer didn’t succeed in making any network requests over IPv6, and thus waited and waited and waited ...
+To fix this, I had to disable IPv6 entirely on my own pc. 
+This is not something I’ll show you how to do, you’ll have to do some research on the internet.
+Before trying that, confirm first if this is indeed the issue by running `wget` with --inet6-only and --inet4-only 
+to see if this is indeed the issue.
 
 
 ## Roadmap
-More features to maybe add in the future:
-- add indicator to series to mark if all their exercises are completely solved
-- user-settings (f.e. auto-download of files, language, formatting, ...)
+This section has a bunch of ideas for me to work on, but also for you, the potential contributor!
+Remember to look at the recent branches/commits to see if I’m not working on one of these:
+- user-settings (f.e. auto-download of files, language, formatting, number of submissions shown, config location, ...)
 - easy (automatic?) downloading of files mentioned in exercise description
-- improve the rendering (can’t be worse than the current state XD)
-- fix IPv4/6
-
-**Not important, but valid ideas:**
+- improve the rendering of all html/markdown frankensteins, in descriptions of exercises and exercise-descriptions 
+- add connection time-out to prevent long waiting when IPv6 doesn’t want to work along
 - (plugin) for syntax-checking before posting, so you get a quicker response in case of a syntax error, depends on the type of exercise (bash, java, python, C, C++, R, ...)
-- caching to make it feel like a real command, very fast! Currently, you’ll often have to wait a few hundred milliseconds for the API call to return
-- look into https://textual.textualize.io/getting_started/ to maybe use that??
-- get exercise-names via html-parsing for submissions list to only need 1 API call. Am I salty about that not being just field in the API, yes I am! Glad you noticed. Html-parsing isn’t a hobby of mine after all
+- caching some info for faster navigation and/or autocompletion
+- add indicator to series to mark if all their exercises are completely solved (maybe fetch from html-version)
+- get exercise-names via html-parsing for a submission list to only need 1 API call (instead of 30). Am I salty about that not being just field in the API, yes I am! Glad you noticed. Html-parsing isn’t a hobby of mine after all
