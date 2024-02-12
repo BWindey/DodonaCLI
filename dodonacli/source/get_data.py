@@ -2,8 +2,9 @@ import datetime
 import http.client
 import json
 import os
-import socket
 import platform
+import socket
+import tomli
 
 from . import set_data, interactive_tutorial
 
@@ -254,3 +255,15 @@ def get_api_token(config: dict):
     return config
 
 
+def get_dodonacli_version():
+    # Get the path of the toml-file.
+    # This is a bit more complicated because this file exists in the same directory as
+    # the python files, but the command may be executed from anywhere with the appropriate alias set.
+    # Thus, first the path to the directory of the python files is retrieved; then the config-file-name is appended
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    toml_file_path = os.path.join(script_directory, '../../pyproject.toml')
+
+    with open(toml_file_path, 'rb') as toml_file:
+        toml_dict = tomli.load(toml_file)
+
+    return toml_dict['project']['version']

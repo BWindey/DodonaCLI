@@ -1,10 +1,10 @@
 import click
-import os
-import tomli
 
 from click_default_group import DefaultGroup
+from packaging.version import parse
+from pkg_info import get_pkg_info
 
-from dodonacli.source import pretty_console
+from dodonacli.source import get_data, pretty_console
 
 
 @click.group(help="Info about version, update-availability and GitHub page.",
@@ -16,21 +16,29 @@ def info():
 @click.command(help='Display the current version of DodonaCLI. The versioning system '
                     'uses a YYYY.M.D format.')
 def version():
-    # Get the path of the toml-file.
-    # This is a bit more complicated because this file exists in the same directory as
-    # the python files, but the command may be executed from anywhere with the appropriate alias set.
-    # Thus, first the path to the directory of the python files is retrieved; then the config-file-name is appended
-    script_directory = os.path.dirname(os.path.abspath(__file__))
-    toml_file_path = os.path.join(script_directory, '../../pyproject.toml')
-
-    with open(toml_file_path, 'rb') as toml_file:
-        toml_dict = tomli.load(toml_file)
-
-    dodonacli_version = toml_dict['project']['version']
+    dodonacli_version = get_data.get_dodonacli_version()
 
     pretty_console.console.print(
         f"DodonaCLI {dodonacli_version}"
     )
 
 
+@click.command(help='Checks if there is a new update available for DodonaCLI.')
+def check_update():
+    dodonacli_version = get_data.get_dodonacli_version()
+    dodonacli_version = "2023.12.7"
+
+    pkg = get_pkg_info('DodonaCLI')
+
+    if parse(pkg.version) > parse(dodonacli_version):
+        pretty_console.console.print(
+            f"There is a new version available: {pkg.version}.\n"
+            f"You can update your old version ({dodonacli_version}) with"
+            "\n\tpip install --upgrade DodonaCLI"
+        )
+    else:
+        print("Your DodonaCLI is up-to-date.")
+
+
 info.add_command(version)
+info.add_command(check_update)
