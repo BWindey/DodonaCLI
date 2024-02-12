@@ -135,3 +135,5 @@ Remember to look at the recent branches/commits to see if I’m not working on o
 - caching some info for faster navigation and/or autocompletion
 - add indicator to series to mark if all their exercises are completely solved (maybe fetch from html-version)
 - get exercise-names via html-parsing for a submission list to only need 1 API call (instead of 30). Am I salty about that not being just field in the API, yes I am! Glad you noticed. Html-parsing isn’t a hobby of mine after all
+- shell completion for other shells then bash (zsh)
+- format weird markup in some feedback of submissions (like the Python and bash exercises)
