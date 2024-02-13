@@ -1,4 +1,4 @@
-- Added *info* command:
+- Added **info** command:
     - Subcommand 'version' to display your current DodonaCLI version. Versions use the YYYY.M.D format.
     - Subcommand 'check-update' lets you know if there is an update available.
     - Subcommand 'github' gives a link to DodonaCLI’s GitHub page.
