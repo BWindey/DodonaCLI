@@ -72,7 +72,7 @@ As always, use the "--help" flag after every command and sub-command to learn mo
 
 
 def get_dodonacli_version():
-    return "2024.02.18.1"
+    return "2024.2.18.1"
 
 
 info.add_command(version)
