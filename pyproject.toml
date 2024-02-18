@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "DodonaCLI"
-version = "2024.1.29"
+version = "2024.2.18"
 authors = [
     { name = "Bram Windey", email = "windey.bram@gmail.com" },
 ]
