@@ -22,9 +22,9 @@ _dodona(){
         COMPREPLY=( $(compgen -W "display next post select status sub tutorial up --help" -- "$2") )
 
     elif [ "$3" == "post" ]; then
-        COMPREPLY=( $(compgen -f -- "$2" | grep -vF ".swp") $(compgen -W "--help --link -l" -- "$2" ))
+        COMPREPLY=( $(compgen -f -- "$2" | grep -vF ".swp") $(compgen -W "--help --use-link -l -c --check" -- "$2" ))
 
-    elif [ "$3" == "-l" ] || [ "$3" == "--use-link" ]; then
+    elif [[ "$3" =~ ^-[lc]+$ ]] || [ "$3" == "--use-link" ] || [ "$3" == "--check" ]; then
         COMPREPLY=( $(compgen -f -- "$2") )
 
     elif [ "$3" == "up" ]; then

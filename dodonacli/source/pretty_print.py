@@ -31,9 +31,6 @@ def print_courses_data(json_data, title="Your courses:", prefixes=None):
     max_course_id_length = max(len(e[0]) for e in display_data)
     max_course_name_length = max(len(e[1]) for e in display_data)
 
-    # Sort the courses by name
-    display_data = sorted(display_data, key=lambda x: x[1])
-
     # Print out all courses in display_data
     pretty_console.console.print(f'\n[u bright_blue]{title}[/]')
     for course in display_data:
@@ -325,13 +322,21 @@ def print_all_submissions(connection, headers, json_data):
 
         exercise_link = submission['exercise'].replace("https://dodona.be/nl", "", 1)
         connection.request("GET", exercise_link, headers=headers)
-        json_exercise_data = json.loads(get_data.handle_connection_response(connection))
 
-        exercise_name = json_exercise_data['name']
+        response = connection.getresponse()
+        res_status = response.status
+        # Need to read always to be able to accept a new request
+        result = response.read()
+
+        if res_status == 200:
+            exercise_name = json.loads(result).get('name') or "[i]unkown[/i]"
+        else:
+            exercise_name = "[i]unable to get info about exercise[/i]"
 
         pretty_console.console.print(
             f"\t{accepted_emoji}  [link={submission['url'].rstrip('.json')}]#{len(json_data) - i: <2}[/link]"
             f"\t{status}"
             f"\t\t\t{exercise_name}"
         )
+    connection.close()
     print()

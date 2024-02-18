@@ -8,7 +8,8 @@ PyPI page: https://pypi.org/project/DodonaCLI/#description
 3) [How to use](#how-to-use)
 4) [Flags that could be important](#flags-that-could-be-important)
 5) [How to update](#how-to-update)
-6) [Roadmap](#roadmap)
+6) [Help, DodonaCLI freezes](#help-dodonacli-freezes)
+7) [Roadmap](#roadmap)
 
 ## Disclaimers
 
@@ -114,14 +115,27 @@ Updating is simple:
 Alternatively, if you installed it with cloning from GitHub, you can `git pull`.
 
 
-## Roadmap
-More features to maybe add in the future:
-- add indicator to series to mark if all their exercises are completely solved
-- user-settings (f.e. auto-download of files, language, formatting, ...)
-- easy (automatic?) downloading of files mentioned in exercise description
-- be able to mark as read via terminal for ContentPage
+## Help, DodonaCLI freezes
+Since I just got this situation, I wanted to tell you how I fixed it.
+My computer didn’t succeed in making any network requests over IPv6, and thus waited and waited and waited ...
+To fix this, I had to disable IPv6 entirely on my own pc. 
+This is not something I’ll show you how to do, you’ll have to do some research on the internet.
+Before trying that, confirm first if this is indeed the issue by running `wget` with --inet6-only and --inet4-only 
+to see if this is indeed the issue.
 
-**Not important, but valid ideas:**
+
+## Roadmap
+This section has a bunch of ideas for me to work on, but also for you, the potential contributor!
+Remember to look at the recent branches/commits to see if I’m not working on one of these:
+- user-settings (f.e. auto-download of files, language, formatting, number of submissions shown, config location, ...)
+- easy (automatic?) downloading of files mentioned in exercise description
+- improve the rendering of all html/markdown frankensteins, in descriptions of exercises and exercise-descriptions 
+- add connection time-out to prevent long waiting when IPv6 doesn’t want to work along
 - (plugin) for syntax-checking before posting, so you get a quicker response in case of a syntax error, depends on the type of exercise (bash, java, python, C, C++, R, ...)
-- caching to make it feel like a real command, very fast! Currently, you’ll often have to wait a few hundred milliseconds for the API call to return
-- look into https://textual.textualize.io/getting_started/ to maybe use that??
+- caching some info for faster navigation and/or autocompletion
+- add indicator to series to mark if all their exercises are completely solved (maybe fetch from html-version)
+- get exercise-names via html-parsing for a submission list to only need 1 API call (instead of 30). Am I salty about that not being just field in the API, yes I am! Glad you noticed. Html-parsing isn’t a hobby of mine after all
+- shell completion for other shells then bash (zsh)
+- format weird markup in some feedback of submissions (like the Python and bash exercises)
+- add file-extension when loading code from submissions
+- provide a link to the feedback of an exercise

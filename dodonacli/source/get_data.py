@@ -2,7 +2,9 @@ import datetime
 import http.client
 import json
 import os
+import platform
 import socket
+import tomli
 
 from . import set_data, interactive_tutorial
 
@@ -152,24 +154,46 @@ def submission_info(sub_id: int, connection: http.client.HTTPSConnection, header
     return json_data
 
 
+def get_config_home():
+    """
+    Returns the path of the config home, this directory stores the config.json file
+    :return: The path to the config directory
+    """
+    # The case switch syntax was introduced in python 3.10
+    system = platform.system()
+    if system == "Linux":
+        platform_config_path = os.getenv("XDG_CONFIG_HOME", default=os.getenv("HOME") + "/.config/")
+    elif system == "Darwin":    # aka macOS
+        platform_config_path = os.path.join(os.getenv("HOME"), "Library/Application Support")
+    elif system == "Windows":
+        platform_config_path = os.getenv("APPDATA")
+    else:
+        return os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../config.json")
+    return os.path.join(platform_config_path, "DodonaCLI")
+
+
 def get_configs():
     """
     Get config data from config.json
     :return: json object with config data
     """
     # Get the path of the config-file.
-    # This is a bit more complicated because this file exists in the same directory as
-    # the python files, but the command may be executed from anywhere with the appropriate alias set.
-    # Thus, first the path to the directory of the python files is retrieved; then the config-file-name is appended
-    script_directory = os.path.dirname(os.path.abspath(__file__))
-    config_file_path = os.path.join(script_directory, '../../config.json')
+    config_file_path = os.path.join(get_config_home(), "config.json")
+
+    # fallback to the old path
+    needs_migration = False
+    if not os.path.exists(config_file_path):
+        config_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../config.json")
+        needs_migration = True
 
     # First try to open, if unable to open, create a new config-file and ask user for a token
     try:
         with open(config_file_path, "r") as file:
             config = json.load(file)
-
             config = validate_config(config)
+            if needs_migration:
+                set_data.dump_config(config)
+                print("config.json has been migrated, the old file is at", os.path.abspath(config_file_path))
 
     except FileNotFoundError:
         # Create config dictionary
@@ -204,7 +228,7 @@ def validate_config(config: dict):
         "course_id", "course_name",
         "serie_id", "serie_name",
         "exercise_id", "exercise_name",
-        "serie_token"
+        "serie_token", "programming_language"
     )
     for key in keys_to_check:
         if key not in config:
@@ -214,8 +238,9 @@ def validate_config(config: dict):
         print("API token not found.")
         config = get_api_token(config)
 
-    if "date_update_checked" not in config:
-        config['date_update_checked'] = datetime.datetime.now().strftime("%Y-%m-%d")
+    # Not needed any more with the "info update" command
+    if "date_update_checked" in config:
+        config.pop("date_update_checked")
 
     return config
 
@@ -230,3 +255,17 @@ def get_api_token(config: dict):
     set_data.dump_config(config)
 
     return config
+
+
+def get_dodonacli_version():
+    # Get the path of the toml-file.
+    # This is a bit more complicated because this file exists in the same directory as
+    # the python files, but the command may be executed from anywhere with the appropriate alias set.
+    # Thus, first the path to the directory of the python files is retrieved; then the config-file-name is appended
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    toml_file_path = os.path.join(script_directory, '../../pyproject.toml')
+
+    with open(toml_file_path, 'rb') as toml_file:
+        toml_dict = tomli.load(toml_file)
+
+    return toml_dict['project']['version']

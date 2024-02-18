@@ -1,9 +1,7 @@
 import click
 
 from dodonacli.commands import select, status, up, post, cli_next
-from dodonacli.commands import tutorial, submission, display
-
-from dodonacli.source import check_for_update
+from dodonacli.commands import tutorial, submission, display, info
 
 
 @click.group(help="A 3rd party Command Line Interface for Dodona. "
@@ -15,7 +13,7 @@ def main():
     Finally, you have no need to exit your terminal any more!
     Use --help for more info about flags, or read the README on discord.
     """
-    check_for_update.check_for_update()
+    pass
 
 
 main.add_command(display.display)
@@ -26,6 +24,7 @@ main.add_command(post.post)
 main.add_command(tutorial.tutorial)
 main.add_command(submission.sub)
 main.add_command(cli_next.cli_next)
+main.add_command(info.info)
 
 
 if __name__ == "__main__":

@@ -270,7 +270,7 @@ but pay attention next time.
     config['exercise_name'] = "Hello, World!"
 
     # This exercise has boilerplate code
-    with open('boilerplate', 'w') as boilerplate:
+    with open('boilerplate.py', 'w') as boilerplate:
         boilerplate.write(json_data[5]['boilerplate'])
     print(
         """

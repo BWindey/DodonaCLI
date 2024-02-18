@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "DodonaCLI"
-version = "2024.01.10"
+version = "2024.2.18"
 authors = [
     { name = "Bram Windey", email = "windey.bram@gmail.com" },
 ]
@@ -18,12 +18,12 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-    "rich",
-    "markdownify",
     "bs4",
     "click",
     "click-default-group",
-    "update-notipy",
+    "markdownify",
+    "packaging",
+    "rich",
     "tomli"
 ]
 keywords = ["dodona", "cli"]
