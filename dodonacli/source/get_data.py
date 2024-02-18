@@ -238,8 +238,9 @@ def validate_config(config: dict):
         print("API token not found.")
         config = get_api_token(config)
 
-    if "date_update_checked" not in config:
-        config['date_update_checked'] = datetime.datetime.now().strftime("%Y-%m-%d")
+    # Not needed any more with the "info update" command
+    if "date_update_checked" in config:
+        config.pop("date_update_checked")
 
     return config
 
