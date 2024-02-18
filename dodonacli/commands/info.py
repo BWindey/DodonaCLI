@@ -1,12 +1,11 @@
 import click
-import os
 
 from click_default_group import DefaultGroup
 from packaging.version import parse
 from pkg_info import get_pkg_info
 from rich.markdown import Markdown
 
-from dodonacli.source import get_data, pretty_console
+from dodonacli.source import pretty_console
 
 
 @click.group(help="Info about version, update-availability and GitHub page.",
@@ -18,7 +17,7 @@ def info():
 @click.command(help='Display the current version of DodonaCLI. The versioning system '
                     'uses a YYYY.M.D format.')
 def version():
-    dodonacli_version = get_data.get_dodonacli_version()
+    dodonacli_version = get_dodonacli_version()
 
     pretty_console.console.print(
         f"DodonaCLI {dodonacli_version}"
@@ -27,7 +26,7 @@ def version():
 
 @click.command(help='Checks if there is a new update available for DodonaCLI.')
 def check_update():
-    dodonacli_version = get_data.get_dodonacli_version()
+    dodonacli_version = get_dodonacli_version()
 
     pkg = get_pkg_info('DodonaCLI')
 
@@ -49,17 +48,31 @@ def github():
 
 @click.command(help='Changelog for the latest version.')
 def changelog():
-    # Get the path of the toml-file.
-    # This is a bit more complicated because this file exists in the same directory as
-    # the python files, but the command may be executed from anywhere with the appropriate alias set.
-    # Thus, first the path to the directory of the python files is retrieved; then the config-file-name is appended
-    script_directory = os.path.dirname(os.path.abspath(__file__))
-    changelog_path = os.path.join(script_directory, '../../CHANGELOG.md')
+    changelog_raw = """
+- Added **info** command:
+    - Subcommand 'version' to display your current DodonaCLI version. Versions use the YYYY.M.D format.
+    - Subcommand 'check-update' lets you know if there is an update available.
+    - Subcommand 'github' gives a link to DodonaCLI’s GitHub page.
+    - Subcommand 'changelog' shows a changelog for the latest downloaded version.
 
-    with open(changelog_path, 'r') as changelog_file:
-        md = Markdown(changelog_file.read())
+- Added syntax-check option to **post** command:
+  - Use '-c' or '--check' to check syntax. This uses other commandline utilities like shellcheck, javac or python
+  - Currently implemented for:
+    - Bash
+    - Java
+    - JavaScript
+    - Python
 
+- Added CHANGELOG.md
+
+As always, use the "--help" flag after every command and sub-command to learn more.
+    """
+    md = Markdown(changelog_raw)
     pretty_console.console.print(md)
+
+
+def get_dodonacli_version():
+    return "2024.2.18.1"
 
 
 info.add_command(version)
