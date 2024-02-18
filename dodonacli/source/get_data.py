@@ -163,13 +163,14 @@ def get_config_home():
     system = platform.system()
     if system == "Linux":
         platform_config_path = os.getenv("XDG_CONFIG_HOME", default=os.getenv("HOME") + "/.config/")
-    elif system == "Darwin": # aka macOS
+    elif system == "Darwin":    # aka macOS
         platform_config_path = os.path.join(os.getenv("HOME"), "Library/Application Support")
     elif system == "Windows":
         platform_config_path = os.getenv("APPDATA")
     else:
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../config.json")
     return os.path.join(platform_config_path, "DodonaCLI")
+
 
 def get_configs():
     """
