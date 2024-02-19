@@ -63,6 +63,8 @@ def changelog():
     - JavaScript
     - Python
 
+- Added link to submission result and removed the error for wrong submissions
+
 - Added CHANGELOG.md
 
 As always, use the "--help" flag after every command and sub-command to learn more.
@@ -72,7 +74,7 @@ As always, use the "--help" flag after every command and sub-command to learn mo
 
 
 def get_dodonacli_version():
-    return "2024.2.18.1"
+    return "2024.2.19"
 
 
 info.add_command(version)
