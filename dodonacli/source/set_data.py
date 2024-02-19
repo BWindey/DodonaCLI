@@ -88,6 +88,7 @@ def post_solution(content, connection, headers, course_id, exercise_id):
 
     # Print out the results
     pretty_print.print_result(json.loads(json_data['result']))
+    pretty_console.console.print(json_data['url'].rstrip(".json"))
     print()
 
 
