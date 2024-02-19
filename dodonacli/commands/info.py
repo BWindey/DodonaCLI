@@ -65,6 +65,8 @@ def changelog():
 
 - Added link to submission result and removed the error for wrong submissions
 
+- Added file extension when loading your code from previous submission. Only works when having selected an exercise.
+
 - Added CHANGELOG.md
 
 As always, use the "--help" flag after every command and sub-command to learn more.
