@@ -11,6 +11,15 @@ from . import set_data, interactive_tutorial
 
 def handle_connection_request(connection: http.client.HTTPSConnection, connection_type: str,
                               link: str, headers: dict) -> http.client.HTTPSConnection:
+    """
+    Handle of a connection request.
+    Quits the program if an exception occurs and displays why.
+    :param connection: Connection object
+    :param connection_type: "POST", "GET", ...
+    :param link: The link to where the connection has to be made
+    :param headers: Dictionary to send along the request as headers
+    :return: The connection object with the request made
+    """
     try:
         connection.request(connection_type, link, headers=headers)
 
@@ -107,7 +116,14 @@ def exercise_data(connection: http.client.HTTPSConnection, headers: dict, course
     return json.loads(data)
 
 
-def exercise_submissions(config: dict, connection: http.client.HTTPSConnection, headers: dict):
+def exercise_submissions(config: dict, connection: http.client.HTTPSConnection, headers: dict) -> dict:
+    """
+    Get the last 30 submissions for the current selected exercise
+    :param config: Dictionary containing the configs
+    :param connection: Connection object to Dodona
+    :param headers: Headers dictionary to send along the request
+    :return: Dictionary containing the submission data
+    """
     course_id = config['course_id']
     series_id = config['serie_id']
     exercise_id = config['exercise_id']
@@ -123,7 +139,13 @@ def exercise_submissions(config: dict, connection: http.client.HTTPSConnection, 
     return json.loads(data)
 
 
-def all_submissions(connection: http.client.HTTPSConnection, headers: dict):
+def all_submissions(connection: http.client.HTTPSConnection, headers: dict) -> dict:
+    """
+    Get the user-wide latest 30 submissions
+    :param connection: Connection object to Dodona
+    :param headers: Headers dictionary to send along the request
+    :return: Dictionary containing the submsision data
+    """
     connection = handle_connection_request(
         connection,
         "GET",
@@ -135,11 +157,19 @@ def all_submissions(connection: http.client.HTTPSConnection, headers: dict):
     return json.loads(data)
 
 
-def submission_info(sub_id: int, connection: http.client.HTTPSConnection, headers: dict, config):
+def submission_info(submission_id: int, connection: http.client.HTTPSConnection, headers: dict, config) -> dict:
+    """
+    Get all the info about the submission together with the name of its exercise.
+    :param submission_id: Submission id to get the info about
+    :param connection: Connection object to Dodona
+    :param headers: Headers dict to send along the request
+    :param config: Dictionary with the configs
+    :return: Dictionary with the submission data
+    """
     connection = handle_connection_request(
         connection,
         "GET",
-        f"/submissions/{sub_id}",
+        f"/submissions/{submission_id}",
         headers=headers
     )
     data = handle_connection_response(connection)
@@ -155,6 +185,12 @@ def submission_info(sub_id: int, connection: http.client.HTTPSConnection, header
 
 
 def get_extension(programming_language: str) -> str:
+    """
+    Get the file-extension for a programming_language supported by Dodona.
+    This is useful when saving code to a file.
+    :param programming_language: String representing the name of a programming language
+    :return: File-extension as string
+    """
     language_dict = {
         "python": "py",
         "sh": "sh",

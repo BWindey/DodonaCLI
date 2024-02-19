@@ -11,7 +11,7 @@ from rich.markdown import Markdown
 from . import get_data, pretty_console
 
 
-def print_courses_data(json_data, title="Your courses:", prefixes=None):
+def print_courses_data(json_data: dict, title: str = "Your courses:", prefixes: dict = None):
     """
     Print out the courses in json_data in a neat way
     :param json_data: json object with data about Dodona courses
@@ -35,17 +35,18 @@ def print_courses_data(json_data, title="Your courses:", prefixes=None):
     pretty_console.console.print(f'\n[u bright_blue]{title}[/]')
     for course in display_data:
         pretty_console.console.print(
-            (prefixes.get(course[0]) or "\t") + f"{course[0].ljust(max_course_id_length)}: "
+            (prefixes.get(course[0]) or "\t") +
+            f"{course[0].ljust(max_course_id_length)}: "
             f"[bold]{course[1].ljust(max_course_name_length)}[/]\tby {course[2]}"
         )
 
 
-def print_series_data(json_data, force=False, prefixes=None):
+def print_series_data(json_data: dict, force: bool = False, prefixes: dict = None):
     """
-    Print out the exercise-series in json_data in a neat way
-    :param json_data: json object with data about Dodona exercise-series
-    :param force: boolean to decide if the series description has to be printed, or only a link to it
-    :param prefixes: dictionary with a prefix for each id in json_data
+    Print out the exercise-series in json_data in a neat way.
+    :param json_data: Json object with data about Dodona exercise-series
+    :param force: Boolean to decide if the series description has to be printed, or only a link to it
+    :param prefixes: Dictionary with a prefix for each id in json_data
     """
     if prefixes is None:
         prefixes = {}
@@ -120,7 +121,7 @@ def print_series_data(json_data, force=False, prefixes=None):
     print()
 
 
-def print_exercise_data(json_data, prefixes=None):
+def print_exercise_data(json_data: dict, prefixes: dict = None):
     """
     Print out the exercises in json_data in a neat way
     :param json_data: json object with data about Dodona exercises in a series
@@ -192,10 +193,11 @@ def print_exercise_data(json_data, prefixes=None):
     print()
 
 
-def print_exercise(json_data, token: str, force=False):
+def print_exercise(json_data: dict, token: str, force: bool = False):
     """
-    Print out the exercise-description. Needs to call the Dodona-sandbox and convert HTML to text.
-    Prints out a warning for potential incompleteness, which may be dangerous for tests and exams.
+    Print out the exercise-description.
+    Needs to call the Dodona sandbox and convert HTML to text.
+    Print out a warning for potential incompleteness, which may be dangerous for tests and exams.
     :param token: API-token as authorization
     :param json_data: json object with info about a Dodona exercise
     :param force: boolean to decide if the exercise description has to be printed, or only a link to it
@@ -249,7 +251,7 @@ def print_exercise(json_data, token: str, force=False):
         )
 
 
-def print_result(json_results):
+def print_result(json_results: dict):
     """
     Print out the results of a submission in a neat way
     :param json_results: json object with data about a submission
@@ -279,14 +281,22 @@ def print_result(json_results):
         #     print("\tSomething went wrong trying to display the results: " + str(e))
 
 
-def print_status(config):
+def print_status(config: dict):
+    """
+    Print out the current selection of course, exercise-series and exercise.
+    :param config: Dictionary with the configs
+    """
     pretty_console.console.print(f"\n[u bright_blue]Status:[/]\n"
                                  f"\t{'Course: '.ljust(10)}{config['course_name']}\n"
                                  f"\t{'Series: '.ljust(10)}{config['serie_name']}\n"
                                  f"\t{'Exercise: '.ljust(10)}{config['exercise_name']}\n")
 
 
-def print_exercise_submissions(json_data):
+def print_exercise_submissions(json_data: dict):
+    """
+    Print out a list of the (up to) 10 most recent submissions as found in json_data
+    :param json_data: Dictionary with submission data
+    """
     pretty_console.console.print(
         "\n[u bright_blue]Most recent submissions:[/]"
     )
@@ -308,7 +318,15 @@ def print_exercise_submissions(json_data):
     print()
 
 
-def print_all_submissions(connection, headers, json_data):
+def print_all_submissions(connection: http.client.HTTPSConnection, headers: dict, json_data: dict):
+    """
+    Print out a list of the latest 30 submissions for the user, userwide (not tied to an exercise).
+    Makes extra requests to Dodona to get the name of the exercises of the submissions
+    :param connection: Connection to Dodona
+    :param headers: Headers to send with the connection
+    :param json_data: Dictionary with submission info
+    :return:
+    """
     pretty_console.console.print(
         "\n[u bright_blue]Most recent submissions:[/]"
     )

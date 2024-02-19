@@ -44,7 +44,7 @@ def load(number):
     submission = json_all_submissions[-int(number)]
 
     submission_info = get_data.submission_info(submission['id'], connection, headers, config)
-    set_data.save_submission_code(
+    set_data.save_to_file(
         submission_info['exercise_name'], submission_info['id'], submission_info['code'], extension
     )
 
