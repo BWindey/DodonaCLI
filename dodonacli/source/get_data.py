@@ -154,6 +154,32 @@ def submission_info(sub_id: int, connection: http.client.HTTPSConnection, header
     return json_data
 
 
+def get_extension(programming_language: str) -> str:
+    language_dict = {
+        "python": "py",
+        "sh": "sh",
+        "javascript": "js",
+        "bash": "sh",
+        "java": "java",
+        "prolog": "pl",
+        "haskell": "hs",
+        "text": "txt",
+        "csharp": "cs",
+        "R": "R",
+        "c": "c",
+        "Rmarkdown": "Rmd",
+        "kotlin": "kt",
+        "scheme": "scm",
+        "sql": "sql",
+        "html": "html",
+        "turtle": "py",
+        "markdown": "md",
+        "ZiM javascript": "txt",
+        "cpp": "cpp"
+    }
+    return language_dict[programming_language]
+
+
 def get_config_home():
     """
     Returns the path of the config home, this directory stores the config.json file

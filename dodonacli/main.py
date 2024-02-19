@@ -26,7 +26,6 @@ main.add_command(submission.sub)
 main.add_command(cli_next.cli_next)
 main.add_command(info.info)
 
-
 if __name__ == "__main__":
     # Main entry-point
     main()
