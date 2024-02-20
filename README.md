@@ -31,8 +31,16 @@ This is mostly useful for those wanting to change/add to the code.
 Tab-completion is supported for bash. You can 
 download ["dodonacli_completion_script.sh" from GitHub](https://github.com/BWindey/DodonaCLI/blob/master/dodonacli_completion_script.sh),
 and source it in your ~/.bashrc. 
-This is currently not supported (tested, tried, ...) for other shells than bash.
-If you know how to support your platform, please reach out to me.
+If you use Zsh or Fish, you can run this:
+```
+_DODONA_COMPLETE=zsh_source dodona > ~/.dodona-complete.zsh
+_DODONA_COMPLETE=fish_source dodona > ~/.config/fish/completions/foo-bar.fish
+```
+On Zsh, you'll have to then source this file in `.zshrc`.
+Testing this on bash (yes, that's possible too), tab-completion was really slow. 
+That's why I'd recommend the first method for bash, 
+and I'm looking to get a full completion script for at least Zsh as well.
+
 
 There is also a manual page. You can download ["dodonacli.1.gz"](https://github.com/BWindey/DodonaCLI/blob/master/man-page/dodonacli.1.gz) and save this in a folder included in `$(manpath)`. 
 
