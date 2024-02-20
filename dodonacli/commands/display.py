@@ -8,7 +8,7 @@ import click
               is_flag=True, default=False)
 def display(force):
     import http.client
-    from source import get_data, pretty_print
+    from dodonacli.source import get_data, pretty_print
 
     # Read configs in
     config = get_data.get_configs()

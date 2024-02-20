@@ -49,7 +49,7 @@ def cli_next(reverse, unsolved):
 
 
 def get_next_exercise(config, connection, headers, reverse, unsolved):
-    from source import get_data, pretty_print
+    from dodonacli.source import get_data, pretty_print
 
     # Get all exercises of selected series
     exercise_data_json = get_data.exercises_data(
@@ -107,7 +107,7 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
 
 
 def get_next_series(config, connection, headers, reverse, unsolved):
-    from source import get_data, pretty_print
+    from dodonacli.source import get_data, pretty_print
     # Get all series of selected course
     series_data_json = get_data.series_data(
         connection, headers, config['course_id']
@@ -147,7 +147,7 @@ def get_next_series(config, connection, headers, reverse, unsolved):
 
 
 def get_next_course(config, connection, headers, reverse, unsolved):
-    from source import get_data, pretty_print
+    from dodonacli.source import get_data, pretty_print
     # Get all registred courses
     course_data_json = get_data.courses_data(connection, headers)
 

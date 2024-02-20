@@ -11,7 +11,7 @@ def info():
 @click.command(help='Display the current version of DodonaCLI. The versioning system '
                     'uses a YYYY.M.D format.')
 def version():
-    from source import pretty_console
+    from dodonacli.source import pretty_console
     dodonacli_version = get_dodonacli_version()
 
     pretty_console.console.print(
@@ -92,7 +92,8 @@ complete -F _dodona dodona
 @click.command(help='Link to the GitHub page of DodonaCLI. Can be handy for the README page, Issues (bug reports) and '
                     'pull requests.')
 def github():
-    from source import pretty_console
+    from dodonacli.source import pretty_console
+
     pretty_console.console.print("https://www.github.com/BWindey/DodonaCLI")
 
 
