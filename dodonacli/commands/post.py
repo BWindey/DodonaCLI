@@ -28,7 +28,7 @@ def post(file, use_link):
     # Check for the link at the top of the file
     if use_link:
         with open(file, 'r') as solutionfile:
-            link = solutionfile.readline()
+            link = solutionfile.readline() + solutionfile.readline()
             link_index = link.find("https://dodona.be/")
             if link_index < 0:
                 print("\nNo valid link found on the first line of your file. Please confirm again.\n"
@@ -36,9 +36,12 @@ def post(file, use_link):
                 return
             link = link[link_index:]
 
-            course_id_index_start = link.find("/courses/") + len("/courses/")
-            course_id_index_stop = link.find("/", course_id_index_start)
-            course_id = link[course_id_index_start:course_id_index_stop]
+            if link.find("/courses/") != -1:
+                course_id_index_start = link.find("/courses/") + len("/courses/")
+                course_id_index_stop = link.find("/", course_id_index_start)
+                course_id = link[course_id_index_start:course_id_index_stop]
+            else:
+                course_id = None
 
             exercise_id_index_start = link.find("/activities/") + len("/activities/")
             exercise_id_index_stop = link.find("/", exercise_id_index_start)
