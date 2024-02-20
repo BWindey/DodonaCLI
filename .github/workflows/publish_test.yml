@@ -1,5 +1,8 @@
 name: Publish to test.PyPI
 
+on:
+  workflow_dispatch
+
 jobs:
  build-and-publish:
   runs-on: ubuntu-latest
