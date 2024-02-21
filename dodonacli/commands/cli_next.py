@@ -5,7 +5,7 @@ import click
 # is a Python built-in. The command, however, will still be called
 # with 'next', as click provides the 'name=' argument
 @click.command(name="next",
-               help="WARING: might overwrite 'boilerplate' file! "
+               help="WARNING: might overwrite 'boilerplate' file! "
                     "Move to the next type of what you have selected. "
                     "It loops around to the beginning if the current selection "
                     "is at the end of the 'list'. If some boilerplate is attached "

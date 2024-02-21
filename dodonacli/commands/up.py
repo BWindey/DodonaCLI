@@ -1,7 +1,7 @@
 import click
 
 
-@click.command(help="Deselect default last selected thing." 
+@click.command(help="Deselect default last selected thing. " 
                     "Can be used with an argument to deselect everything with "
                     "'all' or 'top', or deselect 1, 2 or 3 levels.")
 @click.argument('amount', default='1',
