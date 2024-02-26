@@ -220,7 +220,7 @@ def select_exercise(connection: http.client.HTTPSConnection, headers: dict,
     if programming_language:
         config['programming_language'] = programming_language['name']
 
-    pretty_console.console.print(f"\nExercise [bold]{selected_exercise['name']}[/] selected.")
+    pretty_console.console.print(f"\nExercise [bold]{selected_exercise['name']}[/] selected.\n")
 
     boilerplate = selected_exercise.get('boilerplate')
     if boilerplate and boilerplate.strip() != "":

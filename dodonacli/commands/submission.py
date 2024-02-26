@@ -36,13 +36,17 @@ def load(number):
 
     if config['exercise_id']:
         json_all_submissions = get_data.exercise_submissions(config, connection, headers)
+        extension = "." + get_data.get_extension(config['programming_language']) or ""
     else:
         json_all_submissions = get_data.all_submissions(connection, headers)
+        extension = ""
 
     submission = json_all_submissions[-int(number)]
 
     submission_info = get_data.submission_info(submission['id'], connection, headers, config)
-    set_data.save_submission_code(submission_info['exercise_name'], submission_info['id'], submission_info['code'])
+    set_data.save_submission_code(
+        submission_info['exercise_name'], submission_info['id'], submission_info['code'], extension
+    )
 
     return
 

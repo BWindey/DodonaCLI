@@ -12,6 +12,9 @@ _dodona(){
     elif [ "$3" == "display" ]; then
         COMPREPLY=( $(compgen -W "--force --help" -- "$2") )
 
+    elif [ "$3" == "info" ]; then
+        COMPREPLY=( $(compgen -W "version changelog github check-update"))
+
     elif [ "$3" == "select" ]; then
         COMPREPLY=( $(compgen -W "--other --hidden --help" -- "$2") )
 
@@ -19,12 +22,12 @@ _dodona(){
         COMPREPLY=( $(compgen -W "--reverse --unsolved --help" -- "$2") )
 
     elif [ "$3" == "dodona" ]; then
-        COMPREPLY=( $(compgen -W "display next post select status sub tutorial up --help" -- "$2") )
+        COMPREPLY=( $(compgen -W "display info next post select status sub tutorial up --help" -- "$2") )
 
     elif [ "$3" == "post" ]; then
-        COMPREPLY=( $(compgen -f -- "$2" | grep -vF ".swp") $(compgen -W "--help --link -l" -- "$2" ))
+        COMPREPLY=( $(compgen -f -- "$2" | grep -vF ".swp") $(compgen -W "--help --use-link -l -c --check" -- "$2" ))
 
-    elif [ "$3" == "-l" ] || [ "$3" == "--use-link" ]; then
+    elif [[ "$3" =~ ^-[lc]+$ ]] || [ "$3" == "--use-link" ] || [ "$3" == "--check" ]; then
         COMPREPLY=( $(compgen -f -- "$2") )
 
     elif [ "$3" == "up" ]; then

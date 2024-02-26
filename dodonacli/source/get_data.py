@@ -154,6 +154,32 @@ def submission_info(sub_id: int, connection: http.client.HTTPSConnection, header
     return json_data
 
 
+def get_extension(programming_language: str) -> str:
+    language_dict = {
+        "python": "py",
+        "sh": "sh",
+        "javascript": "js",
+        "bash": "sh",
+        "java": "java",
+        "prolog": "pl",
+        "haskell": "hs",
+        "text": "txt",
+        "csharp": "cs",
+        "R": "R",
+        "c": "c",
+        "Rmarkdown": "Rmd",
+        "kotlin": "kt",
+        "scheme": "scm",
+        "sql": "sql",
+        "html": "html",
+        "turtle": "py",
+        "markdown": "md",
+        "ZiM javascript": "txt",
+        "cpp": "cpp"
+    }
+    return language_dict[programming_language]
+
+
 def get_config_home():
     """
     Returns the path of the config home, this directory stores the config.json file
@@ -163,13 +189,14 @@ def get_config_home():
     system = platform.system()
     if system == "Linux":
         platform_config_path = os.getenv("XDG_CONFIG_HOME", default=os.getenv("HOME") + "/.config/")
-    elif system == "Darwin": # aka macOS
+    elif system == "Darwin":    # aka macOS
         platform_config_path = os.path.join(os.getenv("HOME"), "Library/Application Support")
     elif system == "Windows":
         platform_config_path = os.getenv("APPDATA")
     else:
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../config.json")
     return os.path.join(platform_config_path, "DodonaCLI")
+
 
 def get_configs():
     """
@@ -237,8 +264,9 @@ def validate_config(config: dict):
         print("API token not found.")
         config = get_api_token(config)
 
-    if "date_update_checked" not in config:
-        config['date_update_checked'] = datetime.datetime.now().strftime("%Y-%m-%d")
+    # Not needed any more with the "info update" command
+    if "date_update_checked" in config:
+        config.pop("date_update_checked")
 
     return config
 
@@ -253,17 +281,3 @@ def get_api_token(config: dict):
     set_data.dump_config(config)
 
     return config
-
-
-def get_dodonacli_version():
-    # Get the path of the toml-file.
-    # This is a bit more complicated because this file exists in the same directory as
-    # the python files, but the command may be executed from anywhere with the appropriate alias set.
-    # Thus, first the path to the directory of the python files is retrieved; then the config-file-name is appended
-    script_directory = os.path.dirname(os.path.abspath(__file__))
-    toml_file_path = os.path.join(script_directory, '../../pyproject.toml')
-
-    with open(toml_file_path, 'rb') as toml_file:
-        toml_dict = tomli.load(toml_file)
-
-    return toml_dict['project']['version']
