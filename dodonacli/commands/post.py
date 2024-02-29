@@ -63,6 +63,9 @@ def post(file, use_link, check):
         course_id = config['course_id']
         exercise_id = config['exercise_id']
 
+    # Make sure the amount of newlines is exactly 1
+    content = content.rstrip() + "\n"
+
     # Post exercise to Dodona, does not work if there is no exercise selected or -l flag not used
     if not use_link and not config['exercise_id']:
         print("\nNo exercise selected! If you want to use a link at the top of your file, use the -l flag.\n")
