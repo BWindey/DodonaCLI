@@ -1,8 +1,5 @@
 import click
 
-from dodonacli.source import set_data
-from dodonacli.source import get_data
-
 
 @click.command(help="Deselect default last selected thing. " 
                     "Can be used with an argument to deselect everything with "
@@ -11,6 +8,7 @@ from dodonacli.source import get_data
                 type=click.Choice(['all', 'top', '1', '2', '3'], 
                                   case_sensitive=False))
 def up(amount):
+    from dodonacli.source import set_data, get_data
     # Read configs in
     config = get_data.get_configs()
 

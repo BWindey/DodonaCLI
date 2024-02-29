@@ -7,3 +7,4 @@ boilerplate
 build
 DodonaCLI.egg-info
 dist
+speed_test.sh

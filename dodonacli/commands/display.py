@@ -1,7 +1,4 @@
 import click
-import http.client
-
-from dodonacli.source import pretty_print, get_data
 
 
 @click.command(help="Display info based on the current selection. It will always display what you can select next, "
@@ -10,6 +7,9 @@ from dodonacli.source import pretty_print, get_data
               help="Force display (with possible mistakes) the exercise (-series) description to display.",
               is_flag=True, default=False)
 def display(force):
+    import http.client
+    from dodonacli.source import get_data, pretty_print
+
     # Read configs in
     config = get_data.get_configs()
 

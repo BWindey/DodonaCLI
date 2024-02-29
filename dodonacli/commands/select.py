@@ -1,9 +1,5 @@
 import click
 import http.client
-import json
-import textwrap
-
-from dodonacli.source import set_data, pretty_console, get_data
 
 
 @click.command(
@@ -21,6 +17,8 @@ from dodonacli.source import set_data, pretty_console, get_data
               is_flag=True, default=False)
 @click.argument('thing')
 def select(thing, hidden, other):
+    from dodonacli.source import set_data, get_data
+
     # Read configs in
     config = get_data.get_configs()
 
@@ -67,6 +65,8 @@ def select_course(connection: http.client.HTTPSConnection, headers: dict,
 
 def select_registered_course(connection: http.client.HTTPSConnection,
                              headers: dict, thing: str, config: dict) -> dict:
+    from dodonacli.source import pretty_console, get_data
+
     # Get all registered courses to check if a valid course was selected
     data_courses = get_data.courses_data(connection, headers)
     courses = {str(course['id']): course['name'] for course in data_courses}
@@ -99,6 +99,9 @@ def select_registered_course(connection: http.client.HTTPSConnection,
 
 def select_unregistered_course(connection: http.client.HTTPSConnection,
                                headers: dict, thing: str, config: dict) -> dict:
+    import json
+    from dodonacli.source import pretty_console, get_data
+
     # Has to be an id, because it's not possible to match against names 
     if not thing.isnumeric():
         print("The selection needs to be an id (all numbers). "
@@ -130,6 +133,8 @@ def select_unregistered_course(connection: http.client.HTTPSConnection,
 
 def select_series(connection: http.client.HTTPSConnection, headers: dict,
                   thing: str, config: dict):
+    from dodonacli.source import pretty_console, get_data
+
     data_series = get_data.series_data(connection, headers, config['course_id'])
 
     series = {str(serie['id']): serie['name'] for serie in data_series}
@@ -155,6 +160,9 @@ def select_series(connection: http.client.HTTPSConnection, headers: dict,
 
 def select_hidden_series(connection: http.client.HTTPSConnection, headers: dict,
                          series_id: str, series_token: str, config: dict):
+    import json
+    from dodonacli.source import pretty_console, get_data
+
     if not series_id.isnumeric():
         print("Well this won't work without a valid ID "
               "(only numeric characters). Please try again.")
@@ -187,6 +195,9 @@ def select_hidden_series(connection: http.client.HTTPSConnection, headers: dict,
 
 def select_exercise(connection: http.client.HTTPSConnection, headers: dict,
                     selection: str, config: dict) -> dict:
+    import textwrap
+    from dodonacli.source import pretty_console, get_data
+
     # Token for hidden series
     if config['serie_token'] is None:
         serie_token = ""

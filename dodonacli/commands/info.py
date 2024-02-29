@@ -1,11 +1,5 @@
 import click
-
 from click_default_group import DefaultGroup
-from packaging.version import parse
-from pkg_info import get_pkg_info
-from rich.markdown import Markdown
-
-from dodonacli.source import pretty_console
 
 
 @click.group(help="Info about version, update-availability and GitHub page.",
@@ -17,6 +11,7 @@ def info():
 @click.command(help='Display the current version of DodonaCLI. The versioning system '
                     'uses a YYYY.M.D format.')
 def version():
+    from dodonacli.source import pretty_console
     dodonacli_version = get_dodonacli_version()
 
     pretty_console.console.print(
@@ -26,6 +21,10 @@ def version():
 
 @click.command(help='Checks if there is a new update available for DodonaCLI.')
 def check_update():
+    from packaging.version import parse
+    from pkg_info import get_pkg_info
+    from dodonacli.source import pretty_console
+
     dodonacli_version = get_dodonacli_version()
 
     pkg = get_pkg_info('DodonaCLI')
@@ -93,11 +92,16 @@ complete -F _dodona dodona
 @click.command(help='Link to the GitHub page of DodonaCLI. Can be handy for the README page, Issues (bug reports) and '
                     'pull requests.')
 def github():
+    from dodonacli.source import pretty_console
+
     pretty_console.console.print("https://www.github.com/BWindey/DodonaCLI")
 
 
 @click.command(help='Changelog for the latest version.')
 def changelog():
+    from rich.markdown import Markdown
+    from dodonacli.source import pretty_console
+
     changelog_raw = """
 - Added **info** command:
     - Subcommand 'version' to display your current DodonaCLI version. Versions use the YYYY.M.D format.
