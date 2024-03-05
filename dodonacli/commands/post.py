@@ -33,7 +33,9 @@ def post(file, use_link, check):
     # Check for the link at the top of the file
     if use_link:
         with open(file, 'r') as solutionfile:
-            link = solutionfile.readline() + solutionfile.readline()
+            link = solutionfile.readline()
+            if link[:2] == '#!':
+                link = solutionfile.readline()
             link_index = link.find("https://dodona.be/")
             if link_index < 0:
                 print("\nNo valid link found on the first line of your file. Please confirm again.\n"
