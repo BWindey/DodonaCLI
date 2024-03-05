@@ -123,6 +123,10 @@ def changelog():
 
 - Added CHANGELOG.md
 
+- Added support for hashbangs when using exercise links (post -l)
+
+- Fixed a bug where links to detached exercises didn't work
+
 As always, use the "--help" flag after every command and sub-command to learn more.
     """
     md = Markdown(changelog_raw)
@@ -130,7 +134,8 @@ As always, use the "--help" flag after every command and sub-command to learn mo
 
 
 def get_dodonacli_version():
-    return "2024.2.19"
+    from importlib import metadata
+    return metadata.version(__package__.split('.')[0])
 
 
 info.add_command(version)
