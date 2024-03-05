@@ -39,7 +39,11 @@ def check_update():
         print("Your DodonaCLI is up-to-date.")
 
 
-@click.command(help='Bash completion script for you to source in your .bashrc')
+@click.command(help='Bash completion script for you to source in your .bashrc. '
+                    'This is a manual script. '
+                    'With the optimesed imports, you can also use the completion provided by the Click library '
+                    'for bash, zsh and fish. '
+                    'Read more about this at https://click.palletsprojects.com/en/8.1.x/shell-completion/')
 def completion():
     print(
         """
@@ -103,29 +107,12 @@ def changelog():
     from dodonacli.source import pretty_console
 
     changelog_raw = """
-- Added **info** command:
-    - Subcommand 'version' to display your current DodonaCLI version. Versions use the YYYY.M.D format.
-    - Subcommand 'check-update' lets you know if there is an update available.
-    - Subcommand 'github' gives a link to DodonaCLI’s GitHub page.
-    - Subcommand 'changelog' shows a changelog for the latest downloaded version.
-
-- Added syntax-check option to **post** command:
-  - Use '-c' or '--check' to check syntax. This uses other commandline utilities like shellcheck, javac or python
-  - Currently implemented for:
-    - Bash
-    - Java
-    - JavaScript
-    - Python
-
-- Added link to submission result and removed the error for wrong submissions
-
-- Added file extension when loading your code from previous submission. Only works when having selected an exercise.
-
-- Added CHANGELOG.md
-
 - Added support for hashbangs when using exercise links (post -l)
-
 - Fixed a bug where links to detached exercises didn't work
+- Added completion sub-command to print out the bash-completion-script
+- Optimised imports to gain quite a lot of speed when not making a request to Dodona
+- Small update to printing forcefully of exercise description (is now indented). More is planned.
+
 
 As always, use the "--help" flag after every command and sub-command to learn more.
     """
