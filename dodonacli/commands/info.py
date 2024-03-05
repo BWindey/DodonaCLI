@@ -1,14 +1,8 @@
 import click
-
 from click_default_group import DefaultGroup
-from packaging.version import parse
-from pkg_info import get_pkg_info
-from rich.markdown import Markdown
-
-from dodonacli.source import pretty_console
 
 
-@click.group(help="Info about version, update-availability and GitHub page.",
+@click.group(help="Info about shell-completion, changelog, version, update-availability and GitHub page.",
              cls=DefaultGroup, default='version', default_if_no_args=True)
 def info():
     pass
@@ -17,6 +11,7 @@ def info():
 @click.command(help='Display the current version of DodonaCLI. The versioning system '
                     'uses a YYYY.M.D format.')
 def version():
+    from dodonacli.source import pretty_console
     dodonacli_version = get_dodonacli_version()
 
     pretty_console.console.print(
@@ -26,6 +21,10 @@ def version():
 
 @click.command(help='Checks if there is a new update available for DodonaCLI.')
 def check_update():
+    from packaging.version import parse
+    from pkg_info import get_pkg_info
+    from dodonacli.source import pretty_console
+
     dodonacli_version = get_dodonacli_version()
 
     pkg = get_pkg_info('DodonaCLI')
@@ -40,34 +39,80 @@ def check_update():
         print("Your DodonaCLI is up-to-date.")
 
 
-@click.command(help='Link to the GitHub page of DodonaCLI. Can be handy for the README page, Issues (bug reports) and '
-                    'pull requests.')
+@click.command(help='Bash completion script for you to source in your .bashrc. '
+                    'This is a manual script. '
+                    'With the optimesed imports, you can also use the completion provided by the Click library '
+                    'for bash, zsh and fish. '
+                    'Read more about this at https://click.palletsprojects.com/en/8.1.x/shell-completion/')
+def completion():
+    print(
+        """
+# Bash completion script for DodonaCLI, needs to be sourced to work
+# Used https://www.gnu.org/software/gnuastro/manual/html_node/Bash-TAB-completion-tutorial.html to help create this
+
+# $1 = name of command -> dodona
+# $2 = current word being completed
+# $3 = word before word being completed
+
+_dodona(){
+    if [ "$3" == "sub" ]; then
+        COMPREPLY=( $(compgen -W "load display --help" -- "$2")  )
+
+    elif [ "$3" == "display" ]; then
+        COMPREPLY=( $(compgen -W "--force --help" -- "$2") )
+
+    elif [ "$3" == "info" ]; then
+        COMPREPLY=( $(compgen -W "version changelog github check-update"))
+
+    elif [ "$3" == "select" ]; then
+        COMPREPLY=( $(compgen -W "--other --hidden --help" -- "$2") )
+
+    elif [ "$3" == "next" ]; then
+        COMPREPLY=( $(compgen -W "--reverse --unsolved --help" -- "$2") )
+
+    elif [ "$3" == "dodona" ]; then
+        COMPREPLY=( $(compgen -W "display info next post select status sub tutorial up --help" -- "$2") )
+
+    elif [ "$3" == "post" ]; then
+        COMPREPLY=( $(compgen -f -- "$2" | grep -vF ".swp") $(compgen -W "--help --use-link -l -c --check" -- "$2" ))
+
+    elif [[ "$3" =~ ^-[lc]+$ ]] || [ "$3" == "--use-link" ] || [ "$3" == "--check" ]; then
+        COMPREPLY=( $(compgen -f -- "$2") )
+
+    elif [ "$3" == "up" ]; then
+        COMPREPLY=( $(compgen -W "all top 1 2 3" -- "$2") )
+
+    else
+        COMPREPLY=( $(compgen -W "--help") )
+    fi
+}
+
+complete -F _dodona dodona
+
+        """
+    )
+
+
+@click.command(help='Link to the GitHub page of DodonaCLI. Can be handy for the README page, manpages,'
+                    ' Issues (bug reports) and pull requests.')
 def github():
+    from dodonacli.source import pretty_console
+
     pretty_console.console.print("https://www.github.com/BWindey/DodonaCLI")
 
 
 @click.command(help='Changelog for the latest version.')
 def changelog():
+    from rich.markdown import Markdown
+    from dodonacli.source import pretty_console
+
     changelog_raw = """
-- Added **info** command:
-    - Subcommand 'version' to display your current DodonaCLI version. Versions use the YYYY.M.D format.
-    - Subcommand 'check-update' lets you know if there is an update available.
-    - Subcommand 'github' gives a link to DodonaCLI’s GitHub page.
-    - Subcommand 'changelog' shows a changelog for the latest downloaded version.
+- Added support for hashbangs when using exercise links (post -l)
+- Fixed a bug where links to detached exercises didn't work
+- Added completion sub-command to print out the bash-completion-script
+- Optimised imports to gain quite a lot of speed when not making a request to Dodona
+- Small update to printing forcefully of exercise description (is now indented). More is planned.
 
-- Added syntax-check option to **post** command:
-  - Use '-c' or '--check' to check syntax. This uses other commandline utilities like shellcheck, javac or python
-  - Currently implemented for:
-    - Bash
-    - Java
-    - JavaScript
-    - Python
-
-- Added link to submission result and removed the error for wrong submissions
-
-- Added file extension when loading your code from previous submission. Only works when having selected an exercise.
-
-- Added CHANGELOG.md
 
 As always, use the "--help" flag after every command and sub-command to learn more.
     """
@@ -76,10 +121,12 @@ As always, use the "--help" flag after every command and sub-command to learn mo
 
 
 def get_dodonacli_version():
-    return "2024.2.19"
+    from importlib import metadata
+    return metadata.version(__package__.split('.')[0])
 
 
 info.add_command(version)
 info.add_command(check_update)
+info.add_command(completion)
 info.add_command(github)
 info.add_command(changelog)

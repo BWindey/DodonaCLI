@@ -1,14 +1,11 @@
 import click
-import http.client
-
-from dodonacli.source import get_data, pretty_print, set_data
 
 
 # Function and file have to be called cli_next, as next
 # is a Python built-in. The command, however, will still be called
 # with 'next', as click provides the 'name=' argument
 @click.command(name="next",
-               help="WARING: might overwrite 'boilerplate' file! "
+               help="WARNING: might overwrite 'boilerplate' file! "
                     "Move to the next type of what you have selected. "
                     "It loops around to the beginning if the current selection "
                     "is at the end of the 'list'. If some boilerplate is attached "
@@ -21,6 +18,9 @@ from dodonacli.source import get_data, pretty_print, set_data
                    "Currently only available for exercises, not series or courses.",
               is_flag=True, default=False)
 def cli_next(reverse, unsolved):
+    import http.client
+    from dodonacli.source import get_data, set_data
+
     # Read configs in
     config = get_data.get_configs()
 
@@ -49,6 +49,8 @@ def cli_next(reverse, unsolved):
 
 
 def get_next_exercise(config, connection, headers, reverse, unsolved):
+    from dodonacli.source import get_data, pretty_print
+
     # Get all exercises of selected series
     exercise_data_json = get_data.exercises_data(
         connection, headers, config['serie_id'], config['serie_token'] or ""
@@ -105,6 +107,7 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
 
 
 def get_next_series(config, connection, headers, reverse, unsolved):
+    from dodonacli.source import get_data, pretty_print
     # Get all series of selected course
     series_data_json = get_data.series_data(
         connection, headers, config['course_id']
@@ -144,6 +147,7 @@ def get_next_series(config, connection, headers, reverse, unsolved):
 
 
 def get_next_course(config, connection, headers, reverse, unsolved):
+    from dodonacli.source import get_data, pretty_print
     # Get all registred courses
     course_data_json = get_data.courses_data(connection, headers)
 

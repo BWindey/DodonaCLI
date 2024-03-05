@@ -1,9 +1,5 @@
 import click
-import http.client
-
 from click_default_group import DefaultGroup
-
-from dodonacli.source import get_data, pretty_print, set_data
 
 
 @click.group(help="Get submission data. Default = view",
@@ -23,6 +19,9 @@ def validate_positive_int(ctx, param, value):
 @click.argument('number',
                 type=int, default=0, callback=validate_positive_int)
 def load(number):
+    import http.client
+    from dodonacli.source import get_data, set_data
+
     # Read configs in
     config = get_data.get_configs()
 
@@ -44,7 +43,7 @@ def load(number):
     submission = json_all_submissions[-int(number)]
 
     submission_info = get_data.submission_info(submission['id'], connection, headers, config)
-    set_data.save_submission_code(
+    set_data.save_to_file(
         submission_info['exercise_name'], submission_info['id'], submission_info['code'], extension
     )
 
@@ -53,6 +52,9 @@ def load(number):
 
 @click.command(help="View subimmision data")
 def view():
+    import http.client
+    from dodonacli.source import get_data, pretty_print
+
     # Read configs in
     config = get_data.get_configs()
 

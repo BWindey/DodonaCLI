@@ -4,6 +4,12 @@ import shutil
 
 
 def check_syntax(file: str, language: str) -> bool:
+    """
+    Check the syntax of the code in the file using external tools
+    :param file: Filename containing the code to check
+    :param language: Programming language to determine what tool to use
+    :return: Returns whether the syntax is right
+    """
     if language in ("bash", "sh"):
         return check_bash_syntax(file)
     if language == "python":
@@ -76,6 +82,8 @@ def check_javascript_syntax(file: str) -> bool:
     except subprocess.CalledProcessError as cpe:
         return False
     except FileNotFoundError:
+        # This will only occur if jshint isn't installed.
+        # Click will detect that the user gave an invalid file before this function is called
         print("\nTo check the syntax, 'jshint' is called with your file. It appears however, that "
               "this program isn't installed on your system. Please install it using npm: npm install -g jshint")
         return False

@@ -1,3 +1,4 @@
+import http.client
 import json
 import os
 import random
@@ -9,7 +10,11 @@ from datetime import datetime
 from . import pretty_print, pretty_console, get_data
 
 
-def dump_config(config):
+def dump_config(config: dict):
+    """
+    Save the config to it's file again.
+    :param config: Dictionary containing the configs
+    """
     config_home = get_data.get_config_home()
     config_file_path = os.path.join(config_home, "config.json")
 
@@ -20,7 +25,8 @@ def dump_config(config):
         json.dump(config, config_file)
 
 
-def post_solution(content, connection, headers, course_id, exercise_id):
+def post_solution(content: str, connection: http.client.HTTPSConnection, headers: dict, course_id: str,
+                  exercise_id: str):
     """
     Post the solution in content to Dodona and print the result
     :param content: str with the solution to post to Dodona
@@ -44,8 +50,10 @@ def post_solution(content, connection, headers, course_id, exercise_id):
     res = connection.getresponse()
     status = res.status
     if status == 422:
-        pretty_console.console.print("\n[i]Patience, young padawan.\n"
-                                     "A cooldown, Dodona servers have, to prevent DDOS attacks, hmm, yes.[/]\n")
+        pretty_console.console.print(
+            "\n[i]Patience, young padawan.\n"
+            "A cooldown, Dodona servers have, to prevent DDOS attacks, hmm, yes.[/]\n"
+        )
         return
 
     elif status != 200:
@@ -57,11 +65,11 @@ def post_solution(content, connection, headers, course_id, exercise_id):
     data = res.read()
     json_data = json.loads(data)
 
-    # The Dodona servers take some time to test the solution, so we ping them every 0.3s for an answer.
+    # The Dodona servers take some time to test the solution, so we'll have to keeping asking for an answer.
     json_data['status'] = "running"
 
+    # Spinner animation effect while waiting
     print()
-
     waiting = rich.status.Status("Posting your solution, please wait while the servers evaluate your code.",
                                  spinner=select_spinner())
     waiting.start()
@@ -80,19 +88,23 @@ def post_solution(content, connection, headers, course_id, exercise_id):
             print("Reason: " + res.reason)
             return
 
-        data = res.read()
-        json_data = json.loads(data)
+        json_data: dict[str, str] = json.loads(res.read())
 
     waiting.stop()
     connection.close()
 
     # Print out the results
     pretty_print.print_result(json.loads(json_data['result']))
-    pretty_console.console.print(json_data['url'].rstrip(".json"))
+    pretty_console.console.print(json_data['url'][:json_data['url'].rfind('.')])
     print()
 
 
-def select_spinner():
+def select_spinner() -> str:
+    """
+    Select a random spinner-name from a preselected list with good animations.
+    During Christmas season (11th of Decembre - 8th of January) it always returns the same Christmas spinner.
+    :return: Name of Rich spinner
+    """
     selection_spinners = ['arrow', 'balloon', 'balloon2', 'bouncingBar', 'boxBounce', 'boxBounce2', 'circle',
                           'circleHalves', 'circleQuarters', 'clock', 'dots2', 'dots3', 'dots4', 'dots5', 'dots6',
                           'dots7', 'dots8', 'dots8Bit', 'dots9', 'dots10', 'dots11', 'dots12', 'dqpb', 'flip',
@@ -117,12 +129,20 @@ def select_spinner():
     return random.choice(selection_spinners)
 
 
-def save_submission_code(exer_name: str, sub_id: int, sub_code: str, extension: str):
-    exer_name = exer_name.replace(' ', '-')
-    file_name = f"{exer_name}_{sub_id}{extension}"
+def save_to_file(name: str, id: int, content: str, extension: str = ""):
+    """
+    Save code to a file in the users current working directory.
+    The resulting file name: {name}_{id}{extension}
+    :param name: Name of the file
+    :param id: ID to add to the name of file
+    :param content: Content to save in the file
+    :param extension: Optional file-extension, has to include the '.'
+    """
+    name = name.replace(' ', '-')
+    file_name = f"{name}_{id}{extension}"
 
     with open(file_name, "w") as code_file:
-        code_file.write(sub_code)
+        code_file.write(content)
 
-    print(f"\nCode from your submission for {exer_name} is now saved in:\n"
-          f"\t{exer_name}_{sub_id}{extension}\n")
+    print(f"\nCode from your submission for {name} is now saved in:\n"
+          f"\t{name}_{id}{extension}\n")

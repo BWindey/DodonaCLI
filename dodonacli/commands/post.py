@@ -1,7 +1,4 @@
 import click
-import http.client
-
-from dodonacli.source import set_data, get_data, syntax_checker
 
 
 @click.command(help="Post a solution-file to Dodona. "
@@ -18,6 +15,9 @@ from dodonacli.source import set_data, get_data, syntax_checker
               is_flag=True, default=False)
 @click.argument('file', type=click.Path(exists=True, file_okay=True, dir_okay=False, resolve_path=True))
 def post(file, use_link, check):
+    import http.client
+    from dodonacli.source import set_data, get_data, syntax_checker
+
     # Read configs in
     config = get_data.get_configs()
 
@@ -29,11 +29,12 @@ def post(file, use_link, check):
         "Authorization": config['TOKEN']
     }
 
-
     # Check for the link at the top of the file
     if use_link:
         with open(file, 'r') as solutionfile:
             link = solutionfile.readline()
+            if link[:2] == '#!':
+                link = solutionfile.readline()
             link_index = link.find("https://dodona.be/")
             if link_index < 0:
                 print("\nNo valid link found on the first line of your file. Please confirm again.\n"
@@ -41,11 +42,12 @@ def post(file, use_link, check):
                 return
             link = link[link_index:]
 
-            # Find course-id and exercises-id in the link
-            course_id_index_start = link.find("/courses/") + len("/courses/")
-            course_id_index_stop = link.find("/", course_id_index_start)
-            course_id = link[course_id_index_start:course_id_index_stop]
-
+            if link.find("/courses/") != -1:
+                course_id_index_start = link.find("/courses/") + len("/courses/")
+                course_id_index_stop = link.find("/", course_id_index_start)
+                course_id = link[course_id_index_start:course_id_index_stop]
+            else:
+                course_id = None
             exercise_id_index_start = link.find("/activities/") + len("/activities/")
             exercise_id_index_stop = link.find("/", exercise_id_index_start)
             exercise_id = link[exercise_id_index_start:exercise_id_index_stop]
@@ -62,6 +64,9 @@ def post(file, use_link, check):
             content = solutionfile.read()
         course_id = config['course_id']
         exercise_id = config['exercise_id']
+
+    # Make sure the amount of newlines is exactly 1
+    content = content.rstrip() + "\n"
 
     # Post exercise to Dodona, does not work if there is no exercise selected or -l flag not used
     if not use_link and not config['exercise_id']:
