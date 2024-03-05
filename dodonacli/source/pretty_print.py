@@ -284,10 +284,12 @@ def print_status(config: dict):
     Print out the current selection of course, exercise-series and exercise.
     :param config: Dictionary with the configs
     """
-    pretty_console.console.print(f"\n[u bright_blue]Status:[/]\n"
-                                 f"\t{'Course: '.ljust(10)}{config['course_name']}\n"
-                                 f"\t{'Series: '.ljust(10)}{config['serie_name']}\n"
-                                 f"\t{'Exercise: '.ljust(10)}{config['exercise_name']}\n")
+    pretty_console.console.print(
+        f"\n[u bright_blue]Status:[/]\n"
+        f"\t{'Course: '.ljust(10)}{config['course_name']}\n"
+        f"\t{'Series: '.ljust(10)}{config['serie_name']}\n"
+        f"\t{'Exercise: '.ljust(10)}{config['exercise_name']}\n"
+    )
 
 
 def print_exercise_submissions(json_data: dict):
