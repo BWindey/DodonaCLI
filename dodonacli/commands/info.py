@@ -2,7 +2,7 @@ import click
 from click_default_group import DefaultGroup
 
 
-@click.group(help="Info about version, update-availability and GitHub page.",
+@click.group(help="Info about shell-completion, changelog, version, update-availability and GitHub page.",
              cls=DefaultGroup, default='version', default_if_no_args=True)
 def info():
     pass
@@ -93,8 +93,8 @@ complete -F _dodona dodona
     )
 
 
-@click.command(help='Link to the GitHub page of DodonaCLI. Can be handy for the README page, Issues (bug reports) and '
-                    'pull requests.')
+@click.command(help='Link to the GitHub page of DodonaCLI. Can be handy for the README page, manpages,'
+                    ' Issues (bug reports) and pull requests.')
 def github():
     from dodonacli.source import pretty_console
 
