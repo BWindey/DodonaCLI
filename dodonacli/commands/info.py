@@ -4,6 +4,7 @@ from click_default_group import DefaultGroup
 from packaging.version import parse
 from pkg_info import get_pkg_info
 from rich.markdown import Markdown
+from importlib import metadata
 
 from dodonacli.source import pretty_console
 
@@ -76,7 +77,7 @@ As always, use the "--help" flag after every command and sub-command to learn mo
 
 
 def get_dodonacli_version():
-    return "2024.2.19"
+    return metadata.version(__package__.split('.')[0])
 
 
 info.add_command(version)
