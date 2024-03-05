@@ -7,6 +7,7 @@ import textwrap
 
 from bs4 import BeautifulSoup
 from rich.markdown import Markdown
+from rich.padding import Padding
 
 from . import get_data, pretty_console
 
@@ -213,11 +214,12 @@ def print_exercise(json_data: dict, token: str, force: bool = False):
 
     else:
         # Print the HTML with warnings
-        pretty_console.console.print(
-            "\n[bold bright_red]![/] [u bold bright_red]WARNING:[/] the description may not be correct, "
-            "DO NOT rely on this for exams and tests!!\n"
-            "[bold bright_red]![/] Instead, use this url: " + json_data['description_url'] + '\n'
+        warning = (
+            "\n[u bold bright_red]WARNING:[/] the description may be incorrect, "
+            "DO NOT rely on this for exams and tests!\n"
+            "View in browser: " + json_data['description_url'] + '\n'
         )
+        pretty_console.console.print(warning)
 
         pretty_console.console.print(
             '\n'
@@ -241,14 +243,10 @@ def print_exercise(json_data: dict, token: str, force: bool = False):
 
         md = Markdown(md_description)
 
-        pretty_console.console.print(md)
+        pretty_console.console.print(Padding(md, pad=(0, 0, 0, 3)))
 
         # Print the HTML with warnings
-        pretty_console.console.print(
-            "\n[bold bright_red]![/] [u bold bright_red]WARNING:[/] the description may not be correct, "
-            "DO NOT rely on this for exams and tests!!\n"
-            "[bold bright_red]![/] Instead, use this url: " + json_data['description_url'] + '\n'
-        )
+        pretty_console.console.print(warning)
 
 
 def print_result(json_results: dict):
