@@ -4,7 +4,6 @@ import json
 import os
 import platform
 import socket
-import tomli
 
 from . import set_data, interactive_tutorial
 
