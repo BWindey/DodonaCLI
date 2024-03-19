@@ -1,6 +1,7 @@
+import os
+import shutil
 import subprocess
 import tempfile
-import shutil
 
 
 def check_syntax(file: str, language: str) -> bool:
@@ -57,11 +58,24 @@ def check_python_syntax(file: str) -> bool:
 def check_java_syntax(file: str) -> bool:
     temp_dir = tempfile.mkdtemp()
     try:
-        subprocess.run(['javac', '-d', temp_dir, file], check=True)
+        directory = os.path.dirname(file)
+        java_files = [file for file in os.listdir(directory) if file.endswith('.java') and not "test" in file.lower()]
+        if not java_files:
+            return False  # No Java files found in the directory
+
+        # Construct the list of Java files with their full paths
+        java_files_with_paths = [os.path.join(directory, file) for file in java_files]
+
+        subprocess.run(['javac', '-d', temp_dir] + java_files_with_paths, check=True)
+
+        # Remove temporary directory
         shutil.rmtree(temp_dir, ignore_errors=True)
         return True
+
     except subprocess.CalledProcessError as cpe:
+        # This error will happen if there was something wrong with the Java syntax
         return False
+
     except FileNotFoundError:
         # This will only occur if javac isn't installed.
         # Click will detect that the user gave an invalid file before this function is called
