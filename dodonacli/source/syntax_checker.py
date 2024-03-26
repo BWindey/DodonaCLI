@@ -91,15 +91,15 @@ def check_java_syntax(file: str) -> bool:
 
 def check_javascript_syntax(file: str) -> bool:
     try:
-        subprocess.run(['jshint', file], check=True)
+        subprocess.run(['node', '-c', file], check=True)
         return True
     except subprocess.CalledProcessError as cpe:
         return False
     except FileNotFoundError:
         # This will only occur if jshint isn't installed.
         # Click will detect that the user gave an invalid file before this function is called
-        print("\nTo check the syntax, 'jshint' is called with your file. It appears however, that "
-              "this program isn't installed on your system. Please install it using npm: npm install -g jshint")
+        print("\nTo check the syntax, 'node' is called with your file. It appears however, that "
+              "this program isn't installed on your system. Please install it: https://nodejs.org/en/learn/getting-started/how-to-install-nodejs")
         return False
     except Exception as e:
         print("\nNo idea what's going wrong, but something definitly is going wrong:\n" + str(e))
