@@ -1,6 +1,7 @@
+import os
+import shutil
 import subprocess
 import tempfile
-import shutil
 
 
 def check_syntax(file: str, language: str) -> bool:
@@ -57,11 +58,24 @@ def check_python_syntax(file: str) -> bool:
 def check_java_syntax(file: str) -> bool:
     temp_dir = tempfile.mkdtemp()
     try:
-        subprocess.run(['javac', '-d', temp_dir, file], check=True)
+        directory = os.path.dirname(file)
+        java_files = [file for file in os.listdir(directory) if file.endswith('.java') and not "test" in file.lower()]
+        if not java_files:
+            return False  # No Java files found in the directory
+
+        # Construct the list of Java files with their full paths
+        java_files_with_paths = [os.path.join(directory, file) for file in java_files]
+
+        subprocess.run(['javac', '-d', temp_dir] + java_files_with_paths, check=True)
+
+        # Remove temporary directory
         shutil.rmtree(temp_dir, ignore_errors=True)
         return True
+
     except subprocess.CalledProcessError as cpe:
+        # This error will happen if there was something wrong with the Java syntax
         return False
+
     except FileNotFoundError:
         # This will only occur if javac isn't installed.
         # Click will detect that the user gave an invalid file before this function is called
@@ -77,15 +91,15 @@ def check_java_syntax(file: str) -> bool:
 
 def check_javascript_syntax(file: str) -> bool:
     try:
-        subprocess.run(['jshint', file], check=True)
+        subprocess.run(['node', '-c', file], check=True)
         return True
     except subprocess.CalledProcessError as cpe:
         return False
     except FileNotFoundError:
         # This will only occur if jshint isn't installed.
         # Click will detect that the user gave an invalid file before this function is called
-        print("\nTo check the syntax, 'jshint' is called with your file. It appears however, that "
-              "this program isn't installed on your system. Please install it using npm: npm install -g jshint")
+        print("\nTo check the syntax, 'node' is called with your file. It appears however, that "
+              "this program isn't installed on your system. Please install it: https://nodejs.org/en/learn/getting-started/how-to-install-nodejs")
         return False
     except Exception as e:
         print("\nNo idea what's going wrong, but something definitly is going wrong:\n" + str(e))

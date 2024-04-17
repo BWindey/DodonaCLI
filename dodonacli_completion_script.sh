@@ -13,7 +13,7 @@ _dodona(){
         COMPREPLY=( $(compgen -W "--force --help" -- "$2") )
 
     elif [ "$3" == "info" ]; then
-        COMPREPLY=( $(compgen -W "version changelog completion github check-update"))
+        COMPREPLY=( $(compgen -W "version changelog completion github check-update" -- "$2"))
 
     elif [ "$3" == "select" ]; then
         COMPREPLY=( $(compgen -W "--other --hidden --help" -- "$2") )

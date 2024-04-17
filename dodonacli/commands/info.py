@@ -62,7 +62,7 @@ _dodona(){
         COMPREPLY=( $(compgen -W "--force --help" -- "$2") )
 
     elif [ "$3" == "info" ]; then
-        COMPREPLY=( $(compgen -W "version changelog github check-update"))
+        COMPREPLY=( $(compgen -W "version changelog completion github check-update" -- "$2"))
 
     elif [ "$3" == "select" ]; then
         COMPREPLY=( $(compgen -W "--other --hidden --help" -- "$2") )
@@ -88,7 +88,6 @@ _dodona(){
 }
 
 complete -F _dodona dodona
-
         """
     )
 
@@ -107,14 +106,17 @@ def changelog():
     from dodonacli.source import pretty_console
 
     changelog_raw = """
-- Added support for hashbangs when using exercise links (post -l)
-- Fixed a bug where links to detached exercises didn't work
-- Added completion sub-command to print out the bash-completion-script
-- Optimised imports to gain quite a lot of speed when not making a request to Dodona
-- Small update to printing forcefully of exercise description (is now indented). More is planned.
+- Fixed inconsistent aligning on 'dodona sub view'
+- Improved the syntax-checker for:
+    - Java, now supports multiple classes by compiling all .java-files in the current directory
+    - JavaScript, switched from jshint to node to check syntax, which most JS-devs will have installed already
+- Fixed a wrong link that prevented you from using 'dodona next' inside a hidden series
+- Added check to prevent you from going to a 'next' course when you're in a hidden one, I feel this is a good change, if you disagree, let me know on GitHub
+- Fixed the bash completion script to correctly complete after 'dodona info'
+- Improved the sentence under this one to be more friendly.
 
-
-As always, use the "--help" flag after every command and sub-command to learn more.
+As always, you can use the "--help" flag after every command and sub-command to learn more.
+Happy coding!
     """
     md = Markdown(changelog_raw)
     pretty_console.console.print(md)

@@ -354,8 +354,9 @@ def print_all_submissions(connection: http.client.HTTPSConnection, headers: dict
 
         pretty_console.console.print(
             f"\t{accepted_emoji}  [link={submission['url'].rstrip('.json')}]#{len(json_data) - i: <2}[/link]"
-            f"\t{status}"
-            f"\t\t\t{exercise_name}"
+            f"\t{status: <25}"
+            f"\t{exercise_name}"
         )
+
     connection.close()
     print()

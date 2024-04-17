@@ -1,4 +1,3 @@
-import datetime
 import http.client
 import json
 import os

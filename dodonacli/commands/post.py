@@ -11,7 +11,8 @@ import click
 @click.option("-c", "--check",
               help="Check the file you provided if the syntax is valid for the programming language "
                    "associated with the exercise. Currently supported languages: bash, python, java, "
-                   "javascript.",
+                   "javascript. For Java files, it will use javac to compile all *.java files that "
+                   "don't have 'test' in them.",
               is_flag=True, default=False)
 @click.argument('file', type=click.Path(exists=True, file_okay=True, dir_okay=False, resolve_path=True))
 def post(file, use_link, check):
