@@ -53,7 +53,7 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
 
     # Get all exercises of selected series
     exercise_data_json = get_data.exercises_data(
-        connection, headers, config['serie_id'], config['serie_token'] or ""
+        connection, headers, config['serie_id'], f"/?token={config['serie_token']}" if config['serie_token'] else ""
     )
 
     # Calculate some needed values
@@ -107,6 +107,10 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
 
 
 def get_next_series(config, connection, headers, reverse, unsolved):
+    if config['serie_token']:
+        print("\nSorry, you can't use 'next' when inside a hidden series.\n")
+        return config
+
     from dodonacli.source import get_data, pretty_print
     # Get all series of selected course
     series_data_json = get_data.series_data(
