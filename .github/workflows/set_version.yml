@@ -1,0 +1,48 @@
+name: Check pull request source branch
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - edited
+jobs:
+  check-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check that version is newer if merging into master
+        run: |
+          # function to check version numbers
+          # versions are based on date, and if on same date released, the new version should
+          # be like YYYY.M.D.x, with x gradually becoming bigger
+          compare_versions() {
+            local version1="$1"
+            local version2="$2"
+
+            IFS='.' read -r -a version1_parts <<< "$version1"
+            IFS='.' read -r -a version2_parts <<< "$version2"
+
+            # Check if the versions have 3 or 4 parts
+            if [ ! "${#version1_parts[@]}" ~= 3|4 ]; then
+              return 3
+            elif [ ! "${#version2_parts[@]}" ~= 3|4 ]; then
+              return 3
+            fi
+
+            # Compare the versions
+            for i in {0..2}; do
+              if (( ${version1_parts[$i]} > ${version2_parts[$i]} )); then
+                return 0
+              elif (( ${version1_parts[$i]} < ${version2_parts[$i]} )); then
+                return 1
+              fi
+            done
+            return 2 # equal versions
+          }
+
+          if [ ${{ github.base_ref }} == "master" ]; then
+            oldVersion="$(grep '^version\s*=' pyproject.toml | sed -E 's/.*([0-9]{1,4}\.[0-9]{1,2}\.[0-9]{1,2}).*/\1/' )"
+            newVersion="$(grep '^version\s*=' ${{ github.workspace }}/pyproject.toml | sed -E 's/.*([0-9]{1,4}\.[0-9]{1,2}\.[0-9]{1,2}).*/\1/' )"
+          fi
+
+          exit 0
