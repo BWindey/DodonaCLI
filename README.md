@@ -145,3 +145,7 @@ Remember to look at the recent branches/commits to see if I’m not working on o
 - get exercise-names via html-parsing for a submission list to only need 1 API call (instead of 30). Am I salty about that not being just field in the API, yes I am! Glad you noticed. Html-parsing isn’t a hobby of mine after all
 - format weird markup in some feedback of submissions (like the Python and bash exercises)
 - add "completions_script" and "manpage" as subcommands to "info"
+
+Github stuff to figure out:
+- release by tag/release
+- action to check valid version before trying to push, if not valid, make it valid
