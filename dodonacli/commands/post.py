@@ -3,7 +3,9 @@ import click
 
 @click.command(help="Post a solution-file to Dodona. "
                     "The file has to be in your current working directory, and this only works "
-                    "if there is a selected exercise.")
+                    "if there is a selected exercise. "
+                    "DodonaCLI will give a try at rendering a small part of the feedback-table so you can continue "
+                    "working from the terminal, this isn't guarenteed to provide enough info, but it's doing its best.")
 @click.option("-l", "--use-link",
               help="Post your solutionfile to the link at the first line of your solutionfile. "
                    "This is inspired by plugins for editors as VSCode for Dodona.",

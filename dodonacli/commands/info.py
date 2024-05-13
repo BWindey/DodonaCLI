@@ -106,14 +106,9 @@ def changelog():
     from dodonacli.source import pretty_console
 
     changelog_raw = """
-- Fixed inconsistent aligning on 'dodona sub view'
-- Improved the syntax-checker for:
-    - Java, now supports multiple classes by compiling all .java-files in the current directory
-    - JavaScript, switched from jshint to node to check syntax, which most JS-devs will have installed already
-- Fixed a wrong link that prevented you from using 'dodona next' inside a hidden series
-- Added check to prevent you from going to a 'next' course when you're in a hidden one, I feel this is a good change, if you disagree, let me know on GitHub
-- Fixed the bash completion script to correctly complete after 'dodona info'
-- Improved the sentence under this one to be more friendly.
+- Working on rendering feedback. Please report any troubles you have. 
+I may not be able to solve them, but I can definitly hide them =D
+This is not a full implementation, you should only be able to see which tabs were wrong and wich were correct.
 
 As always, you can use the "--help" flag after every command and sub-command to learn more.
 Happy coding!
