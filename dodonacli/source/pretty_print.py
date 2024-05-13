@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 from rich.markdown import Markdown
 from rich.padding import Padding
 
-from . import get_data, pretty_console
+from . import get_data, pretty_console, submission_data_handler
 
 
 def print_courses_data(json_data: dict, title: str = "Your courses:", prefixes: dict = None):
@@ -115,8 +115,9 @@ def print_series_data(json_data: dict, force: bool = False, prefixes: dict = Non
                 f"\n{new_description}")
         else:
             pretty_console.console.print(
-                (prefixes.get(series[0]) or "\t") + f"{series[0].ljust(max_series_id_length)}: "
-                f"[bold]{series[1].ljust(max_series_name_length)}[/]"
+                (prefixes.get(series[0]) or "\t")
+                + f"{series[0].ljust(max_series_id_length)}: "
+                + f"[bold]{series[1].ljust(max_series_name_length)}[/]"
             )
     # Newline for clarity
     print()
@@ -187,8 +188,9 @@ def print_exercise_data(json_data: dict, prefixes: dict = None):
             solve_status = "[bold]SOLVE STATUS UNKNOWN"
 
         pretty_console.console.print(
-            (prefixes.get(exercise['id']) or "\t") + f"{exercise['id'].ljust(max_exercise_id_length)}: "
-            f"[bold]{exercise['name'].ljust(max_exercise_name_length)}[/]\t"
+            (prefixes.get(exercise['id']) or "\t")
+            + f"{exercise['id'].ljust(max_exercise_id_length)}: "
+            + f"[bold]{exercise['name'].ljust(max_exercise_name_length)}[/]\t"
             + solve_status
         )
     print()
@@ -215,9 +217,9 @@ def print_exercise(json_data: dict, token: str, force: bool = False):
     else:
         # Print the HTML with warnings
         warning = (
-            "\n[u bold bright_red]WARNING:[/] the description may be incorrect, "
-            "DO NOT rely on this for exams and tests!\n"
-            "View in browser: " + json_data['description_url'] + '\n'
+                "\n[u bold bright_red]WARNING:[/] the description may be incorrect, "
+                "DO NOT rely on this for exams and tests!\n"
+                "View in browser: " + json_data['description_url'] + '\n'
         )
         pretty_console.console.print(warning)
 
@@ -259,24 +261,7 @@ def print_result(json_results: dict):
         pretty_console.console.print("[bold bright_green]All tests passed![/] You can continue to next exercise.")
     else:
         pretty_console.console.print("[bold bright_red]Some tests faild.[/]")
-        # try:
-        #     if json_results['status'] in ("memory limit exceeded", "test"):
-        #         print("\t" + json_results['description'])
-        #         return
-        #
-        #     # There were some problems, list them here
-        #     for group in json_results['groups']:
-        #         print(group['description'] + ": " + str(group['badgeCount']) + " tests failed.")
-        #
-        #         if group['badgeCount'] > 0:
-        #             print("Failed exercises:")
-        #             for test in group['groups']:
-        #                 if not test['accepted']:
-        #                     pass
-        #                     print("\t- " + test['groups'][0]['description'] + "\n\t\t" +
-        #                           test['groups'][0]['description']['description'])
-        # except Exception as e:
-        #     print("\tSomething went wrong trying to display the results: " + str(e))
+        pretty_console.console.print(submission_data_handler.submission_data_handler(json_results))
 
 
 def print_status(config: dict):
