@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "DodonaCLI"
+version = "2024.5.14"
+authors = [
+    { name = "Bram Windey", email = "windey.bram@gmail.com" },
+]
+description = "A CLI tool for Dodona"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "bs4",
+    "click",
+    "click-default-group",
+    "markdownify",
+    "packaging",
+    "pkg_info",
+    "rich"
+]
+keywords = ["dodona", "cli"]
+
+
+[project.scripts]
+dodona = "dodonacli.main:main"
+
+[project.urls]
+Homepage = "https://github.com/BWindey/DodonaCLI"
