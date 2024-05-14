@@ -9,9 +9,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout and set version
-        uses: actions/checkout@v4
-        run: |
+      - uses: actions/checkout@v4
+      - run: |
           sed -i "s/version *=.*/version = '${{ github.event.release.tag_name }}'/g" pyproject.toml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
