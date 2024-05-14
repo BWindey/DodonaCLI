@@ -20,7 +20,7 @@ def submission_tabs_handler(submission_data: dict) -> str:
             correct_tabs.append(tab)
 
     result = "[bold bright_red]Wrong tabs[/]:"
-    result += '\n'.join(failed_tab_handler(failed_tab) for failed_tab in failed_tabs)
+    result += ''.join(failed_tab_handler(failed_tab) for failed_tab in failed_tabs)
 
     if len(correct_tabs) > 0:
         result += "\n\n[bold bright_green]Correct tabs:[/] "
@@ -53,10 +53,10 @@ def failed_tab_handler(tab: dict) -> str:
 
 def failed_context_handler(context: dict) -> str:
     result = ""
-    if 'data' in context:
-        result += f"\n\t[bright_red]\u00B7[/] {context['data']['statements'].strip()}:"
-    elif 'description' in context:
-        result += f"\n\t[bright_red]\u00B7[/] {context['description']['description']}:"
+    # if 'data' in context:
+    #     result += f"\n\t[bright_red]\u00B7[/] {context['data']['statements'].strip()}:"
+    # elif 'description' in context:
+    #     result += f"\n\t[bright_red]\u00B7[/] {context['description']['description']}:"
 
     test_cases = context['groups']
     index = 0
@@ -70,15 +70,22 @@ def failed_context_handler(context: dict) -> str:
         if 'tests' in test_case:
             context_content.extend(failed_tests_handler(test_case))
         else:
-            context_content.append(test_case['description']['description'])
+            if test_case['accepted']:
+                emoji = '[bright_green]:heavy_check_mark:[/] '
+            else:
+                emoji = "[bright_red]:heavy_multiplication_x:[/] "
+            context_content.append(emoji + test_case['description']['description'].rstrip())
 
         if not test_case['accepted']:
             amount_failed += 1
         index += 1
 
-    result += f"\n   \u256D {context_content[0]}" + (len(context_content[1:-1]) > 0) * "\n   \u2502 "
-    result += "\n   \u2502 ".join(cc for cc in context_content[1:-1])
-    result += f"\n   \u2570 {context_content[-1]}\n"
+    if len(context_content) > 1:
+        result += f"\n   \u256D {context_content[0]}" + (len(context_content[1:-1]) > 0) * "\n   \u2502 "
+        result += "\n   \u2502 ".join(cc for cc in context_content[1:-1])
+        result += f"\n   \u2570 {context_content[-1]}\n"
+    else:
+        result += "\n   - " + context_content[0] + "\n"
 
     return result
 
@@ -86,14 +93,16 @@ def failed_context_handler(context: dict) -> str:
 def failed_tests_handler(test_case: dict) -> list:
     result = []
     if 'data' in test_case:
-        result.append(test_case['data']['statements'] + ':')
+        result.append(test_case['data']['statements'].rstrip())
     elif 'description' in test_case:
-        result.append(test_case['description']['description'] + ':')
+        result.append(test_case['description']['description'].rstrip())
 
     tests = test_case['tests']
     if all(test['accepted'] for test in tests):
-        result[-1] += " [bright_green]:heavy_check_mark:[/]"
+        result[-1] = "[bright_green]:heavy_check_mark:[/] " + result[-1]
         return result
+    else:
+        result[-1] = "[bright_red]:heavy_multiplication_x:[/] " + result[-1]
 
     index = 0
     amount_failed = 0
@@ -101,8 +110,8 @@ def failed_tests_handler(test_case: dict) -> list:
     while index < len(tests) and amount_failed < 3:
         test = tests[index]
         if not test['accepted']:
-            result.append("\tExpected:\t" + test['expected'])
-            result.append("\tActual:  \t" + test['generated'])
+            result.append("\t    Expected:\t" + test['expected'].rstrip())
+            result.append("\t    Actual:  \t" + test['generated'].rstrip())
         amount_failed += 1
         index += 1
 
