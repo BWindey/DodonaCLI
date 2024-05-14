@@ -40,8 +40,13 @@ jobs:
           
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch
+          git switch master
           git add pyproject.toml
           git commit -m "Updated version automatically"
+          git push
+          git switch develop
+          git merge master
           git push
 
 #      - name: Set up Python
