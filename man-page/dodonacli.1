@@ -1,7 +1,7 @@
 '\" t
-.TH DODONA 18/02/2024
+.TH DODONACLI 14/05/2024
 .SH NAME
-dodona \- a 3rd party Command Line Interface for Dodona
+dodonacli \- a 3rd party Command Line Interface for Dodona
 
 .SH SYNOPSIS
 .B dodona
@@ -10,7 +10,7 @@ dodona \- a 3rd party Command Line Interface for Dodona
 .SH DESCRIPTION
 This documents the usage of a Command Line Interface made for Dodona. 
 .B DodonaCLI
-connects to Dodona to enable you to read, submit and get feedback (if possible) on exercises. 
+connects to Dodona to enable you to read, submit and get (minimal) feedback on exercises.
 You are able to switch courses, series and exercises, as long as you have acces to it on the official Dodona website.
 
 .SH SUBCOMMANDS
@@ -20,19 +20,19 @@ Displays the courses/series/exercises you can select. When used while an exercis
 to force the web-pages content in your terminal. This formatting is often quite broken, so don't rely on this for tests.
 
 .IP info
-Gives some practical info about DodonaCLI itself. It has 4 subcommands: version [default], changelog, check_update and github. They're pretty self-explanatory tbh.
+Gives some practical info about DodonaCLI itself. It has some subcommands: version [default], changelog, check-update, completion and github. They're pretty self-explanatory tbh.
 
 .IP next
 Selects the next course/series/exercise. This subcommand is equivalent to using 'up + select' and can be a nice time-saver. It is possible to go to the next unsolved exercise by appending the
 .BR [-u|--unsolved]
 flag. It is also possible to reverse the order in which it cycles with the
 .BR [-r|--reverse]
-flag.
+flag. Both flags can be used together.
 
 .IP post
-Posts the file given as an extra argument to the currently selected exercise. This will return if the tests are passed and if possible, extra information about the wrong tests. You can also use the
+Posts the file given as an extra argument to the currently selected exercise. This will return if the tests are passed, or information about the wrong tests. You can also use the
 .BR [-c|--check]
-flag to check your solutionfile for syntax-errors before uploading. This is currently supported for Bash, Java(Script) and Python. There is also the
+flag to check your solutionfile for syntax-errors before uploading. This is currently supported for Bash, Java, JavaScript and Python. There is also the
 .BR [-l|--link]
 flag to post your solutionfile directly to the exercise specified in a link on the first line of the file. This link has to be written in a comment!
 
@@ -42,10 +42,10 @@ Select a course/series/exercise of those available when using
 .BR display.
 Requires an extra argument 
 .BR [id|name] 
-where name can be a distinct part of the cours/series/exercise. If the name is not distinct, it will select the first item it matches with (case-insensitive). It is not guarenteed that this matching happens in the same order as displayed.
+where name can be a distinct part of the cours/series/exercise. If the name is not distinct, it will select the first item it matches with (case-insensitive). It is not guarenteed that this matching happens in the same order as displayed, but often it is.
 
 .IP status
-Show the current selected course/series/exercise. No selection for an item is indicated with  
+Show the current selected course/series/exercise. If there is nothing selected for a category, it will be displayed as
 .B None.
 
 .IP sub
@@ -84,12 +84,13 @@ Shows the available series
 .RE
 
 .PP
-dodona select Pyt
+dodona select pyt
 .RS 4
-Matches the series with 'Pyt' in it's name if it's the only one
+Matches the series with 'pyt' in it's name if it's the only one (case-insensitive)
 .RE
 
-.PP dodona select 'Exercise 1'
+.PP
+dodona select 'Exercise 1'
 .RS 4
 Selects  the exercise with the name: "Exercise 1"
 .RE
@@ -97,7 +98,7 @@ Selects  the exercise with the name: "Exercise 1"
 .PP 
 dodona post test.py
 .RS 4
-Submits the document test.py to the currently selected exercise
+Submits the document test.py to the currently selected exercise, and displays feedback.
 .RE
 
 .PP

@@ -108,7 +108,7 @@ def changelog():
     changelog_raw = """
 - Working on rendering feedback. Please report any troubles you have. 
 I may not be able to solve them, but I can definitly hide them =D
-This is not a full implementation, you should only be able to see which tabs were wrong and wich were correct.
+- I think this is in its final state, so definitly report all bugs
 
 As always, you can use the "--help" flag after every command and sub-command to learn more.
 Happy coding!
