@@ -35,7 +35,8 @@ jobs:
           fi
           
           substitute="s/^version = .*$/version = \"${new_version}\"/"
-          sed "${substitute}" pyproject.toml > pyproject.toml
+          sed "${substitute}" pyproject.toml > pyprojectNEW.toml
+          mv pyprojectNEW.toml pyproject.toml
           
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
