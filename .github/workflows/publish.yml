@@ -10,7 +10,12 @@ jobs:
 
     steps:
       - name: checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: setup git
+        run: |
+          git config user.email "windey.bram@gmail.com"
+          git config user.name "Bram Windey"
 
       - name: set version
         run: |
