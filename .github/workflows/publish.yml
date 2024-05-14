@@ -13,7 +13,8 @@ jobs:
 
       - name: Update version
         run: |
-          date=$( date +"%Y.%m.%d" | sed "s/\.0*/./g" )
+          # Get UTC date
+          date=$( date -u +"%Y.%m.%d" | sed "s/\.0*/./g" )
           old_version=$( grep "^version" pyproject.toml | sed "s/.*= \"\([^ ]*\)\"\s*$/\1/" )
           
           # Check if the old version is the same date as today (new version)
