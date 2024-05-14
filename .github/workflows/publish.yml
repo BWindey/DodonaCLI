@@ -9,23 +9,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout code
+      - name: checkout and set version
         uses: actions/checkout@v4
-
-      - name: setup git
-        run: |
-          git config user.email "windey.bram@gmail.com"
-          git config user.name "Bram Windey"
-
-      - name: set version
         run: |
           sed -i "s/version *=.*/version = '${{ github.event.release.tag_name }}'/g" pyproject.toml
-          git add pyproject.toml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
           git commit -m "Update version to ${{ github.event.release.tag_name }}"
-          git push origin ${{ github.ref }}
-
-      - name: Rebase develop from main
-        run: |
+          git push
           git fetch origin develop
           git rebase origin/main develop
           git push origin develop
