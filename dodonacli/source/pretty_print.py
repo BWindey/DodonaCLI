@@ -260,7 +260,6 @@ def print_result(json_results: dict):
         # Everything passed, well done!
         pretty_console.console.print("[bold bright_green]All tests passed![/] You can continue to next exercise.")
     else:
-        pretty_console.console.print("[bold bright_red]Some tests faild.[/]")
         pretty_console.console.print(submission_data_handler.submission_data_handler(json_results))
 
 
