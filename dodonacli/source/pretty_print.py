@@ -40,6 +40,8 @@ def print_courses_data(json_data: dict, title: str = "Your courses:", prefixes: 
             f"{course[0].ljust(max_course_id_length)}: "
             f"[bold]{course[1].ljust(max_course_name_length)}[/]\tby {course[2]}"
         )
+    # Newline for clarity
+    print()
 
 
 def print_series_data(json_data: dict, force: bool = False, prefixes: dict = None):
@@ -193,6 +195,7 @@ def print_exercise_data(json_data: dict, prefixes: dict = None):
             + f"[bold]{exercise['name'].ljust(max_exercise_name_length)}[/]\t"
             + solve_status
         )
+    # Newline for clarity
     print()
 
 
@@ -260,7 +263,9 @@ def print_result(json_results: dict):
     """
     if json_results['accepted']:
         # Everything passed, well done!
-        pretty_console.console.print("[bold bright_green]All tests passed![/] You can continue to next exercise.")
+        pretty_console.console.print(
+            "[bold bright_green]All tests passed![/] You can continue to next exercise."
+        )
     else:
         pretty_console.console.print(submission_data_handler.submission_data_handler(json_results))
 
@@ -304,7 +309,7 @@ def print_exercise_submissions(json_data: dict):
             f"\t{accepted_emoji}  [link={submission['url'].rstrip('.json')}]#{len(json_data) - i: <2}[/link]"
             f"\t{status}\t"
         )
-
+    # Newline for clarity
     print()
 
 
@@ -349,4 +354,5 @@ def print_all_submissions(connection: http.client.HTTPSConnection, headers: dict
         )
 
     connection.close()
+    # Newline for clarity
     print()
