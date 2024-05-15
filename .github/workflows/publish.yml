@@ -1,7 +1,8 @@
-name: Publish to PyPI from Develop
+name: Publish to PyPI from release
 
 on:
-  workflow_dispatch
+  release:
+    type: created
 
 jobs:
   build-and-publish:
@@ -11,43 +12,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Update version
+      - name: Set version
         run: |
-          # Get UTC date
-          date=$( date -u +"%Y.%m.%d" | sed "s/\.0*/./g" )
-          old_version=$( grep "^version" pyproject.toml | sed "s/.*= \"\([^ ]*\)\"\s*$/\1/" )
-          
-          # Check if the old version is the same date as today (new version)
-          if grep -q "${date}" <<< "^${old_version}"; then
-          
-            # Check if the old version is already an extra version at the same date
-            if grep -q "..." <<< $( sed "s/[^.]//g" <<< "${old_version}" ); then
-              day_version=$( sed "s/.*\.\([0-9]*\)$/\1/" <<< "${old_version}" )
-              (( day_version++ ))
-              new_version="${date}.${day_version}"
-          
-            else
-              new_version="${date}.1"
-            fi
-          
-          else
-            new_version="${date}"
-          fi
-          
-          substitute="s/^version = .*$/version = \"${new_version}\"/"
-          sed "${substitute}" pyproject.toml > pyprojectNEW.toml
-          mv pyprojectNEW.toml pyproject.toml
-          
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch
-          git switch develop
-          git add pyproject.toml
-          git commit -m "Updated version automatically"
-          git push
-          git switch master
-          git merge develop
-          git push
+          sed -i "s/version *=.*/version = '${{ github.event.release.tag_name }}'/g" pyproject.toml
 
       - name: Set up Python
         uses: actions/setup-python@v5
