@@ -212,7 +212,9 @@ def print_exercise(json_data: dict, token: str, force: bool = False):
         )
 
     elif not force:
-        pretty_console.console.print("\nYou can find the description at \n" + json_data['description_url'] + '\n')
+        pretty_console.console.print(
+            f"\nYou can find the exercise description at \n{json_data['description_url']}\n"
+        )
 
     else:
         # Print the HTML with warnings
@@ -268,9 +270,13 @@ def print_status(config: dict):
     Print out the current selection of course, exercise-series and exercise.
     :param config: Dictionary with the configs
     """
+    course_string = config['course_name']
+    if config['course_id'] is not None:
+        course_string += f" ({config['course_id']})"
+
     pretty_console.console.print(
         f"\n[u bright_blue]Status:[/]\n"
-        f"\t{'Course: '.ljust(10)}{config['course_name']}\n"
+        f"\t{'Course: '.ljust(10)}{course_string}\n"
         f"\t{'Series: '.ljust(10)}{config['serie_name']}\n"
         f"\t{'Exercise: '.ljust(10)}{config['exercise_name']}\n"
     )
