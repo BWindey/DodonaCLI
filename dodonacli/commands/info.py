@@ -2,21 +2,18 @@ import click
 from click_default_group import DefaultGroup
 
 
-@click.group(help="Info about shell-completion, changelog, version, update-availability and GitHub page.",
-             cls=DefaultGroup, default='version', default_if_no_args=True)
+@click.group(help="Info about shell-completion, changelog, version, "
+    "update-availability and GitHub page.")
 def info():
     pass
 
 
 @click.command(help='Display the current version of DodonaCLI. The versioning system '
-                    'uses a YYYY.M.D format.')
+    'uses a YYYY.M.D format.')
 def version():
     from dodonacli.source import pretty_console
-    dodonacli_version = get_dodonacli_version()
 
-    pretty_console.console.print(
-        f"DodonaCLI {dodonacli_version}"
-    )
+    pretty_console.console.print("DodonaCLI " + get_dodonacli_version())
 
 
 @click.command(help='Checks if there is a new update available for DodonaCLI.')
@@ -31,12 +28,12 @@ def check_update():
 
     if parse(pkg.version) > parse(dodonacli_version):
         pretty_console.console.print(
-            f"There is a new version available: {pkg.version}.\n"
+            f"\nThere is a new version available: {pkg.version}.\n"
             f"You can update your old version ({dodonacli_version}) with"
-            "\n\tpip install --upgrade DodonaCLI"
+            "\n  'pip install --upgrade DodonaCLI'\n"
         )
     else:
-        print("Your DodonaCLI is up-to-date.")
+        print("\nYour DodonaCLI is up-to-date.\n")
 
 
 @click.command(help='Tab completion, very handy for fast use')
@@ -66,12 +63,12 @@ def completion():
     )
 
 
-@click.command(help='Link to the GitHub page of DodonaCLI. Can be handy for the README page, manpages,'
-                    ' Issues (bug reports) and pull requests.')
+@click.command(help="Link to the GitHub page of DodonaCLI. "
+    "Can be handy for the README page, manpages, Issues (bug reports) and pull requests.")
 def github():
     from dodonacli.source import pretty_console
 
-    pretty_console.console.print("https://www.github.com/BWindey/DodonaCLI")
+    pretty_console.console.print("\nhttps://www.github.com/BWindey/DodonaCLI\n")
 
 
 @click.command(help='Changelog for the latest version.')
