@@ -105,14 +105,13 @@ def changelog():
     from rich.markdown import Markdown
     from dodonacli.source import pretty_console
 
-    changelog_raw = """
-- Working on rendering feedback. Please report any troubles you have. 
-I may not be able to solve them, but I can definitly hide them =D
-- I think this is in its final state, so definitly report all bugs
-
-As always, you can use the "--help" flag after every command and sub-command to learn more.
-Happy coding!
-    """
+    changelog_raw = (
+        "\t- Reworked tutorial to be more user-friendly, and look a bit better\n"
+        "\t- Tweaked some message-endings here and there to be more consistent\n"
+        "\t\n"
+        "\tAs always, you can use the '--help' flag after every command and sub-command to learn more.\n"
+        "\tHappy coding!\n"
+    )
     md = Markdown(changelog_raw)
     pretty_console.console.print(md)
 
