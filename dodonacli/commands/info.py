@@ -1,15 +1,14 @@
 import click
-from click_default_group import DefaultGroup
 
 
 @click.group(help="Info about shell-completion, changelog, version, "
-    "update-availability and GitHub page.")
+                  "update-availability and GitHub page.")
 def info():
     pass
 
 
 @click.command(help='Display the current version of DodonaCLI. The versioning system '
-    'uses a YYYY.M.D format.')
+                    'uses a YYYY.M.D format.')
 def version():
     from dodonacli.source import pretty_console
 
@@ -58,13 +57,14 @@ def completion():
         "   Now add 'source <PATH TO SCRIPT>' to your '.bashrc',\n"
         "   where you fill in the path to the downloaded script."
         "\n\n"
-        "For both ways you'll have to either [u yellow]restart your terminal[/], or re-'source' your .bashrc/.fishrc/...\n"
+        "For both ways you'll have to either [u yellow]restart your terminal[/], "
+        "or re-'source' your .bashrc/.fishrc/...\n"
         "Happy tabbing!\n"
     )
 
 
 @click.command(help="Link to the GitHub page of DodonaCLI. "
-    "Can be handy for the README page, manpages, Issues (bug reports) and pull requests.")
+                    "Can be handy for the README page, manpages, Issues (bug reports) and pull requests.")
 def github():
     from dodonacli.source import pretty_console
 

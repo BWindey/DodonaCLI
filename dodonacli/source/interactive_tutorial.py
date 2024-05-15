@@ -245,7 +245,7 @@ def tutorial_select_exercise(config: dict, connection: http.client.HTTPSConnecti
         "here is its content:\n|\t"
         + json_data[5]['boilerplate'].strip()
         + "\nNormally, this file will be saved to your disk, "
-        "with the file-extension of the programming-language of the exercise.\n"
+          "with the file-extension of the programming-language of the exercise.\n"
     )
 
     pretty_console.console.print(
@@ -271,8 +271,8 @@ def tutorial_view_exercise(config: dict, connection: http.client.HTTPSConnection
     connection.request(
         "GET",
         f"/courses/{str(config['course_id'])}"
-            f"/series/{str(config['serie_id'])}"
-            f"/activities/{str(config['exercise_id'])}",
+        + f"/series/{str(config['serie_id'])}"
+        + f"/activities/{str(config['exercise_id'])}",
         headers=headers)
 
     json_data = tutorial_handle_connection(config, connection)

@@ -223,7 +223,7 @@ def get_config_home():
     system = platform.system()
     if system == "Linux":
         platform_config_path = os.getenv("XDG_CONFIG_HOME", default=os.getenv("HOME") + "/.config/")
-    elif system == "Darwin":    # aka macOS
+    elif system == "Darwin":  # aka macOS
         platform_config_path = os.path.join(os.getenv("HOME"), "Library/Application Support")
     elif system == "Windows":
         platform_config_path = os.getenv("APPDATA")
@@ -257,8 +257,11 @@ def get_configs():
 
     except FileNotFoundError:
         # Create config dictionary
-        config = {e: None
-                  for e in ["course_id", "course_name", "serie_id", "serie_name", "exercise_id", "exercise_name"]}
+        config: dict[str, str | None] = {
+            e: None
+            for e in ["course_id", "course_name", "serie_id", "serie_name", "exercise_id",
+                      "exercise_name"]
+        }
 
         print("\nThis may be your first time using DodonaCLI, do you wish to follow a short tutorial?")
         answer = input("(yes/no): ")
