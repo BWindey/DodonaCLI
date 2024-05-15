@@ -39,56 +39,30 @@ def check_update():
         print("Your DodonaCLI is up-to-date.")
 
 
-@click.command(help='Bash completion script for you to source in your .bashrc. '
-                    'This is a manual script. '
-                    'With the optimesed imports, you can also use the completion provided by the Click library '
-                    'for bash, zsh and fish. '
-                    'Read more about this at https://click.palletsprojects.com/en/8.1.x/shell-completion/')
+@click.command(help='Tab completion, very handy for fast use')
 def completion():
-    print(
-        """
-# Bash completion script for DodonaCLI, needs to be sourced to work
-# Used https://www.gnu.org/software/gnuastro/manual/html_node/Bash-TAB-completion-tutorial.html to help create this
+    from dodonacli.source import pretty_console
 
-# $1 = name of command -> dodona
-# $2 = current word being completed
-# $3 = word before word being completed
-
-_dodona(){
-    if [ "$3" == "sub" ]; then
-        COMPREPLY=( $(compgen -W "load display --help" -- "$2")  )
-
-    elif [ "$3" == "display" ]; then
-        COMPREPLY=( $(compgen -W "--force --help" -- "$2") )
-
-    elif [ "$3" == "info" ]; then
-        COMPREPLY=( $(compgen -W "version changelog completion github check-update" -- "$2"))
-
-    elif [ "$3" == "select" ]; then
-        COMPREPLY=( $(compgen -W "--other --hidden --help" -- "$2") )
-
-    elif [ "$3" == "next" ]; then
-        COMPREPLY=( $(compgen -W "--reverse --unsolved --help" -- "$2") )
-
-    elif [ "$3" == "dodona" ]; then
-        COMPREPLY=( $(compgen -W "display info next post select status sub tutorial up --help" -- "$2") )
-
-    elif [ "$3" == "post" ]; then
-        COMPREPLY=( $(compgen -f -- "$2" | grep -vF ".swp") $(compgen -W "--help --use-link -l -c --check" -- "$2" ))
-
-    elif [[ "$3" =~ ^-[lc]+$ ]] || [ "$3" == "--use-link" ] || [ "$3" == "--check" ]; then
-        COMPREPLY=( $(compgen -f -- "$2") )
-
-    elif [ "$3" == "up" ]; then
-        COMPREPLY=( $(compgen -W "all top 1 2 3" -- "$2") )
-
-    else
-        COMPREPLY=( $(compgen -W "--help") )
-    fi
-}
-
-complete -F _dodona dodona
-        """
+    pretty_console.console.print(
+        "\nThere are 2 ways of doing tab-completion: \n"
+        "   - using Click's default tab-completion for bash/zsh/fish\n"
+        "   - using DodonaCLI's custom script for bash only\n"
+        "\nThe reason there is a custom script, is because the default completion lacks "
+        "a bit here and there.\n"
+        "The default option is easier to use, and doesn't need a redownload after an update.\n\n"
+        "To install the default completion:\n"
+        "   Follow this short tutorial:\n"
+        "       https://click.palletsprojects.com/en/8.1.x/shell-completion/#enabling-completion\n"
+        "   Replace every occurence of 'foo-bar' with 'dodona'\n"
+        "   Do notice that you can choose how you name the file, and where you put it.\n\n"
+        "To install the custom script for bash:\n"
+        "   Go to DodonaCLI's GitHub: https://www.github.com/BWindey/DodonaCLI\n"
+        "   And download 'dodonacli_completion_script.sh' (at top-level of project structure)\n"
+        "   Now add 'source <PATH TO SCRIPT>' to your '.bashrc',\n"
+        "   where you fill in the path to the downloaded script."
+        "\n\n"
+        "For both ways you'll have to either restart your terminal, or re-'source' your .bashrc/.fishrc/...\n"
+        "Happy tabbing!\n"
     )
 
 
