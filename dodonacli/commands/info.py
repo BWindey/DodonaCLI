@@ -58,7 +58,7 @@ def completion():
         "   Now add 'source <PATH TO SCRIPT>' to your '.bashrc',\n"
         "   where you fill in the path to the downloaded script."
         "\n\n"
-        "For both ways you'll have to either restart your terminal, or re-'source' your .bashrc/.fishrc/...\n"
+        "For both ways you'll have to either [u yellow]restart your terminal[/], or re-'source' your .bashrc/.fishrc/...\n"
         "Happy tabbing!\n"
     )
 
@@ -77,6 +77,7 @@ def changelog():
     from dodonacli.source import pretty_console
 
     changelog_raw = (
+        "\n"
         "\t- Reworked tutorial to be more user-friendly, and look a bit better\n"
         "\t- Tweaked some message-endings here and there to be more consistent\n"
         "\t\n"
@@ -87,13 +88,33 @@ def changelog():
     pretty_console.console.print(md)
 
 
+@click.command(help='Man-pages for DodonaCLI, very professional')
+def man_page():
+    from dodonacli.source import pretty_console
+
+    pretty_console.console.print(
+        "\n"
+        "To install a man-page for DodonaCLI, you can download it from GitHub:\n"
+        "  https://www.github.com/BWindey/DodonaCLI\n"
+        "The man-page files are located under the 'man-page' directory.\n"
+        "Download the .gz version (gzip-compressed), "
+        "the other one is not useful unless you want to see how man-pages are written.\n\n"
+        "Now run the command 'manpath' in your terminal, this should print a list of "
+        "paths, seperated by a ':'\n"
+        "Now move the downloaded file to one of those paths.\n"
+        "I personally put it onder '~/.local/share/man/man1/'\n"
+        "[u yellow]Note[/] that te manual-entry is for 'dodonacli', not 'dodona'\n"
+    )
+
+
 def get_dodonacli_version():
     from importlib import metadata
     return metadata.version(__package__.split('.')[0])
 
 
-info.add_command(version)
+info.add_command(changelog)
 info.add_command(check_update)
 info.add_command(completion)
 info.add_command(github)
-info.add_command(changelog)
+info.add_command(man_page)
+info.add_command(version)
