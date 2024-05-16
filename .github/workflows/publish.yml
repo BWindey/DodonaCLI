@@ -7,6 +7,9 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    environment: Publish release
+    permissions:
+      id-token: write
 
     steps:
       - name: Checkout code
@@ -29,8 +32,5 @@ jobs:
       - name: Build package
         run: python -m build
 
-      - name: Publish package
+      - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}

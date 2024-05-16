@@ -35,8 +35,11 @@ def check_bash_syntax(file: str) -> bool:
     except FileNotFoundError:
         # This will only occur if shellcheck isn't installed.
         # Click will detect that the user gave an invalid file before this function is called
-        print("\nTo check the syntax, 'shellcheck' is called with your file. It appears however, that "
-              "shellcheck isn't installed on your system. Please install it: https://www.shellcheck.net/")
+        print(
+            "\nTo check the syntax, 'shellcheck' is called with your file. "
+            "It appears however, that shellcheck isn't installed on your system. \n"
+            "Please install it: https://www.shellcheck.net/\n"
+        )
         return False
     except Exception as e:
         print("\nNo idea what's going wrong, but something definitly is going wrong:\n" + str(e))
@@ -49,7 +52,7 @@ def check_python_syntax(file: str) -> bool:
             compile(content.read(), file, 'exec')
         return True
     except SyntaxError as se:
-        print(f"\nSyntax error in Python file:\n{se}")
+        print(f"\nSyntax error in Python file:\n{se}\n")
     except Exception as e:
         print("\nNo idea what's going wrong, but something definitly is going wrong:\n" + str(e))
         return False
@@ -59,7 +62,7 @@ def check_java_syntax(file: str) -> bool:
     temp_dir = tempfile.mkdtemp()
     try:
         directory = os.path.dirname(file)
-        java_files = [file for file in os.listdir(directory) if file.endswith('.java') and not "test" in file.lower()]
+        java_files = [file for file in os.listdir(directory) if file.endswith('.java') and "test" not in file.lower()]
         if not java_files:
             return False  # No Java files found in the directory
 
@@ -72,15 +75,18 @@ def check_java_syntax(file: str) -> bool:
         shutil.rmtree(temp_dir, ignore_errors=True)
         return True
 
-    except subprocess.CalledProcessError as cpe:
+    except subprocess.CalledProcessError:
         # This error will happen if there was something wrong with the Java syntax
         return False
 
     except FileNotFoundError:
         # This will only occur if javac isn't installed.
         # Click will detect that the user gave an invalid file before this function is called
-        print("\nTo check the syntax, 'javac' is called with your file. It appears however, that "
-              "the Java compiler isn't installed on your system. Please install it: https://openjdk.org/install/")
+        print(
+            "\nTo check the syntax, 'javac' is called with your file. "
+            "It appears however, that the Java compiler isn't installed on your system.\n"
+            "Please install it: https://openjdk.org/install/\n"
+        )
         return False
     except Exception as e:
         print("\nNo idea what's going wrong, but something definitly is going wrong:\n" + str(e))
@@ -93,13 +99,16 @@ def check_javascript_syntax(file: str) -> bool:
     try:
         subprocess.run(['node', '-c', file], check=True)
         return True
-    except subprocess.CalledProcessError as cpe:
+    except subprocess.CalledProcessError:
         return False
     except FileNotFoundError:
         # This will only occur if jshint isn't installed.
         # Click will detect that the user gave an invalid file before this function is called
-        print("\nTo check the syntax, 'node' is called with your file. It appears however, that "
-              "this program isn't installed on your system. Please install it: https://nodejs.org/en/learn/getting-started/how-to-install-nodejs")
+        print(
+            "\nTo check the syntax, 'node' is called with your file. "
+            "It appears however, that this program isn't installed on your system.\n"
+            "Please install it: https://nodejs.org/en/learn/getting-started/how-to-install-nodejs\n"
+        )
         return False
     except Exception as e:
         print("\nNo idea what's going wrong, but something definitly is going wrong:\n" + str(e))
@@ -111,11 +120,14 @@ def check_haskell_syntax(file: str) -> bool:
         # TODO: enable compiling without main function present
         subprocess.run(['ghc', '-fno-code', '-v0', file], check=True)
         return True
-    except subprocess.CalledProcessError as cpe:
+    except subprocess.CalledProcessError:
         return False
     except FileNotFoundError:
-        print("\nTo check the syntax, 'ghc' is called with your file. It appears however, that "
-              "this program isn't installed on your system. Please install it: https://www.haskell.org/ghcup/")
+        print(
+            "\nTo check the syntax, 'ghc' is called with your file. "
+            "It appears however, that this program isn't installed on your system.\n"
+            "Please install it: https://www.haskell.org/ghcup/\n"
+        )
         return False
     except Exception as e:
         print("\nNo idea what's going wrong, but something definitly is going wrong:\n" + str(e))

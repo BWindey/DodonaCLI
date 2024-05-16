@@ -136,8 +136,6 @@ to see if this is indeed the issue.
 This section has a bunch of ideas for me to work on, but also for you, the potential contributor!
 Remember to look at the recent branches/commits to see if I’m not working on one of these:
 - user-settings (f.e. auto-download of files, language, formatting, number of submissions shown, config location, ...)
-- improve `info` command (man-page and such)
-- improve `tutorial`
 - easy (automatic?) downloading of files mentioned in exercise description
 - improve the rendering of all html/markdown frankensteins, in descriptions of exercises and exercise-descriptions 
 - add connection time-out to prevent long waiting when IPv6 doesn’t want to work along
@@ -145,7 +143,3 @@ Remember to look at the recent branches/commits to see if I’m not working on o
 - caching some info for faster navigation and/or autocompletion
 - add indicator to series to mark if all their exercises are completely solved (maybe fetch from html-version)
 - get exercise-names via html-parsing for a submission list to only need 1 API call (instead of 30)
-
-GitHub stuff to figure out:
-- release by tag/release
-- action to check valid version before trying to push, if not valid, make it valid

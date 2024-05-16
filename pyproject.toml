@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "DodonaCLI"
-version = "2024.5.14"
+version = "[[FILLED IN BY GITHUB ACTION RELEASE WORKFLOW]]"
 authors = [
     { name = "Bram Windey", email = "windey.bram@gmail.com" },
 ]
@@ -23,7 +23,7 @@ dependencies = [
     "click-default-group",
     "markdownify",
     "packaging",
-    "pkg_info",
+    "pkg-info",
     "rich"
 ]
 keywords = ["dodona", "cli"]

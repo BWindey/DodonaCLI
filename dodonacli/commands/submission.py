@@ -8,16 +8,10 @@ def sub():
     pass
 
 
-def validate_positive_int(ctx, param, value):
-    if value is not None and value < 0:
-        raise click.BadParameter('Number should be greater then 0')
-    return value
-
-
 @click.command(help="Load a submission to the prev_submission file, and display more info about it. "
                     "You can specify a number, else it takes the last submission for that exercise.")
 @click.argument('number',
-                type=int, default=0, callback=validate_positive_int)
+                type=click.IntRange(min=0), default=0)
 def load(number):
     import http.client
     from dodonacli.source import get_data, set_data
