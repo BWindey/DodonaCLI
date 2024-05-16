@@ -240,7 +240,7 @@ def get_configs():
     # Get the path of the config-file.
     config_file_path = os.path.join(get_config_home(), "config.json")
 
-    # fallback to the old path
+    # Fallback to the old path
     needs_migration = False
     if not os.path.exists(config_file_path):
         config_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../config.json")
@@ -274,8 +274,6 @@ def get_configs():
 
         # Save configs
         set_data.dump_config(config)
-
-        exit(0)
 
     return config
 
@@ -318,3 +316,59 @@ def get_api_token(config: dict):
     set_data.dump_config(config)
 
     return config
+
+
+def get_settings():
+    """
+    Get the contents of settings.json and return it.
+    If the file didn't exist yet, the default settings will be made
+    :return: Settings dictionary
+    """
+    # Get the path of the config-file.
+    settings_file_path = os.path.join(get_config_home(), "settings.json")
+
+    # First try to open, if unable to open, create a new settings-file
+    try:
+        with open(settings_file_path, "r") as file:
+            settings = json.load(file)
+            settings = validate_settings(settings)
+
+    except FileNotFoundError:
+        settings = {}
+        settings = validate_settings(settings)
+        set_data.dump_settings(settings)
+
+    return settings
+
+
+def validate_settings(settings: dict):
+    """
+    Make sure that all the needed settings are present,
+    if they're absent, they will be set to the default value
+    :param settings: Dictionary with settings to validate
+    :return: Updated settings dictionary
+    """
+    # Settings to check, with their default value
+    settings_to_check = {
+        'amount_feedback_context': 3,
+        'amount_feedback_tab': -1,
+        'amount_feedback_testcase': 3,
+        'amount_sub_exercise': 10,
+        'amount_sub_global': 30,
+        'new_lines_above': 1,
+        'new_lines_below': 1,
+        'paste_force_warning': True,
+        'display_after_select': False
+    }
+
+    # Remove redundant settings
+    for setting in settings:
+        if setting not in settings_to_check:
+            settings.pop(setting)
+
+    # Add missing settings with their default value
+    for setting in settings_to_check:
+        if setting not in settings:
+            settings[setting] = settings_to_check[setting]
+
+    return settings

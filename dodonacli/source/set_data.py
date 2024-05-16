@@ -25,6 +25,22 @@ def dump_config(config: dict):
         json.dump(config, config_file)
 
 
+def dump_settings(settings: dict):
+    """
+    Save the settings to their file again.
+    :param settings: Dictionary containing the settings
+    """
+    config_home = get_data.get_config_home()
+    settings_file_path = os.path.join(config_home, "settings.json")
+
+    if not os.path.exists(config_home):
+        os.makedirs(config_home)
+
+    with open(settings_file_path, 'w') as settings_file:
+        json.dump(settings, settings_file)
+
+
+
 def post_solution(content: str, connection: http.client.HTTPSConnection, headers: dict, course_id: str,
                   exercise_id: str):
     """
