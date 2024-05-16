@@ -104,13 +104,13 @@ This link is not included in the solution submitted to the Dodona servers; it is
 
 
 ## Tab-completion and man-pages
-Tab-completion is supported for bash, fish and zsh. The easiest way to install it, is by following the instructions at 
-https://click.palletsprojects.com/en/8.1.x/shell-completion/#enabling-completion 
+Tab-completion is supported for bash, fish and zsh. The easiest way to install it, is by following the short instructions at 
+https://click.palletsprojects.com/en/8.1.x/shell-completion/#enabling-completion,
 where you replace all occurences of 'foo-bar' with 'dodona'.
 
-You can also use my custom-written script for bash (if you're using bash), but downloading the autocomplete-script from  
+You can also use my custom-written script for bash (if you're using bash), by downloading the autocomplete-script from  
 https://github.com/BWindey/DodonaCLI/blob/master/dodonacli_completion_script.sh 
-and source it in your ~/.bashrc. 
+and source it in your ~/.bashrc. I personally use this custom one, as it allows me more control over the completion.
 
 A while ago, I strongly recommended the custom script, because the other way took about 200ms to complete, which felt slow, but due to some code-restructuring, the completion happens in around 50ms.
 
