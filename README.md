@@ -130,7 +130,10 @@ to see if this is indeed the issue.
 ## Roadmap
 This section has a bunch of ideas for me to work on, but also for you, the potential contributor!
 Remember to look at the recent branches/commits to see if I’m not working on one of these:
-- user-settings (f.e. auto-download of files, language, formatting, number of submissions shown, config location, ...)
+- user-settings (f.e. auto-download of files, language, formatting, number of submissions shown, ...)
+  - language
+  - whether to save feedback to a file
+  - auto download links from sandbox.dodona when selecting exercise
 - easy (automatic?) downloading of files mentioned in exercise description
 - improve the rendering of all html/markdown frankensteins, in descriptions of exercises and exercise-descriptions 
 - add connection time-out to prevent long waiting when IPv6 doesn’t want to work along
