@@ -292,7 +292,7 @@ def validate_config(config: dict):
         "serie_token", "programming_language"
     )
     for key in keys_to_check:
-        if key not in config:
+        if key not in config or (not isinstance(config[key], str) and config[key] is not None):
             config[key] = None
 
     if "TOKEN" not in config:
@@ -368,7 +368,7 @@ def validate_settings(settings: dict):
 
     # Add missing settings with their default value
     for setting in settings_to_check:
-        if setting not in settings:
+        if setting not in settings or not isinstance(settings[setting], type(settings_to_check[setting])):
             settings[setting] = settings_to_check[setting]
 
     return settings
