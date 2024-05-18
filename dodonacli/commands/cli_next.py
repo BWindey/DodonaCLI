@@ -23,6 +23,7 @@ def cli_next(reverse, unsolved):
 
     # Read configs in
     config = get_data.get_configs()
+    settings = get_data.get_settings()
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
@@ -33,22 +34,26 @@ def cli_next(reverse, unsolved):
     }
 
     if config.get('exercise_id') is not None:
-        config = get_next_exercise(config, connection, headers, reverse, unsolved)
+        config = get_next_exercise(config, settings, connection, headers, reverse, unsolved)
 
     elif config.get('serie_id') is not None:
-        config = get_next_series(config, connection, headers, reverse, unsolved)
+        config = get_next_series(config, settings, connection, headers, reverse, unsolved)
 
     elif config.get('course_id') is not None:
-        config = get_next_course(config, connection, headers, reverse, unsolved)
+        config = get_next_course(config, settings, connection, headers, reverse, unsolved)
 
     else:
-        print("\nCan't select a next course when non are selected.\n")
+        print(
+            '\n' * settings['new_lines_above']
+            + "Can't select a next course when non are selected."
+            + '\n' * settings['new_lines_below']
+        )
         return
 
     set_data.dump_config(config)
 
 
-def get_next_exercise(config, connection, headers, reverse, unsolved):
+def get_next_exercise(config, settings, connection, headers, reverse, unsolved):
     from dodonacli.source import get_data, pretty_print
 
     # Get all exercises of selected series
@@ -81,7 +86,11 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
                 next_id = id_list[(previous_id_index + i * (-1) ** reverse) % len(id_list)]
             i += 1
         if next_id == -1:
-            print("\nYou already solved everything, there is no unsolved exercise to go to!\n")
+            print(
+                '\n' * settings['new_lines_above']
+                + "You already solved everything, there is no unsolved exercise to go to!"
+                + '\n' * settings['new_lines_below']
+            )
             return config
 
     # Store new exercise
@@ -99,19 +108,25 @@ def get_next_exercise(config, connection, headers, reverse, unsolved):
     boilerplate = exercises_dict[next_id]['boilerplate']
     if boilerplate is not None and boilerplate.strip() != "":
         file_extension = exercises_dict[next_id]['programming_language']['extension']
-        print(f"\nBoilerplate code is put in 'boilerplate.{file_extension}'-file\n")
+        print(f"Boilerplate code is put in 'boilerplate.{file_extension}'-file" + '\n' * settings['new_lines_below'])
         with open(f"boilerplate.{file_extension}", "w") as boilerplate_file:
             boilerplate_file.write(boilerplate)
 
     return config
 
 
-def get_next_series(config, connection, headers, reverse, unsolved):
+def get_next_series(config, settings, connection, headers, reverse, unsolved):
     if config['serie_token']:
-        print("\nSorry, you can't use 'next' when inside a hidden series.\n")
+        print(
+            '\n' * settings['new_lines_below']
+            + "Sorry, you can't use 'next' when inside a hidden series."
+            + '\n' * settings['new_lines_below']
+        )
         return config
 
+    # Only import when we need it, speeds things up
     from dodonacli.source import get_data, pretty_print
+
     # Get all series of selected course
     series_data_json = get_data.series_data(
         connection, headers, config['course_id']
@@ -134,7 +149,11 @@ def get_next_series(config, connection, headers, reverse, unsolved):
     # If series ever get a solved/unsolved status support in API, this can get
     # the same logic found in get_next_exercise()
     if unsolved:
-        print("\nUnsolved flag not supported yet for series and courses.\n")
+        print(
+            '\n' * settings['new_lines_above']
+            + "Unsolved flag not supported yet for series and courses."
+            + '\n' * settings['new_lines_below']
+        )
     next_id = id_list[(previous_id_index + 1 - (2 * reverse)) % len(id_list)]
 
     # Store new series
@@ -144,19 +163,16 @@ def get_next_series(config, connection, headers, reverse, unsolved):
     ][0]
 
     prefixes = make_visual_representation(previous_id, previous_id_index, next_id, id_list)
-
     pretty_print.print_series_data(series_data_json, prefixes=prefixes)
 
     return config
 
 
-def get_next_course(config, connection, headers, reverse, unsolved):
+def get_next_course(config, settings, connection, headers, reverse, unsolved):
     from dodonacli.source import get_data, pretty_print
+
     # Get all registred courses
     course_data_json = get_data.courses_data(connection, headers)
-
-    # Simplified data
-    # courses_dict = {course['id']: course['name'] for course in course_data_json}
 
     id_list = [course['id'] for course in course_data_json]
     previous_id = config['course_id']
@@ -166,7 +182,11 @@ def get_next_course(config, connection, headers, reverse, unsolved):
     # If courses get more data that indicates if it's completely solved,
     # then this will get the same logic found in get_next_exercise()
     if unsolved:
-        print("\nUnsolved flag not supported yet for series and courses.\n")
+        print(
+            '\n' * settings['new_lines_above']
+            + "Unsolved flag not supported yet for series and courses."
+            + '\n' * settings['new_lines_below']
+        )
     next_id = id_list[(previous_id_index + 1 - (2 * reverse)) % len(id_list)]
 
     # Store new course
