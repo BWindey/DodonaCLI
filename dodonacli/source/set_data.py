@@ -37,8 +37,7 @@ def dump_settings(settings: dict):
         os.makedirs(config_home)
 
     with open(settings_file_path, 'w') as settings_file:
-        json.dump(settings, settings_file)
-
+        json.dump(settings, settings_file, indent=4)
 
 
 def post_solution(content: str, connection: http.client.HTTPSConnection, headers: dict, course_id: str,
