@@ -288,15 +288,21 @@ def print_status(config: dict):
     )
 
 
-def print_exercise_submissions(json_data: dict):
+def print_exercise_submissions(json_data: dict, settings: dict):
     """
     Print out a list of the (up to) 10 most recent submissions as found in json_data
     :param json_data: Dictionary with submission data
+    :param settings: Dictionary with settings
     """
     pretty_console.console.print(
         "\n[u bright_blue]Most recent submissions:[/]"
     )
-    for i, submission in enumerate(json_data[:10]):
+
+    amount_shown = min(settings['amount_sub_exercise'], len(json_data))
+    if amount_shown == -1:
+        amount_shown = len(json_data)
+
+    for i, submission in enumerate(json_data[:amount_shown]):
         if submission['accepted']:
             accepted_emoji = "[bright_green]:heavy_check_mark:[/bright_green]"
         else:
@@ -314,20 +320,25 @@ def print_exercise_submissions(json_data: dict):
     print()
 
 
-def print_all_submissions(connection: http.client.HTTPSConnection, headers: dict, json_data: dict):
+def print_all_submissions(connection: http.client.HTTPSConnection, headers: dict, json_data: dict, settings: dict):
     """
     Print out a list of the latest 30 submissions for the user, userwide (not tied to an exercise).
     Makes extra requests to Dodona to get the name of the exercises of the submissions
     :param connection: Connection to Dodona
     :param headers: Headers to send with the connection
     :param json_data: Dictionary with submission info
+    :param settings: Dictionary with settings
     :return:
     """
     pretty_console.console.print(
         "\n[u bright_blue]Most recent submissions:[/]"
     )
 
-    for i, submission in enumerate(json_data):
+    amount_shown = min(settings['amount_sub_global'], len(json_data))
+    if amount_shown == -1:
+        amount_shown = len(json_data)
+
+    for i, submission in enumerate(json_data[:amount_shown]):
         if submission['accepted']:
             accepted_emoji = "[bright_green]:heavy_check_mark:[/bright_green]"
         else:

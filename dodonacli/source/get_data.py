@@ -355,7 +355,7 @@ def validate_settings(settings: dict):
         'amount_feedback_testcase': 3,
         'amount_feedback_test': 3,
         'amount_sub_exercise': 10,
-        'amount_sub_global': 30,
+        'amount_sub_global': -1,
         'new_lines_above': 1,
         'new_lines_below': 1,
         'paste_force_warning': True,

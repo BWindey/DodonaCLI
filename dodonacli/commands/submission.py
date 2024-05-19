@@ -51,6 +51,7 @@ def view():
 
     # Read configs in
     config = get_data.get_configs()
+    settings = get_data.get_settings()
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
@@ -62,10 +63,10 @@ def view():
 
     if config['exercise_id']:
         json_data = get_data.exercise_submissions(config, connection, headers)
-        pretty_print.print_exercise_submissions(json_data)
+        pretty_print.print_exercise_submissions(json_data, settings)
     else:
         json_data = get_data.all_submissions(connection, headers)
-        pretty_print.print_all_submissions(connection, headers, json_data)
+        pretty_print.print_all_submissions(connection, headers, json_data, settings)
 
 
 sub.add_command(load)
