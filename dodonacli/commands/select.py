@@ -289,6 +289,6 @@ def select_exercise(connection: http.client.HTTPSConnection, headers: dict,
         with open("boilerplate." + programming_language['extension'], "w") as boilerplate_file:
             boilerplate_file.write(boilerplate)
 
-    print('\n' * settings['new_lines_below'])
+    print('\n' * settings['new_lines_below'], end='')
 
     return config
