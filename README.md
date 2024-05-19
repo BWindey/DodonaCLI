@@ -7,9 +7,10 @@ PyPI page: https://pypi.org/project/DodonaCLI/#description
 2) [Installation and updating](#installation-and-updating)
 3) [How to use](#how-to-use)
 4) [Flags that could be important](#flags-that-could-be-important)
-5) [Tab-completion and man-pages](#tab-completion-and-man-pages)
-6) [Help, DodonaCLI freezes](#help-dodonacli-freezes)
-7) [Roadmap](#roadmap)
+5) [Settings](#settings)
+6) [Tab-completion and man-pages](#tab-completion-and-man-pages)
+7) [Help, DodonaCLI freezes](#help-dodonacli-freezes)
+8) [Roadmap](#roadmap)
 
 
 ## Disclaimers
@@ -103,6 +104,14 @@ It also has to start with "https:<!-- comment to prevent link from appearing as 
 This link is not included in the solution submitted to the Dodona servers; it is stripped out.
 
 
+## Settings
+DodonaCLI has some settings (starting from version 2024.5.20). 
+Currently they are only editable by editing the settings.json file directly.
+In the future, there will be a sub-command to edit these in a more convenient way.
+For info on what is all changeable with these settings, take a look at the changelog
+```dodona info changelog```
+
+
 ## Tab-completion and man-pages
 Tab-completion is supported for bash, fish and zsh. The easiest way to install it, is by following the short instructions at 
 https://click.palletsprojects.com/en/8.1.x/shell-completion/#enabling-completion,
@@ -110,12 +119,17 @@ where you replace all occurences of 'foo-bar' with 'dodona'.
 
 You can also use my custom-written script for bash (if you're using bash), by downloading the autocomplete-script from  
 https://github.com/BWindey/DodonaCLI/blob/master/dodonacli_completion_script.sh 
-and source it in your ~/.bashrc. I personally use this custom one, as it allows me more control over the completion.
+and source it in your ~/.bashrc. 
+I personally use this custom one, as it allows me more control over the completion.
+The disadvantage over using this, however, is that you'll need to redownload it if it ever changes.
+I'll promise here and now that if I don't forget, I will always mention in the changelog 
+(`dodona info changelog`), that you need to download the new completion-script.
 
 A while ago, I strongly recommended the custom script, because the other way took about 200ms to complete, which felt slow, but due to some code-restructuring, the completion happens in around 50ms.
 
 There is also a manual page available (very prefessional). 
 You can download ["dodonacli.1.gz"](https://github.com/BWindey/DodonaCLI/blob/master/man-page/dodonacli.1.gz) and save this in a folder included in `$(manpath)`. 
+This will have to be downloaded again if it is updated. I'll let you know in the changelogs.
 
 
 ## Help, DodonaCLI freezes
