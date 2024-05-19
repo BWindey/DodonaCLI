@@ -74,50 +74,17 @@ def print_series_data(json_data: dict, force: bool = False, prefixes: dict = Non
     print()
     # Print out all the series in display_data while also handling the Markdown inside the series-description
     pretty_console.console.print("[u bright_blue]All series:[/]")
-    for series in display_data:
+    for i, series in enumerate(display_data):
         if force:
-            description = series[2].split('\n')
-            new_description = ''
+            description = series[2].strip('\n')
+            description = re.sub(r'{: *target="_blank"}', '', description)
+            new_description = Markdown(markdownify.markdownify(description))
 
-            for line in description:
-                line = line.rstrip()
-
-                # Remove target pattern from links as they try to open the link in a new tab, not useful for terminal
-                line = re.sub(r'{: *target="_blank"}', '', line)
-
-                # Format links as rich links
-                line = re.sub(r'\[([^]]+)]\((https?://[^)]+)\)', r'[link=\2]\1[/link]', line)
-
-                # Replace Markdown bold to Rich Console bold
-                line = re.sub(r'\*\*(.*?)\*\*', r'[bold]\1[/bold]', line)
-
-                # Replace Markdown italics to Rich Console italics if it is not in a (link)
-                pattern = re.compile(r'([ ,][^ (]*)_(.*?)_([^ ]*[ ,.])')
-                line = pattern.sub(r'\1[i]\2[/i]\3', line)
-
-                # Replace Markdown titles to something that appears as a title in terminal
-                line = re.sub(r'##+ (.*)', r'[bold white]\1[/bold white]', line)
-
-                # Split lines in multiple when they are too long for the terminal while keeping all lines indented.
-                # if len(line.replace("[bold]", "").replace("[/bold]", "")) > shutil.get_terminal_size().columns - 8:
-                #     line = line.split(" ")
-                #     new_line = ''
-                #     line_size = 0
-                #     for word in line:
-                #         if line_size + len(word) > shutil.get_terminal_size().columns - 8:
-                #             new_line += '\n'
-                #             line_size = 0
-                #         new_line += word + ' '
-                #         line_size += len(word + ' ')
-                #     line = new_line
-
-                new_description += line + '\n'
-
-            new_description = textwrap.indent(new_description, '\t')
             pretty_console.console.print(
                 f"\t{series[0].ljust(max_series_id_length)}: "
                 f"[bold]{series[1].ljust(max_series_name_length)}[/]"
-                f"\n{new_description}")
+            )
+            pretty_console.console.print(Padding(new_description, pad=(0, 0, 2 if i + 1 < len(display_data) else 0, 12)))
         else:
             pretty_console.console.print(
                 (prefixes.get(series[0]) or "\t")
@@ -173,15 +140,6 @@ def print_exercise_data(json_data: dict, prefixes: dict = None):
                 solve_status = "[bold bright_red]WRONG[/]"
             else:
                 solve_status = "[bold]NOT YET SOLVED[/]"
-
-            """
-            if not exercise['has_solution']:
-                solve_status = "[bold]NOT YET SOLVED[/]"
-            elif exercise['last_solution_is_best'] and exercise['has_correct_solution']:
-                solve_status = "[bold bright_green]SOLVED[/]"
-            else:
-                solve_status = "[bold bright_red]WRONG[/]"
-            """
 
         elif exercise['type'] == "ContentPage":
             if exercise['has_read']:
