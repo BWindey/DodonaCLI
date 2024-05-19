@@ -1,5 +1,5 @@
 '\" t
-.TH DODONACLI 14/05/2024
+.TH DODONACLI 19/05/2024
 .SH NAME
 dodonacli \- a 3rd party Command Line Interface for Dodona
 
@@ -8,7 +8,7 @@ dodonacli \- a 3rd party Command Line Interface for Dodona
 [display|info|next|post|select|status|sub|tutorial|up] [--help]
 
 .SH DESCRIPTION
-This documents the usage of a Command Line Interface made for Dodona. 
+This documents the usage of a Command Line Interface made for Dodona.
 .B DodonaCLI
 connects to Dodona to enable you to read, submit and get (minimal) feedback on exercises.
 You are able to switch courses, series and exercises, as long as you have acces to it on the official Dodona website.
@@ -37,11 +37,11 @@ flag to check your solutionfile for syntax-errors before uploading. This is curr
 flag to post your solutionfile directly to the exercise specified in a link on the first line of the file. This link has to be written in a comment!
 
 .IP select
-Select a course/series/exercise of those available when using 
+Select a course/series/exercise of those available when using
 .BR dodona
 .BR display.
-Requires an extra argument 
-.BR [id|name] 
+Requires an extra argument
+.BR [id|name]
 where name can be a distinct part of the cours/series/exercise. If the name is not distinct, it will select the first item it matches with (case-insensitive). It is not guarenteed that this matching happens in the same order as displayed, but often it is.
 
 .IP status
@@ -58,14 +58,14 @@ Starts an interactive tutorial to learn how the CLI works.
 Deselects the current course/series/exercise and goes to the layer above. Optional arguments are [all|top|1|2|3], which indicate how many "levels" you'll deselect.
 
 .IP \-\-help
-Can be used with every option to get an help page for the command, if you use 
+Can be used with every option to get an help page for the command, if you use
 .B dodona
 or
 .B dodona --help
 you get the help page of the main command.
 
 .SH EXAMPLE USAGE
-.PP 
+.PP
 dodona display
 .RS 4
 Shows the available courses
@@ -95,7 +95,7 @@ dodona select 'Exercise 1'
 Selects  the exercise with the name: "Exercise 1"
 .RE
 
-.PP 
+.PP
 dodona post test.py
 .RS 4
 Submits the document test.py to the currently selected exercise, and displays feedback.
@@ -112,6 +112,11 @@ dodona up 2
 .RS 4
 Goes up 2 layers, in this case it would deselect the current exercise and series.
 .RE
+
+.SH SETTINGS
+DodonaCLI has settings stored in settings.json, alongside its config file. It's important to note that while it is fine to edit the settings-file manually (while keeping the type of values the same), it is absolutely
+.BR NOT
+advised to edit the config.json file! There will be a subcommand to more easily edit the settings, later.
 
 .SH AUTHORS
 .PP
