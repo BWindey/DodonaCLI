@@ -17,7 +17,7 @@ import http.client
               is_flag=True, default=False)
 @click.argument('thing')
 def select(thing, hidden, other):
-    from dodonacli.source import set_data, get_data
+    from dodonacli.source import set_data, get_data, pretty_print
 
     # Read configs in
     config = get_data.get_configs()
@@ -33,15 +33,32 @@ def select(thing, hidden, other):
 
     if config['course_id'] is None:
         config = select_course(connection, headers, thing, config, settings, other)
+        if settings['display_series_after_select']:
+            # Print available series
+            json_data = get_data.series_data(connection, headers, config['course_id'])
+            pretty_print.print_series_data(json_data)
 
     elif config['serie_id'] is None:
         if hidden:
             config = select_hidden_series(connection, headers, thing, hidden, config, settings)
         else:
             config = select_series(connection, headers, thing, config, settings)
+        if settings['display_exercises_after_select']:
+            # Print available exercises
+            if config['serie_token'] is None:
+                serie_token = ""
+            else:
+                serie_token = "?token=" + config['serie_token']
+
+            json_data = get_data.exercises_data(connection, headers, config['serie_id'], serie_token)
+            pretty_print.print_exercise_data(json_data)
 
     elif config['exercise_id'] is None:
         config = select_exercise(connection, headers, thing, config, settings)
+        if settings['display_exercise_after_select']:
+            # Print exercise-description
+            json_data = get_data.exercise_data(connection, headers, config['course_id'], config['exercise_id'])
+            pretty_print.print_exercise(json_data, config['TOKEN'])
 
     else:
         # You can't select more when everything is already selected
