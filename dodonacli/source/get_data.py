@@ -359,17 +359,26 @@ def validate_settings(settings: dict):
         'new_lines_above': 1,
         'new_lines_below': 1,
         'paste_force_warning': True,
-        'display_after_select': False
+        'display_series_after_select': False,
+        'display_exercises_after_select': False,
+        'display_exercise_after_select': False
     }
 
+    anything_changed = False
+
     # Remove redundant settings
-    for setting in settings:
+    for setting in list(settings.keys()):
         if setting not in settings_to_check:
             settings.pop(setting)
+            anything_changed = True
 
     # Add missing settings with their default value
     for setting in settings_to_check:
         if setting not in settings or not isinstance(settings[setting], type(settings_to_check[setting])):
             settings[setting] = settings_to_check[setting]
+            anything_changed = True
+
+    if anything_changed:
+        set_data.dump_settings(settings)
 
     return settings

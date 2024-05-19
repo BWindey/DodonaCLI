@@ -141,3 +141,8 @@ Remember to look at the recent branches/commits to see if I’m not working on o
 - caching some info for faster navigation and/or autocompletion
 - add indicator to series to mark if all their exercises are completely solved (maybe fetch from html-version)
 - get exercise-names via html-parsing for a submission list to only need 1 API call (instead of 30)
+
+Code cleanup:
+- general refactoring of too large files (>150 lines can often be split)
+- 'display_after_select' should maybe not need to make a 2nd API call? 
+- special print that prints with right amount of new-lines to group that together
