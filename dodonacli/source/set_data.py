@@ -41,7 +41,7 @@ def dump_settings(settings: dict):
 
 
 def post_solution(content: str, connection: http.client.HTTPSConnection, headers: dict, course_id: str,
-                  exercise_id: str):
+                  exercise_id: str, settings):
     """
     Post the solution in content to Dodona and print the result
     :param content: str with the solution to post to Dodona
@@ -49,6 +49,7 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
     :param headers: dict with extra info for connection, mainly authorization needed
     :param course_id:
     :param exercise_id:
+    :param settings: dict with settings
     """
     # Make dict with info needed to post the solution and dump it in a json object
     payload = {
@@ -109,7 +110,7 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
     connection.close()
 
     # Print out the results
-    pretty_print.print_result(json.loads(json_data['result']))
+    pretty_print.print_result(json.loads(json_data['result']), settings)
     pretty_console.console.print(json_data['url'][:json_data['url'].rfind('.')])
     print()
 

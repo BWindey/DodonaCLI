@@ -4,7 +4,7 @@ PyPI page: https://pypi.org/project/DodonaCLI/#description
 
 **Contents**:
 1) [Disclaimers](#disclaimers)
-2) [How to install](#installation-and-updating)
+2) [Installation and updating](#installation-and-updating)
 3) [How to use](#how-to-use)
 4) [Flags that could be important](#flags-that-could-be-important)
 5) [Tab-completion and man-pages](#tab-completion-and-man-pages)

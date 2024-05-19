@@ -267,10 +267,10 @@ def get_configs():
         answer = input("(yes/no): ")
 
         if answer.lower().startswith("yes"):
-            config = interactive_tutorial.start_tutorial(config)
+            settings = get_settings()
+            config = interactive_tutorial.start_tutorial(config, settings)
         else:
-            TOKEN = input('API-Token not found! Enter your code here: ')
-            config["TOKEN"] = TOKEN
+            config["TOKEN"] = input('API-Token not found! Enter your code here: ')
 
         # Save configs
         set_data.dump_config(config)
@@ -353,6 +353,7 @@ def validate_settings(settings: dict):
         'amount_feedback_context': 3,
         'amount_feedback_tab': -1,
         'amount_feedback_testcase': 3,
+        'amount_feedback_test': 3,
         'amount_sub_exercise': 10,
         'amount_sub_global': 30,
         'new_lines_above': 1,

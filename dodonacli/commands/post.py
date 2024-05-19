@@ -97,4 +97,4 @@ def post(file, use_link, check):
     content = content.rstrip() + "\n"
 
     # Post exercise to Dodona
-    set_data.post_solution(content, connection, headers, course_id, exercise_id)
+    set_data.post_solution(content, connection, headers, course_id, exercise_id, settings)

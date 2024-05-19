@@ -10,10 +10,11 @@ import dodonacli.source.get_data
 from . import pretty_print, pretty_console, set_data
 
 
-def start_tutorial(config: dict):
+def start_tutorial(config: dict, settings: dict):
     """
     Runs the tutorial and asks for API token if it wasn't present yet.
-    :param config: dict
+    :param config: dict with configs
+    :param settings: dict with settings
     :return: config: dict
     """
     # Clear screen for tutorial
@@ -50,7 +51,7 @@ def start_tutorial(config: dict):
     config = tutorial_select_exercise(config, connection, headers)
 
     tutorial_view_exercise(config, connection, headers)
-    tutorial_post_exercise(config, connection, headers)
+    tutorial_post_exercise(config, connection, headers, settings)
 
     config = tutorial_conclude(config)
 
@@ -282,7 +283,7 @@ def tutorial_view_exercise(config: dict, connection: http.client.HTTPSConnection
 
 
 def tutorial_post_exercise(config: dict, connection: http.client.HTTPSConnection,
-                           headers: dict):
+                           headers: dict, settings: dict):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
         "Now you can post the solution. You don't need to write any code for this exercise, \n"
@@ -298,7 +299,8 @@ def tutorial_post_exercise(config: dict, connection: http.client.HTTPSConnection
 
     set_data.post_solution(
         "print( \"Hello, world!\" )",
-        connection, headers, config['course_id'], config['exercise_id']
+        connection, headers, config['course_id'], config['exercise_id'],
+        settings
     )
 
     pretty_console.console.print(

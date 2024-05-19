@@ -256,10 +256,11 @@ def print_exercise(json_data: dict, token: str, force: bool = False):
         pretty_console.console.print(warning)
 
 
-def print_result(json_results: dict):
+def print_result(json_results: dict, settings: dict):
     """
     Print out the results of a submission in a neat way
     :param json_results: json object with data about a submission
+    :param settings: dict with settings
     """
     if json_results['accepted']:
         # Everything passed, well done!
@@ -267,7 +268,7 @@ def print_result(json_results: dict):
             "[bold bright_green]All tests passed![/] You can continue to next exercise."
         )
     else:
-        pretty_console.console.print(submission_data_handler.submission_data_handler(json_results))
+        pretty_console.console.print(submission_data_handler.submission_data_handler(json_results, settings))
 
 
 def print_status(config: dict):
