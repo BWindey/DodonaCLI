@@ -160,7 +160,7 @@ def print_exercise_data(json_data: dict, prefixes: dict = None):
     print()
 
 
-def print_exercise(json_data: dict, token: str, force: bool = False):
+def print_exercise(json_data: dict, token: str, settings: dict, force: bool = False):
     """
     Print out the exercise-description.
     Needs to call the Dodona sandbox and convert HTML to text.
@@ -168,6 +168,7 @@ def print_exercise(json_data: dict, token: str, force: bool = False):
     :param token: API-token as authorization
     :param json_data: json object with info about a Dodona exercise
     :param force: boolean to decide if the exercise description has to be printed, or only a link to it
+    :param settings: dict with settings
     """
     if json_data['type'] == 'ContentPage':
         pretty_console.console.print(
@@ -181,14 +182,6 @@ def print_exercise(json_data: dict, token: str, force: bool = False):
         )
 
     else:
-        # Print the HTML with warnings
-        warning = (
-                "\n[u bold bright_red]WARNING:[/] the description may be incorrect, "
-                "DO NOT rely on this for exams and tests!\n"
-                "View in browser: " + json_data['description_url'] + '\n'
-        )
-        pretty_console.console.print(warning)
-
         pretty_console.console.print(
             '\n'
             "Expected programming language: " + json_data['programming_language']['name'] +
@@ -211,10 +204,18 @@ def print_exercise(json_data: dict, token: str, force: bool = False):
 
         md = Markdown(md_description)
 
-        pretty_console.console.print(Padding(md, pad=(0, 0, 0, 3)))
-
-        # Print the HTML with warnings
-        pretty_console.console.print(warning)
+        if settings['paste_force_warning']:
+            # Print the HTML with warnings
+            warning = (
+                    "\n[u bold bright_red]WARNING:[/] the description may be incorrect, "
+                    "DO NOT rely on this for exams and tests!\n"
+                    "View in browser: " + json_data['description_url'] + '\n'
+            )
+            pretty_console.console.print(warning)
+            pretty_console.console.print(Padding(md, pad=(0, 0, 0, 3)))
+            pretty_console.console.print(warning)
+        else:
+            pretty_console.console.print(Padding(md, pad=(0, 0, 0, 3)))
 
 
 def print_result(json_results: dict, settings: dict):

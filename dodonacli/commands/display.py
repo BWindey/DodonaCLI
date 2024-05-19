@@ -44,5 +44,6 @@ def display(force):
 
     else:
         # Print exercise-description
+        settings = get_data.get_settings()
         json_data = get_data.exercise_data(connection, headers, config['course_id'], config['exercise_id'])
-        pretty_print.print_exercise(json_data, config['TOKEN'], force)
+        pretty_print.print_exercise(json_data, config['TOKEN'], settings, force)

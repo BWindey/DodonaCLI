@@ -58,7 +58,7 @@ def select(thing, hidden, other):
         if settings['display_exercise_after_select']:
             # Print exercise-description
             json_data = get_data.exercise_data(connection, headers, config['course_id'], config['exercise_id'])
-            pretty_print.print_exercise(json_data, config['TOKEN'])
+            pretty_print.print_exercise(json_data, config['TOKEN'], settings)
 
     else:
         # You can't select more when everything is already selected

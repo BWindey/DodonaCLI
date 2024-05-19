@@ -50,7 +50,7 @@ def start_tutorial(config: dict, settings: dict):
     config = tutorial_select_series(config, connection, headers)
     config = tutorial_select_exercise(config, connection, headers)
 
-    tutorial_view_exercise(config, connection, headers)
+    tutorial_view_exercise(config, connection, headers, settings)
     tutorial_post_exercise(config, connection, headers, settings)
 
     config = tutorial_conclude(config)
@@ -258,7 +258,7 @@ def tutorial_select_exercise(config: dict, connection: http.client.HTTPSConnecti
 
 
 def tutorial_view_exercise(config: dict, connection: http.client.HTTPSConnection,
-                           headers: dict):
+                           headers: dict, settings: dict):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
         "Use the command `dodona display` to show the description of the exercise."
@@ -277,7 +277,7 @@ def tutorial_view_exercise(config: dict, connection: http.client.HTTPSConnection
         headers=headers)
 
     json_data = tutorial_handle_connection(config, connection)
-    pretty_print.print_exercise(json_data, config['TOKEN'])
+    pretty_print.print_exercise(json_data, config['TOKEN'], settings)
 
     input(" <Enter to continue>")
 
