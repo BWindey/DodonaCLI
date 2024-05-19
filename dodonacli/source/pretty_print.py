@@ -46,7 +46,7 @@ def print_courses_data(json_data: dict, title: str = "Your courses:", prefixes: 
 
 def print_series_data(json_data: dict, force: bool = False, prefixes: dict = None):
     """
-    Print out the exercise-series in json_data in a neat way.
+    Print out the exercise-series in json_data in a neat (unless force) way.
     :param json_data: Json object with data about Dodona exercise-series
     :param force: Boolean to decide if the series description has to be printed, or only a link to it
     :param prefixes: Dictionary with a prefix for each id in json_data
@@ -83,7 +83,10 @@ def print_series_data(json_data: dict, force: bool = False, prefixes: dict = Non
                 line = line.rstrip()
 
                 # Remove target pattern from links as they try to open the link in a new tab, not useful for terminal
-                line = re.sub(r'{: target="_blank"}', '', line)
+                line = re.sub(r'{: *target="_blank"}', '', line)
+
+                # Format links as rich links
+                line = re.sub(r'\[([^]]+)]\((https?://[^)]+)\)', r'[link=\2]\1[/link]', line)
 
                 # Replace Markdown bold to Rich Console bold
                 line = re.sub(r'\*\*(.*?)\*\*', r'[bold]\1[/bold]', line)
@@ -96,17 +99,17 @@ def print_series_data(json_data: dict, force: bool = False, prefixes: dict = Non
                 line = re.sub(r'##+ (.*)', r'[bold white]\1[/bold white]', line)
 
                 # Split lines in multiple when they are too long for the terminal while keeping all lines indented.
-                if len(line.replace("[bold]", "").replace("[/bold]", "")) > shutil.get_terminal_size().columns - 8:
-                    line = line.split(" ")
-                    new_line = ''
-                    line_size = 0
-                    for word in line:
-                        if line_size + len(word) > shutil.get_terminal_size().columns - 8:
-                            new_line += '\n'
-                            line_size = 0
-                        new_line += word + ' '
-                        line_size += len(word + ' ')
-                    line = new_line
+                # if len(line.replace("[bold]", "").replace("[/bold]", "")) > shutil.get_terminal_size().columns - 8:
+                #     line = line.split(" ")
+                #     new_line = ''
+                #     line_size = 0
+                #     for word in line:
+                #         if line_size + len(word) > shutil.get_terminal_size().columns - 8:
+                #             new_line += '\n'
+                #             line_size = 0
+                #         new_line += word + ' '
+                #         line_size += len(word + ' ')
+                #     line = new_line
 
                 new_description += line + '\n'
 
