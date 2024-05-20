@@ -31,7 +31,7 @@ def display(force):
     elif config['serie_id'] is None:
         # Print available series
         json_data = get_data.series_data(connection, headers, config['course_id'])
-        pretty_print.print_series_data(json_data, force)
+        pretty_print.print_series_data(json_data, settings, force)
 
     elif config['exercise_id'] is None:
         # Print available exercises

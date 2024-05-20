@@ -163,7 +163,7 @@ def get_next_series(config, settings, connection, headers, reverse, unsolved):
     ][0]
 
     prefixes = make_visual_representation(previous_id, previous_id_index, next_id, id_list)
-    pretty_print.print_series_data(series_data_json, prefixes=prefixes)
+    pretty_print.print_series_data(series_data_json, settings, prefixes=prefixes)
 
     return config
 

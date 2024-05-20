@@ -62,10 +62,11 @@ def print_courses_data(json_data: dict, settings: dict, title: str = "Your cours
         )
 
 
-def print_series_data(json_data: dict, force: bool = False, prefixes: dict = None):
+def print_series_data(json_data: dict, settings: dict, force: bool = False, prefixes: dict = None):
     """
     Print out the exercise-series in json_data in a neat (unless force) way.
     :param json_data: Json object with data about Dodona exercise-series
+    :param settings: dict with settings
     :param force: Boolean to decide if the series description has to be printed, or only a link to it
     :param prefixes: Dictionary with a prefix for each id in json_data
     """
@@ -88,8 +89,6 @@ def print_series_data(json_data: dict, force: bool = False, prefixes: dict = Non
     max_series_id_length = max(len(e[0]) for e in display_data)
     max_series_name_length = max(len(e[1]) for e in display_data)
 
-    # Newline for clarity
-    print()
     # Print out all the series in display_data while also handling the Markdown inside the series-description
     pretty_console.console.print("[u bright_blue]All series:[/]")
     for i, series in enumerate(display_data):
@@ -104,13 +103,13 @@ def print_series_data(json_data: dict, force: bool = False, prefixes: dict = Non
             )
             pretty_console.console.print(Padding(new_description, pad=(0, 0, 2 if i + 1 < len(display_data) else 0, 12)))
         else:
-            pretty_console.console.print(
+            custom_print(
                 (prefixes.get(series[0]) or "\t")
                 + f"{series[0].ljust(max_series_id_length)}: "
-                + f"[bold]{series[1].ljust(max_series_name_length)}[/]"
+                + f"[bold]{series[1].ljust(max_series_name_length)}[/]",
+                settings,
+                pretty=True
             )
-    # Newline for clarity
-    print()
 
 
 def print_exercise_data(json_data: dict, prefixes: dict = None):

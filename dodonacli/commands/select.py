@@ -36,7 +36,7 @@ def select(thing, hidden, other):
         if settings['display_series_after_select']:
             # Print available series
             json_data = get_data.series_data(connection, headers, config['course_id'])
-            pretty_print.print_series_data(json_data)
+            pretty_print.print_series_data(json_data, settings)
 
     elif config['serie_id'] is None:
         if hidden:

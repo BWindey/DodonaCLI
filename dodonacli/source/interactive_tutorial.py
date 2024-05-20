@@ -47,8 +47,8 @@ def start_tutorial(config: dict, settings: dict):
     }
 
     config = tutorial_select_course(config, connection, headers, settings)
-    config = tutorial_select_series(config, connection, headers)
-    config = tutorial_select_exercise(config, connection, headers)
+    config = tutorial_select_series(config, connection, headers, settings)
+    config = tutorial_select_exercise(config, connection, headers, settings)
 
     tutorial_view_exercise(config, connection, headers, settings)
     tutorial_post_exercise(config, connection, headers, settings)
@@ -135,7 +135,7 @@ def tutorial_select_course(config: dict, connection: http.client.HTTPSConnection
 
 
 def tutorial_select_series(config: dict, connection: http.client.HTTPSConnection,
-                           headers: dict):
+                           headers: dict, settings: dict):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
         "Use the command `dodona display` to show the available exercise-series."
@@ -153,7 +153,7 @@ def tutorial_select_series(config: dict, connection: http.client.HTTPSConnection
 
     # To prevent the screen being blasted with a lot of text,
     # only print out the first 6 exercise series
-    pretty_print.print_series_data(json_data[:6])
+    pretty_print.print_series_data(json_data[:6], settings)
 
     pretty_console.console.print(
         "Select now \"2. Using Python\" with `dodona select` + the series' id,"
@@ -195,7 +195,7 @@ def tutorial_select_series(config: dict, connection: http.client.HTTPSConnection
 
 
 def tutorial_select_exercise(config: dict, connection: http.client.HTTPSConnection,
-                             headers: dict):
+                             headers: dict, settings: dict):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
         "Use the command `dodona display` to show the available exercises."
