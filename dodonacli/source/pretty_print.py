@@ -191,21 +191,24 @@ def print_exercise(json_data: dict, token: str, settings: dict, force: bool = Fa
     :param settings: dict with settings
     """
     if json_data['type'] == 'ContentPage':
-        pretty_console.console.print(
-            "\nNo need to program anything this time, but you'll have to go read this and mark it as read:\n"
-            + json_data['url'].replace(".json", "") + '\n'
+        custom_print(
+            "No need to program anything this time, but you'll have to go read this and mark it as read:\n"
+            + json_data['url'].replace(".json", ""),
+            settings, pretty=True
         )
 
     elif not force:
-        pretty_console.console.print(
-            f"\nYou can find the exercise description at \n{json_data['description_url']}\n"
+        custom_print(
+            f"You can find the exercise description at \n{json_data['description_url']}",
+            settings,
+            pretty=True
         )
 
     else:
-        pretty_console.console.print(
-            '\n'
-            "Expected programming language: " + json_data['programming_language']['name'] +
-            '\n'
+        custom_print(
+            "Expected programming language: " + json_data['programming_language']['name'] + '\n',
+            {'new_lines_above': settings['new_lines_above']},
+            pretty=True
         )
 
         # Make sandbox.dodona connection for exercise description:
@@ -220,7 +223,7 @@ def print_exercise(json_data: dict, token: str, settings: dict, force: bool = Fa
         soup = BeautifulSoup(data, features="html.parser")
         html_description = str(soup.find("div", {"class": "card-supporting-text"}))
 
-        md_description = markdownify.markdownify(html_description)
+        md_description = markdownify.markdownify(html_description).strip()
 
         md = Markdown(md_description)
 
@@ -236,6 +239,8 @@ def print_exercise(json_data: dict, token: str, settings: dict, force: bool = Fa
             pretty_console.console.print(warning)
         else:
             pretty_console.console.print(Padding(md, pad=(0, 0, 0, 3)))
+
+        print('\n' * settings['new_lines_below'], end='')
 
 
 def print_result(json_results: dict, settings: dict):
