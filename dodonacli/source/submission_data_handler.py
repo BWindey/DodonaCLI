@@ -21,9 +21,9 @@ def submission_tabs_handler(submission_data: dict, settings: dict) -> str:
             correct_tabs.append(tab)
 
     if settings['amount_feedback_tab'] == -1:
-        amount_failed_display = len(correct_tabs)
+        amount_failed_display = len(failed_tabs)
     else:
-        amount_failed_display = min(settings['amount_feedback_tab'], len(correct_tabs))
+        amount_failed_display = min(settings['amount_feedback_tab'], len(failed_tabs))
 
     result = "[bold bright_red]Wrong tabs[/]:"
     result += ''.join(failed_tab_handler(failed_tab, settings) for failed_tab in failed_tabs[:amount_failed_display])
