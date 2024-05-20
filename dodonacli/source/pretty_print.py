@@ -243,19 +243,21 @@ def print_exercise(json_data: dict, token: str, settings: dict, force: bool = Fa
         print('\n' * settings['new_lines_below'], end='')
 
 
-def print_result(json_results: dict, settings: dict):
+def print_result(json_results: dict, url: str, settings: dict):
     """
     Print out the results of a submission in a neat way
     :param json_results: json object with data about a submission
+    :param url: link to the submission
     :param settings: dict with settings
     """
     if json_results['accepted']:
         # Everything passed, well done!
-        pretty_console.console.print(
-            "[bold bright_green]All tests passed![/] You can continue to next exercise."
-        )
+        result = "[bold bright_green]All tests passed![/] You can continue to next exercise.\n"
     else:
-        pretty_console.console.print(submission_data_handler.submission_data_handler(json_results, settings))
+        result = submission_data_handler.submission_data_handler(json_results, settings).strip() + '\n'
+
+    result += url
+    custom_print(result, settings, pretty=True)
 
 
 def print_status(config: dict):

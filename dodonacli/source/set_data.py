@@ -66,15 +66,19 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
     res = connection.getresponse()
     status = res.status
     if status == 422:
-        pretty_console.console.print(
-            "\n[i]Patience, young padawan.\n"
-            "A cooldown, Dodona servers have, to prevent DDOS attacks, hmm, yes.[/]\n"
+        pretty_print.custom_print(
+            "[i]Patience, young padawan.\n"
+            "A cooldown, Dodona servers have, to prevent DDOS attacks, hmm, yes.[/]",
+            settings, pretty=True
         )
         return
 
     elif status != 200:
-        print("\nError connection to Dodona: " + str(res.status))
-        print("Reason: " + res.reason + '\n')
+        pretty_print.custom_print(
+            "Error connection to Dodona: " + str(res.status) + '\n'
+            + "Reason: " + res.reason,
+            settings, pretty=True
+        )
         return
 
     # Read out the result
@@ -85,9 +89,16 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
     json_data['status'] = "running"
 
     # Spinner animation effect while waiting
-    print()
-    waiting = rich.status.Status("Posting your solution, please wait while the servers evaluate your code.",
-                                 spinner=select_spinner())
+    print('\n' * settings['new_lines_above'], end='')
+
+    # Disable the new_lines_above here for the further prints, but need more than just that settings,
+    # that's why I don't just make a new dict with only 'new_lines_below' in
+    settings['new_lines_above'] = 0
+
+    waiting = rich.status.Status(
+        "Posting your solution, please wait while the servers evaluate your code.",
+        spinner=select_spinner()
+    )
     waiting.start()
     wait_interval = 0
 
@@ -101,7 +112,7 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
         res = connection.getresponse()
         if res.status != 200:
             print("Error connection to Dodona: " + str(res.status))
-            print("Reason: " + res.reason)
+            print("Reason: " + res.reason, end='\n' * settings['new_lines_below'])
             return
 
         json_data: dict[str, str] = json.loads(res.read())
@@ -110,9 +121,11 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
     connection.close()
 
     # Print out the results
-    pretty_print.print_result(json.loads(json_data['result']), settings)
-    pretty_console.console.print(json_data['url'][:json_data['url'].rfind('.')])
-    print()
+    pretty_print.print_result(
+        json.loads(json_data['result']),
+        json_data['url'][:json_data['url'].rfind('.')],
+        settings
+    )
 
 
 def select_spinner() -> str:
