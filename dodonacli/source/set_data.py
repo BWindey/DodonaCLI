@@ -158,13 +158,14 @@ def select_spinner() -> str:
     return random.choice(selection_spinners)
 
 
-def save_to_file(name: str, submission_id: int, content: str, extension: str = ""):
+def save_to_file(name: str, submission_id: int, content: str, settings: dict, extension: str = ""):
     """
     Save code to a file in the users current working directory.
     The resulting file name: {name}_{id}{extension}
     :param name: Name of the file
     :param submission_id: ID to add to the name of file
     :param content: Content to save in the file
+    :param settings: dict with settings
     :param extension: Optional file-extension, has to include the '.'
     """
     name = name.replace(' ', '-')
@@ -173,5 +174,8 @@ def save_to_file(name: str, submission_id: int, content: str, extension: str = "
     with open(file_name, "w") as code_file:
         code_file.write(content)
 
-    print(f"\nCode from your submission for {name} is now saved in:\n"
-          f"\t{name}_{submission_id}{extension}\n")
+    pretty_print.custom_print(
+        f"Code from your submission for {name} is now saved in:\n"
+        f"\t{name}_{submission_id}{extension}",
+        settings, pretty=True
+    )
