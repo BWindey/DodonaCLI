@@ -2,8 +2,6 @@ import http.client
 import json
 import markdownify
 import re
-import shutil
-import textwrap
 
 from bs4 import BeautifulSoup
 from rich.markdown import Markdown
@@ -12,10 +10,30 @@ from rich.padding import Padding
 from . import get_data, pretty_console, submission_data_handler
 
 
-def print_courses_data(json_data: dict, title: str = "Your courses:", prefixes: dict = None):
+def custom_print(text: str, settings: dict, pretty: bool = False):
+    """
+    Prints out the text with the amount of newlines specified in settings
+    :param text: text to print
+    :param settings: dict with settings
+    :param pretty: whether to use the pretty_console print, or the standard Python print
+    """
+    if pretty:
+        printer = pretty_console.console.print
+    else:
+        printer = print
+
+    printer(
+        '\n' * settings.get('new_lines_above', 0)
+        + text
+        + '\n' * settings.get('new_lines_below', 0)
+    )
+
+
+def print_courses_data(json_data: dict, settings: dict, title: str = "Your courses:", prefixes: dict = None):
     """
     Print out the courses in json_data in a neat way
     :param json_data: json object with data about Dodona courses
+    :param settings: dict with settings
     :param title: title to display above the courses-list
     :param prefixes: dictionary with a prefix for each id in json_data
     """
@@ -23,7 +41,7 @@ def print_courses_data(json_data: dict, title: str = "Your courses:", prefixes: 
         prefixes = {}
 
     # List of tuples where each tuple represents a course by id, name and teacher
-    display_data = []
+    display_data: list[tuple] = []
 
     for field in json_data:
         display_data.append((str(field['id']), field['name'], field['teacher']))
@@ -35,13 +53,13 @@ def print_courses_data(json_data: dict, title: str = "Your courses:", prefixes: 
     # Print out all courses in display_data
     pretty_console.console.print(f'\n[u bright_blue]{title}[/]')
     for course in display_data:
-        pretty_console.console.print(
+        custom_print(
             (prefixes.get(course[0]) or "\t") +
             f"{course[0].ljust(max_course_id_length)}: "
-            f"[bold]{course[1].ljust(max_course_name_length)}[/]\tby {course[2]}"
+            f"[bold]{course[1].ljust(max_course_name_length)}[/]\tby {course[2]}",
+            settings,
+            pretty=True
         )
-    # Newline for clarity
-    print()
 
 
 def print_series_data(json_data: dict, force: bool = False, prefixes: dict = None):
