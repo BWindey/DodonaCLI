@@ -36,7 +36,7 @@ def select(thing, hidden, other):
         if settings['display_series_after_select']:
             # Print available series
             json_data = get_data.series_data(connection, headers, config['course_id'])
-            pretty_print.print_series_data(json_data, settings)
+            pretty_print.print_series_data(json_data, {'new_lines_below': settings['new_lines_below']})
 
     elif config['serie_id'] is None:
         if hidden:
@@ -51,7 +51,7 @@ def select(thing, hidden, other):
                 serie_token = "?token=" + config['serie_token']
 
             json_data = get_data.exercises_data(connection, headers, config['serie_id'], serie_token)
-            pretty_print.print_exercise_data(json_data)
+            pretty_print.print_exercise_data(json_data, {'new_lines_below': settings['new_lines_below']})
 
     elif config['exercise_id'] is None:
         config = select_exercise(connection, headers, thing, config, settings)

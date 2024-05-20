@@ -117,10 +117,11 @@ def print_series_data(json_data: dict, settings: dict, force: bool = False, pref
         custom_print(result.strip(), settings, pretty=True)
 
 
-def print_exercise_data(json_data: dict, prefixes: dict = None):
+def print_exercise_data(json_data: dict, settings: dict, prefixes: dict = None):
     """
     Print out the exercises in json_data in a neat way
     :param json_data: json object with data about Dodona exercises in a series
+    :param settings: dict with settings
     :param prefixes: dictionary with a prefix for each id in json_data
     """
     if prefixes is None:
@@ -153,7 +154,7 @@ def print_exercise_data(json_data: dict, prefixes: dict = None):
     max_exercise_name_length = max(len(e['name']) for e in display_data)
 
     # Print out all exercises in display_data with indicator about solution-status: solved, wrong or not yet solved
-    pretty_console.console.print('\n[u bright_blue]Exercises:[/]')
+    result = '[u bright_blue]Exercises:[/]\n'
     for exercise in display_data:
         if exercise['type'] == "Exercise":
             if exercise['accepted']:
@@ -172,14 +173,11 @@ def print_exercise_data(json_data: dict, prefixes: dict = None):
         else:
             solve_status = "[bold]SOLVE STATUS UNKNOWN"
 
-        pretty_console.console.print(
-            (prefixes.get(exercise['id']) or "\t")
-            + f"{exercise['id'].ljust(max_exercise_id_length)}: "
-            + f"[bold]{exercise['name'].ljust(max_exercise_name_length)}[/]\t"
-            + solve_status
-        )
-    # Newline for clarity
-    print()
+        result += (prefixes.get(exercise['id']) or "\t")
+        result += f"{exercise['id'].ljust(max_exercise_id_length)}: "
+        result += f"[bold]{exercise['name'].ljust(max_exercise_name_length)}[/]\t" + solve_status + '\n'
+
+    custom_print(result.strip(), settings, pretty=True)
 
 
 def print_exercise(json_data: dict, token: str, settings: dict, force: bool = False):

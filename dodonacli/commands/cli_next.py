@@ -101,7 +101,7 @@ def get_next_exercise(config, settings, connection, headers, reverse, unsolved):
 
     prefixes = make_visual_representation(previous_id, previous_id_index, next_id, id_list)
 
-    pretty_print.print_exercise_data(exercise_data_json, prefixes)
+    pretty_print.print_exercise_data(exercise_data_json, settings, prefixes)
 
     # Handle potential boilerplate.
     # I decided to not print the boilerplate (as a 'select' would do), it felt too clunky here.

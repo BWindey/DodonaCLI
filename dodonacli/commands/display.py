@@ -41,7 +41,7 @@ def display(force):
             serie_token = "?token=" + config['serie_token']
 
         json_data = get_data.exercises_data(connection, headers, config['serie_id'], serie_token)
-        pretty_print.print_exercise_data(json_data)
+        pretty_print.print_exercise_data(json_data, settings)
 
     else:
         # Print exercise-description

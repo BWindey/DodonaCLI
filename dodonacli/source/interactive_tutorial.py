@@ -213,7 +213,7 @@ def tutorial_select_exercise(config: dict, connection: http.client.HTTPSConnecti
     )
     json_data = tutorial_handle_connection(config, connection)
 
-    pretty_print.print_exercise_data(json_data)
+    pretty_print.print_exercise_data(json_data, settings)
 
     pretty_console.console.print(
         "Select now \"Hello, World!\" with `dodona select` + the series' id,\n"
