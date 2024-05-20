@@ -32,18 +32,30 @@ def select(thing, hidden, other):
     }
 
     if config['course_id'] is None:
-        config = select_course(connection, headers, thing, config, settings, other)
         if settings['display_series_after_select']:
+            config = select_course(
+                connection, headers, thing, config,
+                {'new_lines_above': settings['new_lines_above'], 'new_lines_below': 1},
+                other
+            )
             # Print available series
             json_data = get_data.series_data(connection, headers, config['course_id'])
             pretty_print.print_series_data(json_data, {'new_lines_below': settings['new_lines_below']})
+        else:
+            config = select_course(connection, headers, thing, config, settings, other)
 
     elif config['serie_id'] is None:
-        if hidden:
-            config = select_hidden_series(connection, headers, thing, hidden, config, settings)
-        else:
-            config = select_series(connection, headers, thing, config, settings)
         if settings['display_exercises_after_select']:
+            if hidden:
+                config = select_hidden_series(
+                    connection, headers, thing, hidden, config,
+                    {'new_lines_above': settings['new_lines_above'], 'new_lines_below': 1}
+                )
+            else:
+                config = select_series(
+                    connection, headers, thing, config,
+                    {'new_lines_above': settings['new_lines_above'], 'new_lines_below': 1}
+                )
             # Print available exercises
             if config['serie_token'] is None:
                 serie_token = ""
@@ -52,21 +64,30 @@ def select(thing, hidden, other):
 
             json_data = get_data.exercises_data(connection, headers, config['serie_id'], serie_token)
             pretty_print.print_exercise_data(json_data, {'new_lines_below': settings['new_lines_below']})
+        else:
+            if hidden:
+                config = select_hidden_series(connection, headers, thing, hidden, config, settings)
+            else:
+                config = select_series(connection, headers, thing, config, settings)
 
     elif config['exercise_id'] is None:
-        config = select_exercise(connection, headers, thing, config, settings)
         if settings['display_exercise_after_select']:
+            config = select_exercise(
+                connection, headers, thing, config,
+                {'new_lines_above': settings['new_lines_above'], 'new_lines_below': 1}
+            )
             # Print exercise-description
             json_data = get_data.exercise_data(connection, headers, config['course_id'], config['exercise_id'])
-            pretty_print.print_exercise(json_data, config['TOKEN'], settings)
+            pretty_print.print_exercise(json_data, config['TOKEN'], {'new_lines_below': settings['new_lines_below']})
+        else:
+            config = select_exercise(connection, headers, thing, config, settings)
 
     else:
         # You can't select more when everything is already selected
-        print(
-            '\n' * settings['new_lines_above']
-            + "There is already an exercise selected."
-              "Please remove selection with --up / -u before selecting a new exercise."
-            + '\n' * settings['new_lines_below']
+        pretty_print.custom_print(
+            "There is already an exercise selected.\n"
+            "Please remove selection with 'dodona up' before selecting a new exercise.",
+            settings
         )
         return
 
