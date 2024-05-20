@@ -51,15 +51,13 @@ def print_courses_data(json_data: dict, settings: dict, title: str = "Your cours
     max_course_name_length = max(len(e[1]) for e in display_data)
 
     # Print out all courses in display_data
-    pretty_console.console.print(f'\n[u bright_blue]{title}[/]')
+    result = f'[u bright_blue]{title}[/]\n'
     for course in display_data:
-        custom_print(
-            (prefixes.get(course[0]) or "\t") +
-            f"{course[0].ljust(max_course_id_length)}: "
-            f"[bold]{course[1].ljust(max_course_name_length)}[/]\tby {course[2]}",
-            settings,
-            pretty=True
-        )
+        result += (prefixes.get(course[0]) or "\t")
+        result += (f"{course[0].ljust(max_course_id_length)}: [bold]"
+                   f"{course[1].ljust(max_course_name_length)}[/]\tby {course[2]}\n")
+
+    custom_print(result.strip(), settings, pretty=True)
 
 
 def print_series_data(json_data: dict, settings: dict, force: bool = False, prefixes: dict = None):
@@ -90,26 +88,33 @@ def print_series_data(json_data: dict, settings: dict, force: bool = False, pref
     max_series_name_length = max(len(e[1]) for e in display_data)
 
     # Print out all the series in display_data while also handling the Markdown inside the series-description
-    pretty_console.console.print("[u bright_blue]All series:[/]")
-    for i, series in enumerate(display_data):
-        if force:
+    result = "[u bright_blue]All series:[/]\n"
+    if force:
+        pretty_console.console.print('\n' * settings['new_lines_above'] + result, end='')
+
+        for i, series in enumerate(display_data):
             description = series[2].strip('\n')
-            description = re.sub(r'{: *target="_blank"}', '', description)
-            new_description = Markdown(markdownify.markdownify(description))
+            description = re.sub(r'{: *target="_blank"}', '', description).strip()
+            md_description = Markdown(markdownify.markdownify(description))
 
             pretty_console.console.print(
                 f"\t{series[0].ljust(max_series_id_length)}: "
                 f"[bold]{series[1].ljust(max_series_name_length)}[/]"
             )
-            pretty_console.console.print(Padding(new_description, pad=(0, 0, 2 if i + 1 < len(display_data) else 0, 12)))
-        else:
-            custom_print(
-                (prefixes.get(series[0]) or "\t")
-                + f"{series[0].ljust(max_series_id_length)}: "
-                + f"[bold]{series[1].ljust(max_series_name_length)}[/]",
-                settings,
-                pretty=True
+            pretty_console.console.print(
+                Padding(
+                    md_description,
+                    pad=(0, 0, 1 if description and i + 1 < len(display_data) else 0, 12)
+                ), end=''
             )
+        print('\n' * settings['new_lines_below'], end='')
+
+    else:
+        for i, series in enumerate(display_data):
+            result += prefixes.get(series[0]) or "\t"
+            result += f"{series[0].ljust(max_series_id_length)}: [bold]{series[1].ljust(max_series_name_length)}[/]\n"
+
+        custom_print(result.strip(), settings, pretty=True)
 
 
 def print_exercise_data(json_data: dict, prefixes: dict = None):
