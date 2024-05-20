@@ -7,7 +7,7 @@ import time
 
 from datetime import datetime
 
-from . import pretty_print, pretty_console, get_data
+from . import pretty_print, get_data, pretty_printer
 
 
 def dump_config(config: dict):
@@ -66,7 +66,7 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
     res = connection.getresponse()
     status = res.status
     if status == 422:
-        pretty_print.custom_print(
+        pretty_printer.custom_print(
             "[i]Patience, young padawan.\n"
             "A cooldown, Dodona servers have, to prevent DDOS attacks, hmm, yes.[/]",
             settings, pretty=True
@@ -74,7 +74,7 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
         return
 
     elif status != 200:
-        pretty_print.custom_print(
+        pretty_printer.custom_print(
             "Error connection to Dodona: " + str(res.status) + '\n'
             + "Reason: " + res.reason,
             settings, pretty=True
@@ -174,7 +174,7 @@ def save_to_file(name: str, submission_id: int, content: str, settings: dict, ex
     with open(file_name, "w") as code_file:
         code_file.write(content)
 
-    pretty_print.custom_print(
+    pretty_printer.custom_print(
         f"Code from your submission for {name} is now saved in:\n"
         f"\t{name}_{submission_id}{extension}",
         settings, pretty=True

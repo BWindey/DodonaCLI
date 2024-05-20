@@ -10,16 +10,16 @@ def info():
 @click.command(help='Display the current version of DodonaCLI. The versioning system '
                     'uses a YYYY.M.D format.')
 def version():
-    from dodonacli.source import get_data, pretty_print
+    from dodonacli.source import get_data, pretty_printer
 
-    pretty_print.custom_print("DodonaCLI " + get_dodonacli_version(), get_data.get_settings(), pretty=True)
+    pretty_printer.custom_print("DodonaCLI " + get_dodonacli_version(), get_data.get_settings(), pretty=True)
 
 
 @click.command(help='Checks if there is a new update available for DodonaCLI.')
 def check_update():
     from packaging.version import parse
     from pkg_info import get_pkg_info
-    from dodonacli.source import get_data, pretty_print
+    from dodonacli.source import get_data, pretty_printer
 
     settings = get_data.get_settings()
     dodonacli_version = get_dodonacli_version()
@@ -33,16 +33,16 @@ def check_update():
     else:
         text = "Your DodonaCLI is up-to-date."
 
-    pretty_print.custom_print(text, settings, pretty=True)
+    pretty_printer.custom_print(text, settings, pretty=True)
 
 
 @click.command(help='Tab completion, very handy for fast use')
 def completion():
-    from dodonacli.source import get_data, pretty_print
+    from dodonacli.source import get_data, pretty_printer
 
     settings = get_data.get_settings()
 
-    pretty_print.custom_print(
+    pretty_printer.custom_print(
         "There are 2 ways of doing tab-completion: \n"
         "   - using Click's default tab-completion for bash/zsh/fish\n"
         "   - using DodonaCLI's custom script for bash only\n"
@@ -70,11 +70,11 @@ def completion():
 @click.command(help="Link to the GitHub page of DodonaCLI. "
                     "Can be handy for the README page, manpages, Issues (bug reports) and pull requests.")
 def github():
-    from dodonacli.source import get_data, pretty_print
+    from dodonacli.source import get_data, pretty_printer
 
     settings = get_data.get_settings()
 
-    pretty_print.custom_print(
+    pretty_printer.custom_print(
         "https://www.github.com/BWindey/DodonaCLI",
         settings, pretty=True
     )
@@ -126,11 +126,11 @@ def changelog():
 
 @click.command(help='Man-pages for DodonaCLI, very professional')
 def man_page():
-    from dodonacli.source import get_data, pretty_print
+    from dodonacli.source import get_data, pretty_printer
 
     settings = get_data.get_settings()
 
-    pretty_print.custom_print(
+    pretty_printer.custom_print(
         "To install a man-page for DodonaCLI, you can download it from GitHub:\n"
         "  https://www.github.com/BWindey/DodonaCLI\n"
         "The man-page files are located under the 'man-page' directory.\n"
