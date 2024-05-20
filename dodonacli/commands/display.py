@@ -12,6 +12,7 @@ def display(force):
 
     # Read configs in
     config = get_data.get_configs()
+    settings = get_data.get_settings()
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
@@ -25,12 +26,12 @@ def display(force):
     if config['course_id'] is None:
         # Print available courses
         json_data = get_data.courses_data(connection, headers)
-        pretty_print.print_courses_data(json_data)
+        pretty_print.print_courses_data(json_data, settings)
 
     elif config['serie_id'] is None:
         # Print available series
         json_data = get_data.series_data(connection, headers, config['course_id'])
-        pretty_print.print_series_data(json_data, force)
+        pretty_print.print_series_data(json_data, settings, force)
 
     elif config['exercise_id'] is None:
         # Print available exercises
@@ -40,9 +41,10 @@ def display(force):
             serie_token = "?token=" + config['serie_token']
 
         json_data = get_data.exercises_data(connection, headers, config['serie_id'], serie_token)
-        pretty_print.print_exercise_data(json_data)
+        pretty_print.print_exercise_data(json_data, settings)
 
     else:
         # Print exercise-description
+        settings = get_data.get_settings()
         json_data = get_data.exercise_data(connection, headers, config['course_id'], config['exercise_id'])
-        pretty_print.print_exercise(json_data, config['TOKEN'], force)
+        pretty_print.print_exercise(json_data, config['TOKEN'], settings, force)

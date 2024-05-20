@@ -2,8 +2,6 @@ import http.client
 import json
 import markdownify
 import re
-import shutil
-import textwrap
 
 from bs4 import BeautifulSoup
 from rich.markdown import Markdown
@@ -12,10 +10,30 @@ from rich.padding import Padding
 from . import get_data, pretty_console, submission_data_handler
 
 
-def print_courses_data(json_data: dict, title: str = "Your courses:", prefixes: dict = None):
+def custom_print(text: str, settings: dict, pretty: bool = False):
+    """
+    Prints out the text with the amount of newlines specified in settings
+    :param text: text to print
+    :param settings: dict with settings
+    :param pretty: whether to use the pretty_console print, or the standard Python print
+    """
+    if pretty:
+        printer = pretty_console.console.print
+    else:
+        printer = print
+
+    printer(
+        '\n' * settings.get('new_lines_above', 0)
+        + text
+        + '\n' * settings.get('new_lines_below', 0)
+    )
+
+
+def print_courses_data(json_data: dict, settings: dict, title: str = "Your courses:", prefixes: dict = None):
     """
     Print out the courses in json_data in a neat way
     :param json_data: json object with data about Dodona courses
+    :param settings: dict with settings
     :param title: title to display above the courses-list
     :param prefixes: dictionary with a prefix for each id in json_data
     """
@@ -23,7 +41,7 @@ def print_courses_data(json_data: dict, title: str = "Your courses:", prefixes: 
         prefixes = {}
 
     # List of tuples where each tuple represents a course by id, name and teacher
-    display_data = []
+    display_data: list[tuple] = []
 
     for field in json_data:
         display_data.append((str(field['id']), field['name'], field['teacher']))
@@ -33,21 +51,20 @@ def print_courses_data(json_data: dict, title: str = "Your courses:", prefixes: 
     max_course_name_length = max(len(e[1]) for e in display_data)
 
     # Print out all courses in display_data
-    pretty_console.console.print(f'\n[u bright_blue]{title}[/]')
+    result = f'[u bright_blue]{title}[/]\n'
     for course in display_data:
-        pretty_console.console.print(
-            (prefixes.get(course[0]) or "\t") +
-            f"{course[0].ljust(max_course_id_length)}: "
-            f"[bold]{course[1].ljust(max_course_name_length)}[/]\tby {course[2]}"
-        )
-    # Newline for clarity
-    print()
+        result += (prefixes.get(course[0]) or "\t")
+        result += (f"{course[0].ljust(max_course_id_length)}: [bold]"
+                   f"{course[1].ljust(max_course_name_length)}[/]\tby {course[2]}\n")
+
+    custom_print(result.strip(), settings, pretty=True)
 
 
-def print_series_data(json_data: dict, force: bool = False, prefixes: dict = None):
+def print_series_data(json_data: dict, settings: dict, force: bool = False, prefixes: dict = None):
     """
-    Print out the exercise-series in json_data in a neat way.
+    Print out the exercise-series in json_data in a neat (unless force) way.
     :param json_data: Json object with data about Dodona exercise-series
+    :param settings: dict with settings
     :param force: Boolean to decide if the series description has to be printed, or only a link to it
     :param prefixes: Dictionary with a prefix for each id in json_data
     """
@@ -70,65 +87,41 @@ def print_series_data(json_data: dict, force: bool = False, prefixes: dict = Non
     max_series_id_length = max(len(e[0]) for e in display_data)
     max_series_name_length = max(len(e[1]) for e in display_data)
 
-    # Newline for clarity
-    print()
     # Print out all the series in display_data while also handling the Markdown inside the series-description
-    pretty_console.console.print("[u bright_blue]All series:[/]")
-    for series in display_data:
-        if force:
-            description = series[2].split('\n')
-            new_description = ''
+    result = "[u bright_blue]All series:[/]\n"
+    if force:
+        pretty_console.console.print('\n' * settings['new_lines_above'] + result, end='')
 
-            for line in description:
-                line = line.rstrip()
+        for i, series in enumerate(display_data):
+            description = series[2].strip('\n')
+            description = re.sub(r'{: *target="_blank"}', '', description).strip()
+            md_description = Markdown(markdownify.markdownify(description))
 
-                # Remove target pattern from links as they try to open the link in a new tab, not useful for terminal
-                line = re.sub(r'{: target="_blank"}', '', line)
-
-                # Replace Markdown bold to Rich Console bold
-                line = re.sub(r'\*\*(.*?)\*\*', r'[bold]\1[/bold]', line)
-
-                # Replace Markdown italics to Rich Console italics if it is not in a (link)
-                pattern = re.compile(r'([ ,][^ (]*)_(.*?)_([^ ]*[ ,.])')
-                line = pattern.sub(r'\1[i]\2[/i]\3', line)
-
-                # Replace Markdown titles to something that appears as a title in terminal
-                line = re.sub(r'##+ (.*)', r'[bold white]\1[/bold white]', line)
-
-                # Split lines in multiple when they are too long for the terminal while keeping all lines indented.
-                if len(line.replace("[bold]", "").replace("[/bold]", "")) > shutil.get_terminal_size().columns - 8:
-                    line = line.split(" ")
-                    new_line = ''
-                    line_size = 0
-                    for word in line:
-                        if line_size + len(word) > shutil.get_terminal_size().columns - 8:
-                            new_line += '\n'
-                            line_size = 0
-                        new_line += word + ' '
-                        line_size += len(word + ' ')
-                    line = new_line
-
-                new_description += line + '\n'
-
-            new_description = textwrap.indent(new_description, '\t')
             pretty_console.console.print(
                 f"\t{series[0].ljust(max_series_id_length)}: "
                 f"[bold]{series[1].ljust(max_series_name_length)}[/]"
-                f"\n{new_description}")
-        else:
-            pretty_console.console.print(
-                (prefixes.get(series[0]) or "\t")
-                + f"{series[0].ljust(max_series_id_length)}: "
-                + f"[bold]{series[1].ljust(max_series_name_length)}[/]"
             )
-    # Newline for clarity
-    print()
+            pretty_console.console.print(
+                Padding(
+                    md_description,
+                    pad=(0, 0, 1 if description and i + 1 < len(display_data) else 0, 12)
+                ), end=''
+            )
+        print('\n' * settings['new_lines_below'], end='')
+
+    else:
+        for i, series in enumerate(display_data):
+            result += prefixes.get(series[0]) or "\t"
+            result += f"{series[0].ljust(max_series_id_length)}: [bold]{series[1].ljust(max_series_name_length)}[/]\n"
+
+        custom_print(result.strip(), settings, pretty=True)
 
 
-def print_exercise_data(json_data: dict, prefixes: dict = None):
+def print_exercise_data(json_data: dict, settings: dict, prefixes: dict = None):
     """
     Print out the exercises in json_data in a neat way
     :param json_data: json object with data about Dodona exercises in a series
+    :param settings: dict with settings
     :param prefixes: dictionary with a prefix for each id in json_data
     """
     if prefixes is None:
@@ -161,7 +154,7 @@ def print_exercise_data(json_data: dict, prefixes: dict = None):
     max_exercise_name_length = max(len(e['name']) for e in display_data)
 
     # Print out all exercises in display_data with indicator about solution-status: solved, wrong or not yet solved
-    pretty_console.console.print('\n[u bright_blue]Exercises:[/]')
+    result = '[u bright_blue]Exercises:[/]\n'
     for exercise in display_data:
         if exercise['type'] == "Exercise":
             if exercise['accepted']:
@@ -170,15 +163,6 @@ def print_exercise_data(json_data: dict, prefixes: dict = None):
                 solve_status = "[bold bright_red]WRONG[/]"
             else:
                 solve_status = "[bold]NOT YET SOLVED[/]"
-
-            """
-            if not exercise['has_solution']:
-                solve_status = "[bold]NOT YET SOLVED[/]"
-            elif exercise['last_solution_is_best'] and exercise['has_correct_solution']:
-                solve_status = "[bold bright_green]SOLVED[/]"
-            else:
-                solve_status = "[bold bright_red]WRONG[/]"
-            """
 
         elif exercise['type'] == "ContentPage":
             if exercise['has_read']:
@@ -189,17 +173,14 @@ def print_exercise_data(json_data: dict, prefixes: dict = None):
         else:
             solve_status = "[bold]SOLVE STATUS UNKNOWN"
 
-        pretty_console.console.print(
-            (prefixes.get(exercise['id']) or "\t")
-            + f"{exercise['id'].ljust(max_exercise_id_length)}: "
-            + f"[bold]{exercise['name'].ljust(max_exercise_name_length)}[/]\t"
-            + solve_status
-        )
-    # Newline for clarity
-    print()
+        result += (prefixes.get(exercise['id']) or "\t")
+        result += f"{exercise['id'].ljust(max_exercise_id_length)}: "
+        result += f"[bold]{exercise['name'].ljust(max_exercise_name_length)}[/]\t" + solve_status + '\n'
+
+    custom_print(result.strip(), settings, pretty=True)
 
 
-def print_exercise(json_data: dict, token: str, force: bool = False):
+def print_exercise(json_data: dict, token: str, settings: dict, force: bool = False):
     """
     Print out the exercise-description.
     Needs to call the Dodona sandbox and convert HTML to text.
@@ -207,31 +188,27 @@ def print_exercise(json_data: dict, token: str, force: bool = False):
     :param token: API-token as authorization
     :param json_data: json object with info about a Dodona exercise
     :param force: boolean to decide if the exercise description has to be printed, or only a link to it
+    :param settings: dict with settings
     """
     if json_data['type'] == 'ContentPage':
-        pretty_console.console.print(
-            "\nNo need to program anything this time, but you'll have to go read this and mark it as read:\n"
-            + json_data['url'].replace(".json", "") + '\n'
+        custom_print(
+            "No need to program anything this time, but you'll have to go read this and mark it as read:\n"
+            + json_data['url'].replace(".json", ""),
+            settings, pretty=True
         )
 
     elif not force:
-        pretty_console.console.print(
-            f"\nYou can find the exercise description at \n{json_data['description_url']}\n"
+        custom_print(
+            f"You can find the exercise description at \n{json_data['description_url']}",
+            settings,
+            pretty=True
         )
 
     else:
-        # Print the HTML with warnings
-        warning = (
-                "\n[u bold bright_red]WARNING:[/] the description may be incorrect, "
-                "DO NOT rely on this for exams and tests!\n"
-                "View in browser: " + json_data['description_url'] + '\n'
-        )
-        pretty_console.console.print(warning)
-
-        pretty_console.console.print(
-            '\n'
-            "Expected programming language: " + json_data['programming_language']['name'] +
-            '\n'
+        custom_print(
+            "Expected programming language: " + json_data['programming_language']['name'] + '\n',
+            {'new_lines_above': settings['new_lines_above']},
+            pretty=True
         )
 
         # Make sandbox.dodona connection for exercise description:
@@ -246,28 +223,41 @@ def print_exercise(json_data: dict, token: str, force: bool = False):
         soup = BeautifulSoup(data, features="html.parser")
         html_description = str(soup.find("div", {"class": "card-supporting-text"}))
 
-        md_description = markdownify.markdownify(html_description)
+        md_description = markdownify.markdownify(html_description).strip()
 
         md = Markdown(md_description)
 
-        pretty_console.console.print(Padding(md, pad=(0, 0, 0, 3)))
+        if settings['paste_force_warning']:
+            # Print the HTML with warnings
+            warning = (
+                    "\n[u bold bright_red]WARNING:[/] the description may be incorrect, "
+                    "DO NOT rely on this for exams and tests!\n"
+                    "View in browser: " + json_data['description_url'] + '\n'
+            )
+            pretty_console.console.print(warning)
+            pretty_console.console.print(Padding(md, pad=(0, 0, 0, 3)))
+            pretty_console.console.print(warning)
+        else:
+            pretty_console.console.print(Padding(md, pad=(0, 0, 0, 3)))
 
-        # Print the HTML with warnings
-        pretty_console.console.print(warning)
+        print('\n' * settings['new_lines_below'], end='')
 
 
-def print_result(json_results: dict):
+def print_result(json_results: dict, url: str, settings: dict):
     """
     Print out the results of a submission in a neat way
     :param json_results: json object with data about a submission
+    :param url: link to the submission
+    :param settings: dict with settings
     """
     if json_results['accepted']:
         # Everything passed, well done!
-        pretty_console.console.print(
-            "[bold bright_green]All tests passed![/] You can continue to next exercise."
-        )
+        result = "[bold bright_green]All tests passed![/] You can continue to next exercise.\n"
     else:
-        pretty_console.console.print(submission_data_handler.submission_data_handler(json_results))
+        result = submission_data_handler.submission_data_handler(json_results, settings).strip() + '\n'
+
+    result += url
+    custom_print(result, settings, pretty=True)
 
 
 def print_status(config: dict):
@@ -287,15 +277,21 @@ def print_status(config: dict):
     )
 
 
-def print_exercise_submissions(json_data: dict):
+def print_exercise_submissions(json_data: dict, settings: dict):
     """
     Print out a list of the (up to) 10 most recent submissions as found in json_data
     :param json_data: Dictionary with submission data
+    :param settings: Dictionary with settings
     """
     pretty_console.console.print(
         "\n[u bright_blue]Most recent submissions:[/]"
     )
-    for i, submission in enumerate(json_data[:10]):
+
+    amount_shown = min(settings['amount_sub_exercise'], len(json_data))
+    if amount_shown == -1:
+        amount_shown = len(json_data)
+
+    for i, submission in enumerate(json_data[:amount_shown]):
         if submission['accepted']:
             accepted_emoji = "[bright_green]:heavy_check_mark:[/bright_green]"
         else:
@@ -313,20 +309,25 @@ def print_exercise_submissions(json_data: dict):
     print()
 
 
-def print_all_submissions(connection: http.client.HTTPSConnection, headers: dict, json_data: dict):
+def print_all_submissions(connection: http.client.HTTPSConnection, headers: dict, json_data: dict, settings: dict):
     """
     Print out a list of the latest 30 submissions for the user, userwide (not tied to an exercise).
     Makes extra requests to Dodona to get the name of the exercises of the submissions
     :param connection: Connection to Dodona
     :param headers: Headers to send with the connection
     :param json_data: Dictionary with submission info
+    :param settings: Dictionary with settings
     :return:
     """
     pretty_console.console.print(
         "\n[u bright_blue]Most recent submissions:[/]"
     )
 
-    for i, submission in enumerate(json_data):
+    amount_shown = min(settings['amount_sub_global'], len(json_data))
+    if amount_shown == -1:
+        amount_shown = len(json_data)
+
+    for i, submission in enumerate(json_data[:amount_shown]):
         if submission['accepted']:
             accepted_emoji = "[bright_green]:heavy_check_mark:[/bright_green]"
         else:

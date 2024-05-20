@@ -23,6 +23,15 @@ def post(file, use_link, check):
 
     # Read configs in
     config = get_data.get_configs()
+    settings = get_data.get_settings()
+
+    # Quick check if combination of selected exercise and -l flag are valid
+    if not use_link and not config['exercise_id']:
+        print(
+            '\n' * settings['new_lines_above']
+            + "No exercise selected! If you want to use a link at the top of your file, use the -l flag."
+            + '\n' * settings['new_lines_below']
+        )
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
@@ -36,43 +45,56 @@ def post(file, use_link, check):
     if use_link:
         with open(file, 'r') as solutionfile:
             link = solutionfile.readline()
-            if link[:2] == '#!':
+
+            # If file starts with hashbang, look at 2nd line
+            if link[:2].strip() == '#!':
+                hashbang = link
                 link = solutionfile.readline()
+
+            # Check if valid link to try to post to
             link_index = link.find("https://dodona.be/")
             if link_index < 0:
-                print("\nNo valid link found on the first line of your file. Please confirm again.\n"
-                      "A valid link starts with 'https://dodona.be/'\n")
+                print(
+                    '\n' * settings['new_lines_above']
+                    + "No valid link found on the first line of your file. Please confirm again.\n"
+                      "A valid link starts with 'https://dodona.be/'"
+                    + '\n' * settings['new_lines_below']
+                )
                 return
             link = link[link_index:]
 
+            # Take out the id's we need
             if link.find("/courses/") != -1:
                 course_id_index_start = link.find("/courses/") + len("/courses/")
                 course_id_index_stop = link.find("/", course_id_index_start)
                 course_id = link[course_id_index_start:course_id_index_stop]
             else:
                 course_id = None
+
             exercise_id_index_start = link.find("/activities/") + len("/activities/")
             exercise_id_index_stop = link.find("/", exercise_id_index_start)
             exercise_id = link[exercise_id_index_start:exercise_id_index_stop]
 
             # We can read the content of the file now as the file-pointer is already at the 2nd line
-            content = solutionfile.read()
+            if hashbang:
+                content = hashbang + solutionfile.read()
+            else:
+                content = solutionfile.read()
+
     else:
-        # Syntax check not available with link at top of file
+        # Syntax check only available without link at top of file
         if check:
             if not syntax_checker.check_syntax(file, config['programming_language']):
                 return
 
         with open(file, 'r') as solutionfile:
             content = solutionfile.read()
+
         course_id = config['course_id']
         exercise_id = config['exercise_id']
 
-    # Make sure the amount of newlines is exactly 1
+    # Make sure the amount of newlines is exactly 1 to make Dodona's linters happy
     content = content.rstrip() + "\n"
 
-    # Post exercise to Dodona, does not work if there is no exercise selected or -l flag not used
-    if not use_link and not config['exercise_id']:
-        print("\nNo exercise selected! If you want to use a link at the top of your file, use the -l flag.\n")
-    else:
-        set_data.post_solution(content, connection, headers, course_id, exercise_id)
+    # Post exercise to Dodona
+    set_data.post_solution(content, connection, headers, course_id, exercise_id, settings)

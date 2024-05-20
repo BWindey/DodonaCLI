@@ -13,7 +13,7 @@ _dodona(){
         mapfile -t COMPREPLY < <(compgen -W "--force --help" -- "$2")
 
     elif [ "$3" == "info" ]; then
-        mapfile -t COMPREPLY < <(compgen -W "version changelog completion github check-update --help" -- "$2")
+        mapfile -t COMPREPLY < <(compgen -W "version changelog completion github check-update man-page --help" -- "$2")
 
     elif [ "$3" == "select" ]; then
         mapfile -t COMPREPLY < <(compgen -W "--other --hidden --help" -- "$2")

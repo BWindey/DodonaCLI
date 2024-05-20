@@ -9,20 +9,30 @@ import click
                                   case_sensitive=False))
 def up(amount):
     from dodonacli.source import set_data, get_data
+
     # Read configs in
     config = get_data.get_configs()
+    settings = get_data.get_settings()
 
     if str(amount).lower().strip() in ('all', 'top'):
         for e in ('exercise_id', 'exercise_name', 'serie_id', 'serie_name', 'serie_token', 'course_id', 'course_name'):
             config[e] = None
-        print("\nDeselected everything.\n")
+        print(
+            '\n' * settings['new_lines_above']
+            + "Deselected everything."
+            + "\n" * settings['new_lines_below']
+        )
 
     elif not isinstance(amount, int) and not amount.isnumeric():
-        print("You didn't provide a number or 'all', nothing deselected.")
+        print(
+            '\n' * settings['new_lines_above']
+            + "You didn't provide a number or 'all', nothing deselected."
+            + "\n" * settings['new_lines_below']
+        )
 
     else:
         levels = int(amount)
-        print()
+        print('\n' * settings['new_lines_above'], end='')
         for _ in range(levels):
             if config.get('exercise_id') is not None:
                 config['exercise_id'] = None
@@ -41,6 +51,6 @@ def up(amount):
             else:
                 print("Nothing selected.")
                 break
-        print()
+        print('\n' * settings['new_lines_below'], end='')
 
     set_data.dump_config(config)

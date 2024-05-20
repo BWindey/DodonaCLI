@@ -4,12 +4,14 @@ PyPI page: https://pypi.org/project/DodonaCLI/#description
 
 **Contents**:
 1) [Disclaimers](#disclaimers)
-2) [How to install](#how-to-install)
+2) [Installation and updating](#installation-and-updating)
 3) [How to use](#how-to-use)
 4) [Flags that could be important](#flags-that-could-be-important)
-5) [How to update](#how-to-update)
-6) [Help, DodonaCLI freezes](#help-dodonacli-freezes)
-7) [Roadmap](#roadmap)
+5) [Settings](#settings)
+6) [Tab-completion and man-pages](#tab-completion-and-man-pages)
+7) [Help, DodonaCLI freezes](#help-dodonacli-freezes)
+8) [Roadmap](#roadmap)
+
 
 ## Disclaimers
 
@@ -17,32 +19,18 @@ PyPI page: https://pypi.org/project/DodonaCLI/#description
 
 - Although the exercise-description formatting is mostly useable, do NOT rely on this for tests and exams! The printed description may be incomplete, or even incorrect. Please be aware of this!
 
-
 - I did my best to format the output of DodonaCLI in a nice manner. If this is not the case for your terminal, please reach out via the [Issues](https://github.com/BWindey/DodonaCLI/issues) to see if we can fix that. I use the Alacritty and Gnome terminal, so if you’re using those, you can be mostly sure that what you see is intended.
 
 
-## How to install
-`pip install DodonaCLI`
+## Installation and updating
+Both installation and updating happen through pip:
+```pip install DodonaCLI```
+and
+```pip install --upgrade DodonaCLI```
 
 Alternatively, you can `git clone https://github.com/BWindey/DodonaCLI` and when inside the DodonaCLI folder,
-do `pip install -e .`.
-This is mostly useful for those wanting to change/add to the code.
-
-Tab-completion is supported for bash. You can 
-download ["dodonacli_completion_script.sh" from GitHub](https://github.com/BWindey/DodonaCLI/blob/master/dodonacli_completion_script.sh),
-and source it in your ~/.bashrc. 
-If you use Zsh or Fish, you can run this:
-```
-_DODONA_COMPLETE=zsh_source dodona > ~/.dodona-complete.zsh
-_DODONA_COMPLETE=fish_source dodona > ~/.config/fish/completions/foo-bar.fish
-```
-On Zsh, you'll have to then source this file in `.zshrc`.
-Testing this on bash (yes, that's possible too), tab-completion was really slow. 
-That's why I'd recommend the first method for bash, 
-and I'm looking to get a full completion script for at least Zsh as well.
-
-
-There is also a manual page. You can download ["dodonacli.1.gz"](https://github.com/BWindey/DodonaCLI/blob/master/man-page/dodonacli.1.gz) and save this in a folder included in `$(manpath)`. 
+do `pip install -e .`. The `-e` flag ensures that when you change files (or did a `git pull`), the cli will use the new code.
+This is mostly useful for those wanting to change/add to the code, or test new features on the develop-branch (not recommended for normal users).
 
 
 ## How to use
@@ -96,7 +84,7 @@ and in the future the formatting-"engine" can improve.
 ### Hidden 
 This flag is used in combination with the `select` command, when selecting an exercise-series that is hidden. 
 Series can be hidden when they are used in tests or exams, and to get to them, you’ll receive a link to it from your 
-teachers. This link will be of the form ".../series/<SERIES-ID>/?token=<TOKEN>". 
+teachers. This link will be of the form `.../series/<SERIES-ID>/?token=<TOKEN>`. 
 The only correct syntax to then select that hidden series with DodonaCLI is:
     ```dodona select --hidden <TOKEN> <SERIES-ID>```
 
@@ -116,11 +104,32 @@ It also has to start with "https:<!-- comment to prevent link from appearing as 
 This link is not included in the solution submitted to the Dodona servers; it is stripped out.
 
 
-## How to update
-Updating is simple: 
-`pip install DodonaCLI --update`
+## Settings
+DodonaCLI has some settings (starting from version 2024.5.20). 
+Currently they are only editable by editing the settings.json file directly.
+In the future, there will be a sub-command to edit these in a more convenient way.
+For info on what is all changeable with these settings, take a look at the changelog
+```dodona info changelog```
 
-Alternatively, if you installed it with cloning from GitHub, you can `git pull`.
+
+## Tab-completion and man-pages
+Tab-completion is supported for bash, fish and zsh. The easiest way to install it, is by following the short instructions at 
+https://click.palletsprojects.com/en/8.1.x/shell-completion/#enabling-completion,
+where you replace all occurences of 'foo-bar' with 'dodona'.
+
+You can also use my custom-written script for bash (if you're using bash), by downloading the autocomplete-script from  
+https://github.com/BWindey/DodonaCLI/blob/master/dodonacli_completion_script.sh 
+and source it in your ~/.bashrc. 
+I personally use this custom one, as it allows me more control over the completion.
+The disadvantage over using this, however, is that you'll need to redownload it if it ever changes.
+I'll promise here and now that if I don't forget, I will always mention in the changelog 
+(`dodona info changelog`), that you need to download the new completion-script.
+
+A while ago, I strongly recommended the custom script, because the other way took about 200ms to complete, which felt slow, but due to some code-restructuring, the completion happens in around 50ms.
+
+There is also a manual page available (very prefessional). 
+You can download ["dodonacli.1.gz"](https://github.com/BWindey/DodonaCLI/blob/master/man-page/dodonacli.1.gz) and save this in a folder included in `$(manpath)`. 
+This will have to be downloaded again if it is updated. I'll let you know in the changelogs.
 
 
 ## Help, DodonaCLI freezes
@@ -135,7 +144,10 @@ to see if this is indeed the issue.
 ## Roadmap
 This section has a bunch of ideas for me to work on, but also for you, the potential contributor!
 Remember to look at the recent branches/commits to see if I’m not working on one of these:
-- user-settings (f.e. auto-download of files, language, formatting, number of submissions shown, config location, ...)
+- user-settings (f.e. auto-download of files, language, formatting, number of submissions shown, ...)
+  - language
+  - whether to save feedback to a file
+  - auto download links from sandbox.dodona when selecting exercise
 - easy (automatic?) downloading of files mentioned in exercise description
 - improve the rendering of all html/markdown frankensteins, in descriptions of exercises and exercise-descriptions 
 - add connection time-out to prevent long waiting when IPv6 doesn’t want to work along
@@ -143,3 +155,8 @@ Remember to look at the recent branches/commits to see if I’m not working on o
 - caching some info for faster navigation and/or autocompletion
 - add indicator to series to mark if all their exercises are completely solved (maybe fetch from html-version)
 - get exercise-names via html-parsing for a submission list to only need 1 API call (instead of 30)
+
+Code cleanup:
+- general refactoring of too large files (>150 lines can often be split)
+- 'display_after_select' should maybe not need to make a 2nd API call? 
+- special print that prints with right amount of new-lines to group that together

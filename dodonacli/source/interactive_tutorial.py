@@ -10,10 +10,11 @@ import dodonacli.source.get_data
 from . import pretty_print, pretty_console, set_data
 
 
-def start_tutorial(config: dict):
+def start_tutorial(config: dict, settings: dict):
     """
     Runs the tutorial and asks for API token if it wasn't present yet.
-    :param config: dict
+    :param config: dict with configs
+    :param settings: dict with settings
     :return: config: dict
     """
     # Clear screen for tutorial
@@ -45,12 +46,12 @@ def start_tutorial(config: dict):
         "Authorization": config['TOKEN']
     }
 
-    config = tutorial_select_course(config, connection, headers)
-    config = tutorial_select_series(config, connection, headers)
-    config = tutorial_select_exercise(config, connection, headers)
+    config = tutorial_select_course(config, connection, headers, settings)
+    config = tutorial_select_series(config, connection, headers, settings)
+    config = tutorial_select_exercise(config, connection, headers, settings)
 
-    tutorial_view_exercise(config, connection, headers)
-    tutorial_post_exercise(config, connection, headers)
+    tutorial_view_exercise(config, connection, headers, settings)
+    tutorial_post_exercise(config, connection, headers, settings)
 
     config = tutorial_conclude(config)
 
@@ -85,7 +86,7 @@ def tutorial_handle_connection(config: dict, connection: http.client.HTTPSConnec
 
 
 def tutorial_select_course(config: dict, connection: http.client.HTTPSConnection,
-                           headers: dict):
+                           headers: dict, settings: dict):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
         "Use the command `dodona display` to show the available courses."
@@ -100,7 +101,7 @@ def tutorial_select_course(config: dict, connection: http.client.HTTPSConnection
     connection.request("GET", "/courses?tab=featured", headers=headers)
     json_data = tutorial_handle_connection(config, connection)
 
-    pretty_print.print_courses_data(json_data, "Featured courses")
+    pretty_print.print_courses_data(json_data, settings, "Featured courses")
 
     pretty_console.console.print(
         "\nSelect now \"The Coder's Apprenctice\" with `dodona select` + the courses id,"
@@ -134,7 +135,7 @@ def tutorial_select_course(config: dict, connection: http.client.HTTPSConnection
 
 
 def tutorial_select_series(config: dict, connection: http.client.HTTPSConnection,
-                           headers: dict):
+                           headers: dict, settings: dict):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
         "Use the command `dodona display` to show the available exercise-series."
@@ -152,7 +153,7 @@ def tutorial_select_series(config: dict, connection: http.client.HTTPSConnection
 
     # To prevent the screen being blasted with a lot of text,
     # only print out the first 6 exercise series
-    pretty_print.print_series_data(json_data[:6])
+    pretty_print.print_series_data(json_data[:6], settings)
 
     pretty_console.console.print(
         "Select now \"2. Using Python\" with `dodona select` + the series' id,"
@@ -194,7 +195,7 @@ def tutorial_select_series(config: dict, connection: http.client.HTTPSConnection
 
 
 def tutorial_select_exercise(config: dict, connection: http.client.HTTPSConnection,
-                             headers: dict):
+                             headers: dict, settings: dict):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
         "Use the command `dodona display` to show the available exercises."
@@ -212,7 +213,7 @@ def tutorial_select_exercise(config: dict, connection: http.client.HTTPSConnecti
     )
     json_data = tutorial_handle_connection(config, connection)
 
-    pretty_print.print_exercise_data(json_data)
+    pretty_print.print_exercise_data(json_data, settings)
 
     pretty_console.console.print(
         "Select now \"Hello, World!\" with `dodona select` + the series' id,\n"
@@ -257,7 +258,7 @@ def tutorial_select_exercise(config: dict, connection: http.client.HTTPSConnecti
 
 
 def tutorial_view_exercise(config: dict, connection: http.client.HTTPSConnection,
-                           headers: dict):
+                           headers: dict, settings: dict):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
         "Use the command `dodona display` to show the description of the exercise."
@@ -276,13 +277,13 @@ def tutorial_view_exercise(config: dict, connection: http.client.HTTPSConnection
         headers=headers)
 
     json_data = tutorial_handle_connection(config, connection)
-    pretty_print.print_exercise(json_data, config['TOKEN'])
+    pretty_print.print_exercise(json_data, config['TOKEN'], settings)
 
     input(" <Enter to continue>")
 
 
 def tutorial_post_exercise(config: dict, connection: http.client.HTTPSConnection,
-                           headers: dict):
+                           headers: dict, settings: dict):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
         "Now you can post the solution. You don't need to write any code for this exercise, \n"
@@ -298,7 +299,8 @@ def tutorial_post_exercise(config: dict, connection: http.client.HTTPSConnection
 
     set_data.post_solution(
         "print( \"Hello, world!\" )",
-        connection, headers, config['course_id'], config['exercise_id']
+        connection, headers, config['course_id'], config['exercise_id'],
+        settings
     )
 
     pretty_console.console.print(

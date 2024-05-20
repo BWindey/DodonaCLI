@@ -25,8 +25,23 @@ def dump_config(config: dict):
         json.dump(config, config_file)
 
 
+def dump_settings(settings: dict):
+    """
+    Save the settings to their file again.
+    :param settings: Dictionary containing the settings
+    """
+    config_home = get_data.get_config_home()
+    settings_file_path = os.path.join(config_home, "settings.json")
+
+    if not os.path.exists(config_home):
+        os.makedirs(config_home)
+
+    with open(settings_file_path, 'w') as settings_file:
+        json.dump(settings, settings_file, indent=4)
+
+
 def post_solution(content: str, connection: http.client.HTTPSConnection, headers: dict, course_id: str,
-                  exercise_id: str):
+                  exercise_id: str, settings):
     """
     Post the solution in content to Dodona and print the result
     :param content: str with the solution to post to Dodona
@@ -34,6 +49,7 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
     :param headers: dict with extra info for connection, mainly authorization needed
     :param course_id:
     :param exercise_id:
+    :param settings: dict with settings
     """
     # Make dict with info needed to post the solution and dump it in a json object
     payload = {
@@ -50,15 +66,19 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
     res = connection.getresponse()
     status = res.status
     if status == 422:
-        pretty_console.console.print(
-            "\n[i]Patience, young padawan.\n"
-            "A cooldown, Dodona servers have, to prevent DDOS attacks, hmm, yes.[/]\n"
+        pretty_print.custom_print(
+            "[i]Patience, young padawan.\n"
+            "A cooldown, Dodona servers have, to prevent DDOS attacks, hmm, yes.[/]",
+            settings, pretty=True
         )
         return
 
     elif status != 200:
-        print("\nError connection to Dodona: " + str(res.status))
-        print("Reason: " + res.reason + '\n')
+        pretty_print.custom_print(
+            "Error connection to Dodona: " + str(res.status) + '\n'
+            + "Reason: " + res.reason,
+            settings, pretty=True
+        )
         return
 
     # Read out the result
@@ -69,9 +89,16 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
     json_data['status'] = "running"
 
     # Spinner animation effect while waiting
-    print()
-    waiting = rich.status.Status("Posting your solution, please wait while the servers evaluate your code.",
-                                 spinner=select_spinner())
+    print('\n' * settings['new_lines_above'], end='')
+
+    # Disable the new_lines_above here for the further prints, but need more than just that settings,
+    # that's why I don't just make a new dict with only 'new_lines_below' in
+    settings['new_lines_above'] = 0
+
+    waiting = rich.status.Status(
+        "Posting your solution, please wait while the servers evaluate your code.",
+        spinner=select_spinner()
+    )
     waiting.start()
     wait_interval = 0
 
@@ -85,7 +112,7 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
         res = connection.getresponse()
         if res.status != 200:
             print("Error connection to Dodona: " + str(res.status))
-            print("Reason: " + res.reason)
+            print("Reason: " + res.reason, end='\n' * settings['new_lines_below'])
             return
 
         json_data: dict[str, str] = json.loads(res.read())
@@ -94,9 +121,11 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
     connection.close()
 
     # Print out the results
-    pretty_print.print_result(json.loads(json_data['result']))
-    pretty_console.console.print(json_data['url'][:json_data['url'].rfind('.')])
-    print()
+    pretty_print.print_result(
+        json.loads(json_data['result']),
+        json_data['url'][:json_data['url'].rfind('.')],
+        settings
+    )
 
 
 def select_spinner() -> str:
@@ -129,13 +158,14 @@ def select_spinner() -> str:
     return random.choice(selection_spinners)
 
 
-def save_to_file(name: str, submission_id: int, content: str, extension: str = ""):
+def save_to_file(name: str, submission_id: int, content: str, settings: dict, extension: str = ""):
     """
     Save code to a file in the users current working directory.
     The resulting file name: {name}_{id}{extension}
     :param name: Name of the file
     :param submission_id: ID to add to the name of file
     :param content: Content to save in the file
+    :param settings: dict with settings
     :param extension: Optional file-extension, has to include the '.'
     """
     name = name.replace(' ', '-')
@@ -144,5 +174,8 @@ def save_to_file(name: str, submission_id: int, content: str, extension: str = "
     with open(file_name, "w") as code_file:
         code_file.write(content)
 
-    print(f"\nCode from your submission for {name} is now saved in:\n"
-          f"\t{name}_{submission_id}{extension}\n")
+    pretty_print.custom_print(
+        f"Code from your submission for {name} is now saved in:\n"
+        f"\t{name}_{submission_id}{extension}",
+        settings, pretty=True
+    )
