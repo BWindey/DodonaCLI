@@ -12,6 +12,7 @@ def display(force):
 
     # Read configs in
     config = get_data.get_configs()
+    settings = get_data.get_settings()
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
@@ -25,7 +26,7 @@ def display(force):
     if config['course_id'] is None:
         # Print available courses
         json_data = get_data.courses_data(connection, headers)
-        pretty_print.print_courses_data(json_data)
+        pretty_print.print_courses_data(json_data, settings)
 
     elif config['serie_id'] is None:
         # Print available series

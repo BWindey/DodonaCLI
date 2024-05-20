@@ -182,11 +182,11 @@ def get_next_course(config, settings, connection, headers, reverse, unsolved):
     # If courses get more data that indicates if it's completely solved,
     # then this will get the same logic found in get_next_exercise()
     if unsolved:
-        print(
-            '\n' * settings['new_lines_above']
-            + "Unsolved flag not supported yet for series and courses."
-            + '\n' * settings['new_lines_below']
+        pretty_print.custom_print(
+            "Unsolved flag not supported yet for series and courses.",
+            {'new_lines_above': settings['new_lines_above']}
         )
+
     next_id = id_list[(previous_id_index + 1 - (2 * reverse)) % len(id_list)]
 
     # Store new course
@@ -196,7 +196,9 @@ def get_next_course(config, settings, connection, headers, reverse, unsolved):
     ][0]
 
     prefixes = make_visual_representation(previous_id, previous_id_index, next_id, id_list)
-    pretty_print.print_courses_data(course_data_json, prefixes=prefixes)
+    pretty_print.print_courses_data(
+        course_data_json, {'new_lines_below': settings['new_lines_below']}, prefixes=prefixes
+    )
 
     return config
 

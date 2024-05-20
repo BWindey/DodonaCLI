@@ -46,7 +46,7 @@ def start_tutorial(config: dict, settings: dict):
         "Authorization": config['TOKEN']
     }
 
-    config = tutorial_select_course(config, connection, headers)
+    config = tutorial_select_course(config, connection, headers, settings)
     config = tutorial_select_series(config, connection, headers)
     config = tutorial_select_exercise(config, connection, headers)
 
@@ -86,7 +86,7 @@ def tutorial_handle_connection(config: dict, connection: http.client.HTTPSConnec
 
 
 def tutorial_select_course(config: dict, connection: http.client.HTTPSConnection,
-                           headers: dict):
+                           headers: dict, settings: dict):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
         "Use the command `dodona display` to show the available courses."
@@ -101,7 +101,7 @@ def tutorial_select_course(config: dict, connection: http.client.HTTPSConnection
     connection.request("GET", "/courses?tab=featured", headers=headers)
     json_data = tutorial_handle_connection(config, connection)
 
-    pretty_print.print_courses_data(json_data, "Featured courses")
+    pretty_print.print_courses_data(json_data, settings, "Featured courses")
 
     pretty_console.console.print(
         "\nSelect now \"The Coder's Apprenctice\" with `dodona select` + the courses id,"
