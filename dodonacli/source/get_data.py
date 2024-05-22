@@ -25,6 +25,11 @@ def handle_connection_request(connection: http.client.HTTPSConnection, connectio
         print("Something went wrong trying to connect to Dodona. This is probably an internet connection problem.")
         exit(2)
 
+    except Exception as e:
+        print("Something went wrong trying to connect to Dodona, can you report this error on Github please?")
+        print(e)
+        connection.close()
+
     return connection
 
 

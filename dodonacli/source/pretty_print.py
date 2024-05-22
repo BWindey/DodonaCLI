@@ -301,8 +301,10 @@ def print_all_submissions(connection: http.client.HTTPSConnection, headers: dict
     :param settings: Dictionary with settings
     :return:
     """
+    print('\n' * settings['new_lines_above'], end='')
+
     pretty_console.console.print(
-        "\n[u bright_blue]Most recent submissions:[/]"
+        "[u bright_blue]Most recent submissions:[/]"
     )
 
     amount_shown = min(settings['amount_sub_global'], len(json_data))
@@ -337,5 +339,4 @@ def print_all_submissions(connection: http.client.HTTPSConnection, headers: dict
         )
 
     connection.close()
-    # Newline for clarity
-    print()
+    print('\n' * settings['new_lines_below'], end='')
