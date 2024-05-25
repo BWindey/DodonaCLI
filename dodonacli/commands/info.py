@@ -88,6 +88,10 @@ def changelog():
     settings = get_data.get_settings()
 
     changelog_raw = (
+        "\t- Added some forgotten settings-driven prints, I think every print now takes the "
+        "new-lines into account.\n"
+        "\t- Moved some imports around, speeding up some subcommands that don't connect to Dodona.\n"
+        "\nThis was a small quick update, so here is the changelog for the previous update:\n\n"
         "\t- Added man-page sub-command to completion-script, oopsie,"
         "forgot that previously\n"
         "\t- Added a settings.json file at the same location as config.json. "
