@@ -1,13 +1,3 @@
-import http.client
-import json
-import markdownify
-import re
-
-from bs4 import BeautifulSoup
-from rich.markdown import Markdown
-from rich.padding import Padding
-
-from . import get_data, pretty_console, submission_data_handler
 from .pretty_printer import custom_print
 
 
@@ -72,6 +62,12 @@ def print_series_data(json_data: dict, settings: dict, force: bool = False, pref
     # Print out all the series in display_data while also handling the Markdown inside the series-description
     result = "[u bright_blue]All series:[/]\n"
     if force:
+        import markdownify
+        import re
+        from rich.markdown import Markdown
+        from rich.padding import Padding
+        from dodonacli.source import pretty_console
+
         pretty_console.console.print('\n' * settings['new_lines_above'] + result, end='')
 
         for i, series in enumerate(display_data):
@@ -187,6 +183,13 @@ def print_exercise(json_data: dict, token: str, settings: dict, force: bool = Fa
         )
 
     else:
+        import http.client
+        import markdownify
+        from bs4 import BeautifulSoup
+        from rich.markdown import Markdown
+        from rich.padding import Padding
+        from dodonacli.source import get_data, pretty_console
+
         custom_print(
             "Expected programming language: " + json_data['programming_language']['name'] + '\n',
             {'new_lines_above': settings['new_lines_above']},
@@ -232,6 +235,8 @@ def print_result(json_results: dict, url: str, settings: dict):
     :param url: link to the submission
     :param settings: dict with settings
     """
+    from dodonacli.source import submission_data_handler
+
     if json_results['accepted']:
         # Everything passed, well done!
         result = "[bold bright_green]All tests passed![/] You can continue to next exercise.\n"
@@ -242,20 +247,22 @@ def print_result(json_results: dict, url: str, settings: dict):
     custom_print(result, settings, pretty=True)
 
 
-def print_status(config: dict):
+def print_status(config: dict, settings: dict):
     """
     Print out the current selection of course, exercise-series and exercise.
     :param config: Dictionary with the configs
+    :param settings: Dictionary with the settings
     """
     course_string = config['course_name']
     if config['course_id'] is not None:
         course_string += f" ({config['course_id']})"
 
-    pretty_console.console.print(
-        f"\n[u bright_blue]Status:[/]\n"
+    custom_print(
+        f"[u bright_blue]Status:[/]\n"
         f"\t{'Course: '.ljust(10)}{course_string}\n"
         f"\t{'Series: '.ljust(10)}{config['serie_name']}\n"
-        f"\t{'Exercise: '.ljust(10)}{config['exercise_name']}\n"
+        f"\t{'Exercise: '.ljust(10)}{config['exercise_name']}",
+        settings, pretty=True
     )
 
 
@@ -265,6 +272,8 @@ def print_exercise_submissions(json_data: dict, settings: dict):
     :param json_data: Dictionary with submission data
     :param settings: Dictionary with settings
     """
+    from dodonacli.source import pretty_console
+
     pretty_console.console.print(
         "\n[u bright_blue]Most recent submissions:[/]"
     )
@@ -291,7 +300,7 @@ def print_exercise_submissions(json_data: dict, settings: dict):
     print()
 
 
-def print_all_submissions(connection: http.client.HTTPSConnection, headers: dict, json_data: dict, settings: dict):
+def print_all_submissions(connection, headers: dict, json_data: dict, settings: dict):
     """
     Print out a list of the latest 30 submissions for the user, userwide (not tied to an exercise).
     Makes extra requests to Dodona to get the name of the exercises of the submissions
@@ -301,6 +310,9 @@ def print_all_submissions(connection: http.client.HTTPSConnection, headers: dict
     :param settings: Dictionary with settings
     :return:
     """
+    from dodonacli.source import pretty_console
+    import json
+
     print('\n' * settings['new_lines_above'], end='')
 
     pretty_console.console.print(
