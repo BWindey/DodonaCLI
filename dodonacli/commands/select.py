@@ -17,7 +17,7 @@ import http.client
               is_flag=True, default=False)
 @click.argument('thing')
 def select(thing, hidden, other):
-    from dodonacli.source import set_data, get_data, pretty_print
+    from dodonacli.source import set_data, get_data, pretty_print, pretty_printer
 
     # Read configs in
     config = get_data.get_configs()
@@ -84,7 +84,7 @@ def select(thing, hidden, other):
 
     else:
         # You can't select more when everything is already selected
-        pretty_print.custom_print(
+        pretty_printer.custom_print(
             "There is already an exercise selected.\n"
             "Please remove selection with 'dodona up' before selecting a new exercise.",
             settings

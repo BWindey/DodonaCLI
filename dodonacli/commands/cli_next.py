@@ -169,7 +169,7 @@ def get_next_series(config, settings, connection, headers, reverse, unsolved):
 
 
 def get_next_course(config, settings, connection, headers, reverse, unsolved):
-    from dodonacli.source import get_data, pretty_print
+    from dodonacli.source import get_data, pretty_print, pretty_printer
 
     # Get all registred courses
     course_data_json = get_data.courses_data(connection, headers)
@@ -182,7 +182,7 @@ def get_next_course(config, settings, connection, headers, reverse, unsolved):
     # If courses get more data that indicates if it's completely solved,
     # then this will get the same logic found in get_next_exercise()
     if unsolved:
-        pretty_print.custom_print(
+        pretty_printer.custom_print(
             "Unsolved flag not supported yet for series and courses.",
             {'new_lines_above': settings['new_lines_above']}
         )

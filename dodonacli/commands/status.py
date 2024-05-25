@@ -7,5 +7,6 @@ def status():
 
     # Read configs in
     config = get_data.get_configs()
+    settings = get_data.get_settings()
 
-    pretty_print.print_status(config)
+    pretty_print.print_status(config, settings)
