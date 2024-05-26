@@ -5,42 +5,58 @@ And adapted to my needs.
 import os
 import re
 
+if os.name != 'nt':
+    import getch
 
-def get_key():  # get keypress using getch, msvcrt = windows
-    try:
-        import getch
 
-        first_char = getch.getch()
-        if first_char == '\x1b':  # arrow keys
-            a = getch.getch()
-            b = getch.getch()
-            return {'[A': 'up', '[B': 'down', '[C': 'right', '[D': 'left'}[a + b]
-        if ord(first_char) == 10:
-            return 'enter'
-        if ord(first_char) == 32:
-            return 'space'
-        else:
-            # normal keys like abcd 1234
-            return first_char
+    def get_key() -> str:
+        return get_key_getch()
 
-    except ImportError:
-        try:
-            import msvcrt
+else:
+    import msvcrt
 
-            key = msvcrt.getch()  # get keypress
-            if key == b'\x1b':  # Esc key to exit
-                return 'esc'
-            elif key == b'\r':  # Enter key to select
-                return 'enter'
-            elif key == b'\x48':  # Up or Down arrow
-                return 'up'
-            elif key == b'\x50':  # Up or Down arrow
-                return 'down'
-            else:
-                return key.decode('utf-8')
-        except ImportError:
-            print("Failed to get input, both getch (Unix) and msvcrt (Windows) don't get imported")
-            exit(1)
+
+    def get_key() -> str:
+        return get_key_msvcrt()
+
+
+def get_key_getch() -> str:  # get keypress using getch, msvcrt = windows
+    """
+     Get pressed key using getch
+     :return: pressed key
+     """
+    first_char = getch.getch()
+    if first_char == '\x1b':  # arrow keys
+        getch.getch()   # will be '[' charachter for arrow key
+        b = getch.getch()   # actual ABCD character
+        return {'A': 'up', 'B': 'down', 'C': 'right', 'D': 'left'}[b]
+    if ord(first_char) == 10:
+        return 'enter'
+    if first_char == '\x0e':
+        return 'down'
+    if first_char == '\x10':
+        return 'up'
+    else:
+        # normal keys like abcd 1234
+        return first_char
+
+
+def get_key_msvcrt() -> str:
+    """
+    Get pressed key using msvcrt
+    :return: pressed key
+    """
+    key = msvcrt.getch()  # get keypress
+    if key == b'\x1b':  # Esc key to exit
+        return 'esc'
+    elif key == b'\r':  # Enter key to select
+        return 'enter'
+    elif key == b'\x48':  # Up or Down arrow
+        return 'up'
+    elif key == b'\x50':  # Up or Down arrow
+        return 'down'
+    else:
+        return key.decode('utf-8')
 
 
 def get_menu_choice(options: list[str]):
@@ -55,10 +71,10 @@ def get_menu_choice(options: list[str]):
     key = get_key()
 
     while key not in shortcuts and key != 'enter':
-        show_menu(options, selected_index)
-        key = get_key()
         if key in ('up', 'down'):  # Up or Down arrow
             selected_index = (selected_index + (1 if key == 'down' else -1) + len(options)) % len(options)
+        show_menu(options, selected_index)
+        key = get_key()
     return shortcuts.get(key, selected_index)
 
 
