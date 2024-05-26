@@ -38,7 +38,7 @@ def get_key_getch() -> str:  # get keypress using getch, msvcrt = windows
             sys.stdin.read(1)       # will be '[' charachter for arrow key
             b = sys.stdin.read(1)   # actual ABCD character
             return {'A': 'up', 'B': 'down', 'C': 'right', 'D': 'left'}[b]
-        if ord(first_char) == 10:
+        if ord(first_char) in (10, 13):
             return 'enter'
         if first_char == '\x0e':
             return 'down'

@@ -30,7 +30,7 @@ def clear_screen():
         os.system("cls")
     else:
         # ANSI escape codes to clear display, is faster than calling 'clear' with os.system
-        print("\033[2J\033[H")
+        print("\033[2J\033[H", end='')
 
 
 def set_amount_newlines(settings_dict: dict) -> bool:
@@ -42,13 +42,13 @@ def set_amount_newlines(settings_dict: dict) -> bool:
     clear_screen()
     print("Leave field empty if you don't want to change it.")
 
-    print("Amount of newlines above each print, currently: " + settings_dict['new_lines_above'] + "")
+    print(f"Amount of newlines above each print, currently: {settings_dict['new_lines_above']}")
     new_lines_above = input("New value: ")
     while new_lines_above != "" and (not new_lines_above.isnumeric() or int(new_lines_above) < 0):
         print("An amount has to be a positive integer!")
         new_lines_above = input("New value: ")
 
-    print("Amount of newlines below each print, currently: " + settings_dict['new_lines_below'] + "")
+    print(f"Amount of newlines below each print, currently: {settings_dict['new_lines_below']}")
     new_lines_below = input("New value: ")
     while new_lines_below != "" and (not new_lines_below.isnumeric() or int(new_lines_below) < 0):
         print("An amount has to be a positive integer!")
