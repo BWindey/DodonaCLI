@@ -1,135 +1,66 @@
-"""
-Blatenly stolen from https://github.com/cornradio/dumb_menu
-And adapted to my needs.
-"""
+import click
 import os
-import re
-
-if os.name != 'nt':
-    import sys
-    import tty
-    import termios
 
 
-    def get_key() -> str:
-        return get_key_getch()
+@click.command(help="Interactive settings-menu to change some settings")
+def settings():
+    from dodonacli.source import menu, get_data
 
-else:
-    import msvcrt
+    settings_dict = get_data.get_settings()
+    anything_changed = False
 
+    menu_items = [
+        "[1] Amount of newlines",
+        "[2] Force warning",
+        "[3] Display after select",
+        "[4] Amount of feedback-items",
+        "[5] Amount of submissions",
+        "[s] Save and quit",
+        "[q] Quit (no save)",
+    ]
 
-    def get_key() -> str:
-        return get_key_msvcrt()
+    selected_index = menu.get_menu_choice(menu_items)
 
-
-def get_key_getch() -> str:  # get keypress using getch, msvcrt = windows
-    """
-     Get pressed key using getch
-     :return: pressed key
-     """
-    file_descriptor = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(file_descriptor)
-
-    try:
-        tty.setraw(file_descriptor)
-        first_char = sys.stdin.read(1)
-
-        if first_char == '\x1b':    # arrow keys
-            sys.stdin.read(1)       # will be '[' charachter for arrow key
-            b = sys.stdin.read(1)   # actual ABCD character
-            return {'A': 'up', 'B': 'down', 'C': 'right', 'D': 'left'}[b]
-        if ord(first_char) == 10:
-            return 'enter'
-        if first_char == '\x0e':
-            return 'down'
-        if first_char == '\x10':
-            return 'up'
-        else:
-            # normal keys like abcd 1234
-            return first_char
-    finally:
-        termios.tcsetattr(file_descriptor, termios.TCSADRAIN, old_settings)
+    if selected_index == 0:
+        anything_changed = set_amount_newlines(settings_dict)
 
 
-def get_key_msvcrt() -> str:
-    """
-    Get pressed key using msvcrt
-    :return: pressed key
-    """
-    key = msvcrt.getch()  # get keypress
-    if key == b'\x1b':  # Esc key to exit
-        return 'esc'
-    elif key == b'\r':  # Enter key to select
-        return 'enter'
-    elif key == b'\x48':  # Up or Down arrow
-        return 'up'
-    elif key == b'\x50':  # Up or Down arrow
-        return 'down'
-    else:
-        return key.decode('utf-8')
-
-
-def get_menu_choice(options: list[str]):
-    """
-    Display a menu, and return the chosen option index
-    :param options: list of strings with the options to display
-    :return: chose option index, as found in the options-list
-    """
-    selected_index = 0
-    shortcuts = scan_short_cuts(options)
-    show_menu(options, selected_index)
-    key = get_key()
-
-    while key not in shortcuts and key != 'enter':
-        if key in ('up', 'down'):  # Up or Down arrow
-            selected_index = (selected_index + (1 if key == 'down' else -1) + len(options)) % len(options)
-        show_menu(options, selected_index)
-        key = get_key()
-    return shortcuts.get(key, selected_index)
-
-
-def scan_short_cuts(options: list[str]) -> dict[str, int]:
-    """
-    Build up dictionary with the short-cut key for each option
-    :param options: list of strings with the options to display
-    :return: dictionary mapping shortcut on index
-    """
-    shortcuts = {}
-    for i, option in enumerate(options):
-        match = re.match(r"\[(.*)](.*)", option)
-        if match:
-            shortcut = match.group(1)
-            shortcuts[shortcut] = i
-
-    return shortcuts
-
-
-def show_menu(options: list[str], selected_index: int):
-    """
-    Print out the actual menu
-    :param options: list of strings with the menu-itmes
-    :param selected_index: index of where cursor is now
-    """
+def clear_screen():
     if os.name == 'nt':
         os.system("cls")
-        result = ""
     else:
         # ANSI escape codes to clear display, is faster than calling 'clear' with os.system
-        result = "\033[2J\033[H"
-
-    result += '\n'.join(
-        f"{'>' * (selected_index == i)} {option}"
-        for i, option in enumerate(options)
-    )
-    print(result)
+        print("\033[2J\033[H")
 
 
-# test code
-if __name__ == "__main__":
-    menu_items = ["[1] Option 1", "[2] Option 2", "[3] Option 3", "[q] Quit"]
-    index = get_menu_choice(menu_items)
+def set_amount_newlines(settings_dict: dict) -> bool:
+    """
+    Asks the user for new values for new_lines above/below, and returns if the new values are changed
+    :param settings_dict:
+    :return:
+    """
+    clear_screen()
+    print("Leave field empty if you don't want to change it.")
 
-    if index != -1:
-        print(f"You selected option {index + 1}: {menu_items[index]}")
-    else:
-        print("You exited the menu.")
+    print("Amount of newlines above each print, currently: " + settings_dict['new_lines_above'] + "")
+    new_lines_above = input("New value: ")
+    while new_lines_above != "" and (not new_lines_above.isnumeric() or int(new_lines_above) < 0):
+        print("An amount has to be a positive integer!")
+        new_lines_above = input("New value: ")
+
+    print("Amount of newlines below each print, currently: " + settings_dict['new_lines_below'] + "")
+    new_lines_below = input("New value: ")
+    while new_lines_below != "" and (not new_lines_below.isnumeric() or int(new_lines_below) < 0):
+        print("An amount has to be a positive integer!")
+        new_lines_below = input("New value: ")
+
+    anything_changed = False
+    if new_lines_above not in (settings_dict['new_lines_above'], ""):
+        settings_dict['new_lines_above'] = int(new_lines_above)
+        anything_changed = True
+
+    if new_lines_below not in (settings_dict['new_lines_below'], ""):
+        settings_dict['new_lines_below'] = int(new_lines_below)
+        anything_changed = False
+
+    return anything_changed
