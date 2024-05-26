@@ -85,6 +85,7 @@ def get_menu_choice(options: list[str]):
             selected_index = (selected_index + (1 if key == 'down' else -1) + len(options)) % len(options)
         show_menu(options, selected_index)
         key = get_key()
+
     return shortcuts.get(key, selected_index)
 
 

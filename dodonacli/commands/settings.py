@@ -4,7 +4,7 @@ import os
 
 @click.command(help="Interactive settings-menu to change some settings")
 def settings():
-    from dodonacli.source import menu, get_data
+    from dodonacli.source import menu, get_data, set_data
 
     settings_dict = get_data.get_settings()
     anything_changed = False
@@ -19,10 +19,15 @@ def settings():
         "[q] Quit (no save)",
     ]
 
-    selected_index = menu.get_menu_choice(menu_items)
+    while (selected_index := menu.get_menu_choice(menu_items)) not in (5, 6):
+        if selected_index == 0:
+            if set_amount_newlines(settings_dict):
+                anything_changed = True
+                # TODO: this doesn't update the menu items
+                menu_items[0] = "[1] Amount of newlines (*)"
 
-    if selected_index == 0:
-        anything_changed = set_amount_newlines(settings_dict)
+    if selected_index == 5 and anything_changed:
+        set_data.dump_settings(settings_dict)
 
 
 def clear_screen():
