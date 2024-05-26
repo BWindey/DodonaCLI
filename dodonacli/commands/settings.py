@@ -6,7 +6,9 @@ import os
 import re
 
 if os.name != 'nt':
-    import getch
+    import sys
+    import tty
+    import termios
 
 
     def get_key() -> str:
@@ -25,20 +27,28 @@ def get_key_getch() -> str:  # get keypress using getch, msvcrt = windows
      Get pressed key using getch
      :return: pressed key
      """
-    first_char = getch.getch()
-    if first_char == '\x1b':  # arrow keys
-        getch.getch()   # will be '[' charachter for arrow key
-        b = getch.getch()   # actual ABCD character
-        return {'A': 'up', 'B': 'down', 'C': 'right', 'D': 'left'}[b]
-    if ord(first_char) == 10:
-        return 'enter'
-    if first_char == '\x0e':
-        return 'down'
-    if first_char == '\x10':
-        return 'up'
-    else:
-        # normal keys like abcd 1234
-        return first_char
+    file_descriptor = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(file_descriptor)
+
+    try:
+        tty.setraw(file_descriptor)
+        first_char = sys.stdin.read(1)
+
+        if first_char == '\x1b':    # arrow keys
+            sys.stdin.read(1)       # will be '[' charachter for arrow key
+            b = sys.stdin.read(1)   # actual ABCD character
+            return {'A': 'up', 'B': 'down', 'C': 'right', 'D': 'left'}[b]
+        if ord(first_char) == 10:
+            return 'enter'
+        if first_char == '\x0e':
+            return 'down'
+        if first_char == '\x10':
+            return 'up'
+        else:
+            # normal keys like abcd 1234
+            return first_char
+    finally:
+        termios.tcsetattr(file_descriptor, termios.TCSADRAIN, old_settings)
 
 
 def get_key_msvcrt() -> str:
