@@ -24,9 +24,9 @@ else:
 
 def get_key_getch() -> str:  # get keypress using getch, msvcrt = windows
     """
-     Get pressed key using getch
-     :return: pressed key
-     """
+    Get pressed key using getch
+    :return: pressed key
+    """
     file_descriptor = sys.stdin.fileno()
     old_settings = termios.tcgetattr(file_descriptor)
 
@@ -69,21 +69,24 @@ def get_key_msvcrt() -> str:
         return key.decode('utf-8')
 
 
-def get_menu_choice(options: list[str]):
+def get_menu_choice(options: list[str], title: str = "", body: str = "", start_index: int = 0) -> int:
     """
     Display a menu, and return the chosen option index
     :param options: list of strings with the options to display
+    :param title: title of the menu to display above
+    :param body: piece of text to display between the title and the menu
+    :param start_index: index to put the '> ' next to in the beginning
     :return: chose option index, as found in the options-list
     """
-    selected_index = 0
+    selected_index = start_index
     shortcuts = scan_short_cuts(options)
-    show_menu(options, selected_index)
+    show_menu(options, selected_index, title)
     key = get_key()
 
     while key not in shortcuts and key != 'enter':
         if key in ('up', 'down'):  # Up or Down arrow
             selected_index = (selected_index + (1 if key == 'down' else -1) + len(options)) % len(options)
-        show_menu(options, selected_index)
+        show_menu(options, selected_index, title, body)
         key = get_key()
 
     return shortcuts.get(key, selected_index)
@@ -105,18 +108,20 @@ def scan_short_cuts(options: list[str]) -> dict[str, int]:
     return shortcuts
 
 
-def show_menu(options: list[str], selected_index: int):
+def show_menu(options: list[str], selected_index: int, title: str, body: str):
     """
     Print out the actual menu
     :param options: list of strings with the menu-itmes
     :param selected_index: index of where cursor is now
+    :param title: title to display above the options
+    :param body: piece of text to display between the title and the menu
     """
     if os.name == 'nt':
         os.system("cls")
-        result = ""
+        result = title + '\n' * (len(title.strip()) > 0) + body + '\n' * (len(body.strip()) > 0)
     else:
         # ANSI escape codes to clear display, is faster than calling 'clear' with os.system
-        result = "\033[2J\033[H"
+        result = "\033[2J\033[H" + title + '\n' * (len(title.strip()) > 0) + body + '\n' * (len(body.strip()) > 0)
 
     result += '\n'.join(
         f"{'>' * (selected_index == i)} {option}"
