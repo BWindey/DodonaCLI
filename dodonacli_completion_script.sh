@@ -26,7 +26,7 @@ _dodona(){
 
     elif [ "$3" == "post" ]; then
         mapfile -t COMPREPLY < <(compgen -f -- "$2" | grep -v "\.swp")
-        mapfile -t COMPREPLY < <(compgen -W "--help --use-link -l -c --check" -- "$2" )
+        mapfile -t -O "${#COMPREPLY[@]}" COMPREPLY < <(compgen -W "--help --use-link -l -c --check" -- "$2" )
 
     elif [[ "$3" =~ ^-[lc]+$ ]] || [ "$3" == "--use-link" ] || [ "$3" == "--check" ]; then
         mapfile -t COMPREPLY < <(compgen -f -- "$2")
