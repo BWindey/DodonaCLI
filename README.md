@@ -28,8 +28,10 @@ Both installation and updating happen through pip:
 and
 ```pip install --upgrade DodonaCLI```
 
-Alternatively, you can `git clone https://github.com/BWindey/DodonaCLI` and when inside the DodonaCLI folder,
-do `pip install -e .`. The `-e` flag ensures that when you change files (or did a `git pull`), the cli will use the new code.
+You can check for a new update with 
+```dodona info check-update```
+
+Alternatively, you can `git clone https://github.com/BWindey/DodonaCLI && cd DodonaCLI`, and do `pip install -e .`. The `-e` flag ensures that when you change files (or did a `git pull`), the cli will use the new code.
 This is mostly useful for those wanting to change/add to the code, or test new features on the develop-branch (not recommended for normal users).
 
 
