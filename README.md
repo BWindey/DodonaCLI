@@ -28,8 +28,10 @@ Both installation and updating happen through pip:
 and
 ```pip install --upgrade DodonaCLI```
 
-Alternatively, you can `git clone https://github.com/BWindey/DodonaCLI` and when inside the DodonaCLI folder,
-do `pip install -e .`. The `-e` flag ensures that when you change files (or did a `git pull`), the cli will use the new code.
+You can check for a new update with 
+```dodona info check-update```
+
+Alternatively, you can `git clone https://github.com/BWindey/DodonaCLI && cd DodonaCLI`, and do `pip install -e .`. The `-e` flag ensures that when you change files (or did a `git pull`), the cli will use the new code.
 This is mostly useful for those wanting to change/add to the code, or test new features on the develop-branch (not recommended for normal users).
 
 
@@ -149,14 +151,8 @@ Remember to look at the recent branches/commits to see if I’m not working on o
   - whether to save feedback to a file
   - auto download links from sandbox.dodona when selecting exercise
 - easy (automatic?) downloading of files mentioned in exercise description
-- improve the rendering of all html/markdown frankensteins, in descriptions of exercises and exercise-descriptions 
 - add connection time-out to prevent long waiting when IPv6 doesn’t want to work along
 - add support for more languages syntax checkers
 - caching some info for faster navigation and/or autocompletion
 - add indicator to series to mark if all their exercises are completely solved (maybe fetch from html-version)
 - get exercise-names via html-parsing for a submission list to only need 1 API call (instead of 30)
-
-Code cleanup:
-- general refactoring of too large files (>150 lines can often be split)
-- 'display_after_select' should maybe not need to make a 2nd API call? 
-- special print that prints with right amount of new-lines to group that together
