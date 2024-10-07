@@ -241,7 +241,10 @@ def print_result(json_results: dict, url: str, settings: dict):
         # Everything passed, well done!
         result = "[bold bright_green]All tests passed![/] You can continue to next exercise.\n"
     else:
-        result = submission_data_handler.submission_data_handler(json_results, settings).strip() + '\n'
+        try:
+            result = submission_data_handler.submission_data_handler(json_results, settings).strip() + '\n'
+        except Exception as _:
+            result = "[bold bright_red]Some tests failed.[/]\n"
 
     result += url
     custom_print(result, settings, pretty=True)
