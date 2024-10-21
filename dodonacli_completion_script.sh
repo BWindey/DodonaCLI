@@ -22,11 +22,11 @@ _dodona(){
         mapfile -t COMPREPLY < <(compgen -W "--reverse --unsolved --help" -- "$2")
 
     elif [ "$3" == "dodona" ]; then
-        mapfile -t COMPREPLY < <(compgen -W "display info next post select status sub tutorial up --help" -- "$2")
+        mapfile -t COMPREPLY < <(compgen -W "display info next post select settings status sub tutorial up --help" -- "$2")
 
     elif [ "$3" == "post" ]; then
         mapfile -t COMPREPLY < <(compgen -f -- "$2" | grep -v "\.swp")
-        mapfile -t COMPREPLY < <(compgen -W "--help --use-link -l -c --check" -- "$2" )
+        mapfile -t -O "${#COMPREPLY[@]}" COMPREPLY < <(compgen -W "--help --use-link -l -c --check" -- "$2" )
 
     elif [[ "$3" =~ ^-[lc]+$ ]] || [ "$3" == "--use-link" ] || [ "$3" == "--check" ]; then
         mapfile -t COMPREPLY < <(compgen -f -- "$2")

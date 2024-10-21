@@ -347,7 +347,7 @@ def tutorial_conclude(config: dict) -> dict:
 
     # End of tutorial
     pretty_console.console.print(
-        "\nRemember you can always use `dodona \[subcommand\] --help` to get "
+        "\nRemember you can always use `dodona [subcommand] --help` to get "
         "help with all the subcommands.\n"
         "Additionally there is a manual-page you can download "
         "from https://www.github.com/BWindey/DodonaCLI .\n"
