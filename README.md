@@ -28,7 +28,7 @@ Both installation and updating happen through pip:
 and
 ```pip install --upgrade DodonaCLI```
 
-You can check for a new update with 
+You can check for a new update with
 ```dodona info check-update```
 
 Alternatively, you can `git clone https://github.com/BWindey/DodonaCLI && cd DodonaCLI`, and do `pip install -e .`. The `-e` flag ensures that when you change files (or did a `git pull`), the cli will use the new code.
@@ -48,7 +48,7 @@ You can imagine it as a tree structure:
 If nothing is selected, you’ll need to select a course first, then an exercise series, then an exercise.
 You can always see all your available options with `dodona display`.
 Posting a solution will only work if you have selected an exercise, and can be done with `dodona post <SOLUTION_FILE>`.
-This tree-like structure also explains the name of the deselect-flag: `up` and `uptop`. 
+This tree-like structure also explains the name of the deselect-flag: `up` and `uptop`.
 To select the next exercise, you don’t need to go up and select the new one, you can use the `next` command.
 
 The first time you use DodonaCLI, the program will ask you for an API token,
@@ -67,7 +67,7 @@ but be aware that this file gets overwritten when you select a new exercise that
 
 
 ## Flags that could be important
-There currently are four flags that can be important when working with non-standard exercises. 
+There currently are four flags that can be important when working with non-standard exercises.
 - --force
 - --hidden
 - --other
@@ -75,23 +75,23 @@ There currently are four flags that can be important when working with non-stand
 
 They are all context-specific. A short explanation can be found in the help-pages, a slightly longer one here:
 
-### Force 
-This flag is used in combination with the `display` command, when viewing exercise-series and exercise-descriptions. 
-It will do its best to render the html and markdown of the web-page in your terminal. 
-You’ll quickly see why this is hidden behind this flag: the formatting can be awful. 
+### Force
+This flag is used in combination with the `display` command, when viewing exercise-series and exercise-descriptions.
+It will do its best to render the html and markdown of the web-page in your terminal.
+You’ll quickly see why this is hidden behind this flag: the formatting can be awful.
 For some exercise-descriptions, this can, however, be a nice addition,
 and in the future the formatting-"engine" can improve.
 
 
-### Hidden 
-This flag is used in combination with the `select` command, when selecting an exercise-series that is hidden. 
-Series can be hidden when they are used in tests or exams, and to get to them, you’ll receive a link to it from your 
-teachers. This link will be of the form `.../series/<SERIES-ID>/?token=<TOKEN>`. 
+### Hidden
+This flag is used in combination with the `select` command, when selecting an exercise-series that is hidden.
+Series can be hidden when they are used in tests or exams, and to get to them, you’ll receive a link to it from your
+teachers. This link will be of the form `.../series/<SERIES-ID>/?token=<TOKEN>`.
 The only correct syntax to then select that hidden series with DodonaCLI is:
     ```dodona select --hidden <TOKEN> <SERIES-ID>```
 
 
-### Other 
+### Other
 This flag is used in combination with the `select` command, when selecting a course you’re not registered for.
 This allows you, for example, to select courses from previous years to try out those old tests or exams.
 You cannot find these courses when using `display`,
@@ -107,39 +107,51 @@ This link is not included in the solution submitted to the Dodona servers; it is
 
 
 ## Settings
-DodonaCLI has some settings (starting from version 2024.5.20). 
+DodonaCLI has some settings (starting from version 2024.5.20).
 Currently they are only editable by editing the settings.json file directly.
-In the future, there will be a sub-command to edit these in a more convenient way.
-For info on what is all changeable with these settings, take a look at the changelog
-```dodona info changelog```
+In the future, there could be a sub-command to edit these in a more convenient way.
+The current settings, with their default values, are:
+- `amount_feedback_context`: 3
+- `amount_feedback_tab`: -1
+- `amount_feedback_testcase`: 3
+- `amount_feedback_test`: 3
+- `amount_sub_exercise`: 10
+- `amount_sub_global`: -1 (-1 means that it will show everything Dodona gives)
+- `new_lines_above`: 1 (How many new lines above DodonaCLI output)
+- `new_lines_below`: 1
+- `paste_force_warning`: false
+- `display_series_after_select`: false
+- `display_exercises_after_select`: false
+- `display_exercise_after_select`: false
+
 
 
 ## Tab-completion and man-pages
-Tab-completion is supported for bash, fish and zsh. The easiest way to install it, is by following the short instructions at 
+Tab-completion is supported for bash, fish and zsh. The easiest way to install it, is by following the short instructions at
 https://click.palletsprojects.com/en/8.1.x/shell-completion/#enabling-completion,
 where you replace all occurences of 'foo-bar' with 'dodona'.
 
-You can also use my custom-written script for bash (if you're using bash), by downloading the autocomplete-script from  
-https://github.com/BWindey/DodonaCLI/blob/master/dodonacli_completion_script.sh 
-and source it in your ~/.bashrc. 
+You can also use my custom-written script for bash (if you're using bash), by downloading the autocomplete-script from
+https://github.com/BWindey/DodonaCLI/blob/master/dodonacli_completion_script.sh
+and source it in your ~/.bashrc.
 I personally use this custom one, as it allows me more control over the completion.
 The disadvantage over using this, however, is that you'll need to redownload it if it ever changes.
-I'll promise here and now that if I don't forget, I will always mention in the changelog 
+I'll promise here and now that if I don't forget, I will always mention in the changelog
 (`dodona info changelog`), that you need to download the new completion-script.
 
 A while ago, I strongly recommended the custom script, because the other way took about 200ms to complete, which felt slow, but due to some code-restructuring, the completion happens in around 50ms.
 
-There is also a manual page available (very prefessional). 
-You can download ["dodonacli.1.gz"](https://github.com/BWindey/DodonaCLI/blob/master/man-page/dodonacli.1.gz) and save this in a folder included in `$(manpath)`. 
+There is also a manual page available (very prefessional).
+You can download ["dodonacli.1.gz"](https://github.com/BWindey/DodonaCLI/blob/master/man-page/dodonacli.1.gz) and save this in a folder included in `$(manpath)`.
 This will have to be downloaded again if it is updated. I'll let you know in the changelogs.
 
 
 ## Help, DodonaCLI freezes
 Since I just got this situation, I wanted to tell you how I fixed it.
 My computer didn’t succeed in making any network requests over IPv6, and thus waited and waited and waited ...
-To fix this, I had to disable IPv6 entirely on my own pc. 
+To fix this, I had to disable IPv6 entirely on my own pc.
 This is not something I’ll show you how to do, you’ll have to do some research on the internet.
-Before trying that, confirm first if this is indeed the issue by running `wget` with --inet6-only and --inet4-only 
+Before trying that, confirm first if this is indeed the issue by running `wget` with --inet6-only and --inet4-only
 to see if this is indeed the issue.
 
 
