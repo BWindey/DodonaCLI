@@ -1,6 +1,9 @@
 def submission_data_handler(submission_data: dict, settings: dict) -> str:
     result = ""
-    result += submission_tabs_handler(submission_data, settings)
+    if submission_data['description'] == "Timeout":
+        result += "\n[bold bright_red]Timout[/]"
+    else:
+        result += submission_tabs_handler(submission_data, settings)
     result += submission_code_annotations(submission_data)
     return result
 
