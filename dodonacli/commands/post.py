@@ -49,21 +49,20 @@ def post(file, use_link, check):
         )
         return
 
-    # Start up the connection to Dodona
-    connection = http.client.HTTPSConnection("dodona.be")
-    headers = {
-        "Content-type": "application/json",
-        "Accept": "application/json",
-        "Authorization": config['TOKEN']
-    }
+    # Must be filled in:
+    content = None
+    course_id = None
+    exercise_id = None
 
     # Check for the link at the top of the file
     if use_link:
+        # TODO: move this link extraction to different function (diff. file?)
         with open(file, 'r') as solutionfile:
             link = solutionfile.readline()
 
             # If file starts with hashbang, look at 2nd line
-            if link[:2].strip() == '#!':
+            hashbang = None
+            if link[:2] == '#!':
                 hashbang = link
                 link = solutionfile.readline()
 
@@ -123,6 +122,14 @@ def post(file, use_link, check):
     # Make sure the amount of newlines is exactly 1 to make Dodona's linters
     # happy
     content = content.rstrip() + "\n"
+
+    # Start up the connection to Dodona
+    connection = http.client.HTTPSConnection("dodona.be")
+    headers = {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+        "Authorization": config['TOKEN']
+    }
 
     # Post exercise to Dodona
     set_data.post_solution(
