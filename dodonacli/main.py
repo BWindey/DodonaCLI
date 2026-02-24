@@ -5,14 +5,16 @@ from dodonacli.commands import tutorial, submission, display, info
 from dodonacli.commands import settings
 
 
-@click.group(help="A 3rd party Command Line Interface for Dodona. "
-                  "Finally you have no need to exit your terminal anymore!\n"
-                  "Use --help for more info about flags, or read the README on discord.")
+@click.group(
+    help="A 3rd party Command Line Interface for Dodona. "
+    "Finally you have no need to exit your terminal anymore!\n"
+    "Use --help for more info about flags, or read the README on GitHub."
+)
 def main():
     """
     A Command Line Interface for Dodona.
     Finally, you have no need to exit your terminal any more!
-    Use --help for more info about flags, or read the README on discord.
+    Use --help for more info about flags, or read the README on GitHub.
     """
     pass
 

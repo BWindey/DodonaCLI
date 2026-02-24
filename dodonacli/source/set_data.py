@@ -40,8 +40,10 @@ def dump_settings(settings: dict):
         json.dump(settings, settings_file, indent=4)
 
 
-def post_solution(content: str, connection: http.client.HTTPSConnection, headers: dict, course_id: str,
-                  exercise_id: str, settings):
+def post_solution(
+    content: str, connection: http.client.HTTPSConnection, headers: dict,
+    course_id: str, exercise_id: str, settings
+):
     """
     Post the solution in content to Dodona and print the result
     :param content: str with the solution to post to Dodona
@@ -51,7 +53,8 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
     :param exercise_id:
     :param settings: dict with settings
     """
-    # Make dict with info needed to post the solution and dump it in a json object
+    # Make dict with info needed to post the solution and dump it in a
+    # json object
     payload = {
         "submission": {
             "code": content,
@@ -62,13 +65,16 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
     json_payload = json.dumps(payload)
 
     # Connect to Dodona and post the solution
-    connection.request("POST", "/submissions.json", json_payload, headers=headers)
+    connection.request(
+        "POST", "/submissions.json", json_payload, headers=headers
+    )
     res = connection.getresponse()
     status = res.status
     if status == 422:
         pretty_printer.custom_print(
             "[i]Patience, young padawan.\n"
-            "A cooldown, Dodona servers have, to prevent DDOS attacks, hmm, yes.[/]",
+            "A cooldown, Dodona servers have, "
+            "to prevent DDOS attacks, hmm, yes.[/]",
             settings, pretty=True
         )
         return
@@ -85,34 +91,44 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
     data = res.read()
     json_data = json.loads(data)
 
-    # The Dodona servers take some time to test the solution, so we'll have to keeping asking for an answer.
+    # The Dodona servers take some time to test the solution,
+    # so we'll have to keeping asking for an answer.
     json_data['status'] = "running"
 
     # Spinner animation effect while waiting
     print('\n' * settings['new_lines_above'], end='')
 
-    # Disable the new_lines_above here for the further prints, but need more than just that settings,
+    # Disable the new_lines_above here for the further prints,
+    # but need more than just that settings,
     # that's why I don't just make a new dict with only 'new_lines_below' in
     settings['new_lines_above'] = 0
 
     waiting = rich.status.Status(
-        "Posting your solution, please wait while the servers evaluate your code.",
+        "Posting your solution, "
+        "please wait while the servers evaluate your code.",
         spinner=select_spinner()
     )
     waiting.start()
     wait_interval = 0
 
     while json_data['status'] in ("running", "queued"):
-        # Aks the servers for the result with an increasing interval, from 1s to 5s, as the website does
+        # Aks the servers for the result with an increasing interval,
+        # from 1s to 5s, as the website does
         time.sleep(wait_interval)
         if wait_interval < 5:
             wait_interval += 1
 
-        connection.request("GET", "/submissions/" + str(json_data['id']) + ".json", headers=headers)
+        connection.request(
+            "GET", "/submissions/" + str(json_data['id']) + ".json",
+            headers=headers
+        )
         res = connection.getresponse()
         if res.status != 200:
             print("Error connection to Dodona: " + str(res.status))
-            print("Reason: " + res.reason, end='\n' * settings['new_lines_below'])
+            print(
+                "Reason: " + res.reason,
+                end='\n' * settings['new_lines_below']
+            )
             return
 
         json_data: dict[str, str] = json.loads(res.read())
@@ -131,14 +147,18 @@ def post_solution(content: str, connection: http.client.HTTPSConnection, headers
 def select_spinner() -> str:
     """
     Select a random spinner-name from a preselected list with good animations.
-    During Christmas season (11th of Decembre - 8th of January) it always returns the same Christmas spinner.
+    During Christmas season (11th of Decembre - 8th of January) it always
+    returns the same Christmas spinner.
     :return: Name of Rich spinner
     """
-    selection_spinners = ['arrow', 'balloon', 'balloon2', 'bouncingBar', 'boxBounce', 'boxBounce2', 'circle',
-                          'circleHalves', 'circleQuarters', 'clock', 'dots2', 'dots3', 'dots4', 'dots5', 'dots6',
-                          'dots7', 'dots8', 'dots8Bit', 'dots9', 'dots10', 'dots11', 'dots12', 'dqpb', 'flip',
-                          'hamburger', 'layer', 'line', 'line2', 'moon', 'pipe', 'point', 'runner', 'simpleDots',
-                          'simpleDotsScrolling', 'squareCorners']
+    selection_spinners = [
+        'arrow', 'balloon', 'balloon2', 'bouncingBar', 'boxBounce',
+        'boxBounce2', 'circle', 'circleHalves', 'circleQuarters', 'clock',
+        'dots2', 'dots3', 'dots4', 'dots5', 'dots6', 'dots7', 'dots8',
+        'dots8Bit', 'dots9', 'dots10', 'dots11', 'dots12', 'dqpb', 'flip',
+        'hamburger', 'layer', 'line', 'line2', 'moon', 'pipe', 'point',
+        'runner', 'simpleDots', 'simpleDotsScrolling', 'squareCorners'
+    ]
 
     christmas_spinner = 'christmas'
 
@@ -158,7 +178,10 @@ def select_spinner() -> str:
     return random.choice(selection_spinners)
 
 
-def save_to_file(name: str, submission_id: int, content: str, settings: dict, extension: str = ""):
+def save_to_file(
+    name: str, submission_id: int, content: str, settings: dict,
+    extension: str = ""
+):
     """
     Save code to a file in the users current working directory.
     The resulting file name: {name}_{id}{extension}

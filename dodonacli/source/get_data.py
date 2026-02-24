@@ -7,8 +7,10 @@ import socket
 from . import set_data, interactive_tutorial
 
 
-def handle_connection_request(connection: http.client.HTTPSConnection, connection_type: str,
-                              link: str, headers: dict) -> http.client.HTTPSConnection:
+def handle_connection_request(
+    connection: http.client.HTTPSConnection, connection_type: str,
+    link: str, headers: dict
+) -> http.client.HTTPSConnection:
     """
     Handle of a connection request.
     Quits the program if an exception occurs and displays why.
@@ -22,11 +24,17 @@ def handle_connection_request(connection: http.client.HTTPSConnection, connectio
         connection.request(connection_type, link, headers=headers)
 
     except socket.gaierror:
-        print("Something went wrong trying to connect to Dodona. This is probably an internet connection problem.")
+        print(
+            "Something went wrong trying to connect to Dodona. "
+            "This is probably an internet connection problem."
+        )
         exit(2)
 
     except Exception as e:
-        print("Something went wrong trying to connect to Dodona, can you report this error on Github please?")
+        print(
+            "Something went wrong trying to connect to Dodona, "
+            "can you report this error on Github please?"
+        )
         print(e)
         connection.close()
 
@@ -60,13 +68,17 @@ def courses_data(connection: http.client.HTTPSConnection, headers: dict):
     :param headers: Dict with extra info, mainly autorization needed
     :return: json object with info about available courses
     """
-    connection = handle_connection_request(connection, "GET", "/courses?tab=my", headers)
+    connection = handle_connection_request(
+        connection, "GET", "/courses?tab=my", headers
+    )
     data = handle_connection_response(connection)
 
     return json.loads(data)
 
 
-def series_data(connection: http.client.HTTPSConnection, headers: dict, course_id: str):
+def series_data(
+    connection: http.client.HTTPSConnection, headers: dict, course_id: str
+):
     """
     Get all exercise-series of course
     :param connection: HTTPSConnection object to the main Dodona page
@@ -74,13 +86,18 @@ def series_data(connection: http.client.HTTPSConnection, headers: dict, course_i
     :param course_id: int id of the course to find series from
     :return: json object with info about available series
     """
-    connection = handle_connection_request(connection, "GET", "/courses/" + course_id + "/series", headers=headers)
+    connection = handle_connection_request(
+        connection, "GET", "/courses/" + course_id + "/series", headers=headers
+    )
     data = handle_connection_response(connection)
 
     return json.loads(data)
 
 
-def exercises_data(connection: http.client.HTTPSConnection, headers: dict, series_id: str, serie_token: str = ""):
+def exercises_data(
+    connection: http.client.HTTPSConnection, headers: dict, series_id: str,
+    serie_token: str = ""
+):
     """
     Get all exercises of exercise-serie
     :param connection: HTTPSConnection object to the main Dodona page
@@ -100,7 +117,10 @@ def exercises_data(connection: http.client.HTTPSConnection, headers: dict, serie
     return json.loads(data)
 
 
-def exercise_data(connection: http.client.HTTPSConnection, headers: dict, course_id: str, exercise_id: str):
+def exercise_data(
+    connection: http.client.HTTPSConnection, headers: dict, course_id: str,
+    exercise_id: str
+):
     """
     Get exercise-info for selected exercise
     :param connection: HTTPSConnection object to the main Dodona page
@@ -119,7 +139,9 @@ def exercise_data(connection: http.client.HTTPSConnection, headers: dict, course
     return json.loads(data)
 
 
-def exercise_submissions(config: dict, connection: http.client.HTTPSConnection, headers: dict) -> dict:
+def exercise_submissions(
+    config: dict, connection: http.client.HTTPSConnection, headers: dict
+) -> dict:
     """
     Get the last 30 submissions for the current selected exercise
     :param config: Dictionary containing the configs
@@ -160,7 +182,10 @@ def all_submissions(connection: http.client.HTTPSConnection, headers: dict) -> d
     return json.loads(data)
 
 
-def submission_info(submission_id: int, connection: http.client.HTTPSConnection, headers: dict, config) -> dict:
+def submission_info(
+    submission_id: int, connection: http.client.HTTPSConnection, headers: dict,
+    config
+) -> dict:
     """
     Get all the info about the submission together with the name of its exercise.
     :param submission_id: Submission id to get the info about
@@ -180,7 +205,9 @@ def submission_info(submission_id: int, connection: http.client.HTTPSConnection,
 
     exercise_id = json_data['exercise'].split('/')[-1].replace('.json', '')
 
-    exercise = exercise_data(connection, headers, config['course_id'], exercise_id)
+    exercise = exercise_data(
+        connection, headers, config['course_id'], exercise_id
+    )
 
     json_data['exercise_name'] = exercise['name']
 
@@ -221,19 +248,26 @@ def get_extension(programming_language: str) -> str:
 
 def get_config_home():
     """
-    Returns the path of the config home, this directory stores the config.json file
+    Returns the path of the config home, this directory stores the config.json
+    file
     :return: The path to the config directory
     """
     # The case switch syntax was introduced in python 3.10
     system = platform.system()
     if system == "Linux":
-        platform_config_path = os.getenv("XDG_CONFIG_HOME", default=os.getenv("HOME") + "/.config/")
+        platform_config_path = os.getenv(
+            "XDG_CONFIG_HOME", default=os.getenv("HOME") + "/.config/"
+        )
     elif system == "Darwin":  # aka macOS
-        platform_config_path = os.path.join(os.getenv("HOME"), "Library/Application Support")
+        platform_config_path = os.path.join(
+            os.getenv("HOME"), "Library/Application Support"
+        )
     elif system == "Windows":
         platform_config_path = os.getenv("APPDATA")
     else:
-        return os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../config.json")
+        return os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "../../config.json"
+        )
     return os.path.join(platform_config_path, "DodonaCLI")
 
 
@@ -248,34 +282,47 @@ def get_configs():
     # Fallback to the old path
     needs_migration = False
     if not os.path.exists(config_file_path):
-        config_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../config.json")
+        config_file_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "../../config.json"
+        )
         needs_migration = True
 
-    # First try to open, if unable to open, create a new config-file and ask user for a token
+    # First try to open, if unable to open, create a new config-file and ask
+    # user for a token
     try:
         with open(config_file_path, "r") as file:
             config = json.load(file)
             config = validate_config(config)
             if needs_migration:
                 set_data.dump_config(config)
-                print("config.json has been migrated, the old file is at", os.path.abspath(config_file_path))
+                print(
+                    "config.json has been migrated, the old file is at",
+                    os.path.abspath(config_file_path)
+                )
 
     except FileNotFoundError:
         # Create config dictionary
         config: dict[str, str | None] = {
             e: None
-            for e in ["course_id", "course_name", "serie_id", "serie_name", "exercise_id",
-                      "exercise_name"]
+            for e in [
+                "course_id", "course_name", "serie_id", "serie_name",
+                "exercise_id", "exercise_name"
+            ]
         }
 
-        print("\nThis may be your first time using DodonaCLI, do you wish to follow a short tutorial?")
+        print(
+            "\nThis may be your first time using DodonaCLI, "
+            "do you wish to follow a short tutorial?"
+        )
         answer = input("(yes/no): ")
 
         if answer.lower().startswith("yes"):
             settings = get_settings()
             config = interactive_tutorial.start_tutorial(config, settings)
         else:
-            config["TOKEN"] = input('API-Token not found! Enter your code here: ')
+            config["TOKEN"] = input(
+                'API-Token not found! Enter your code here: '
+            )
 
         # Save configs
         set_data.dump_config(config)
@@ -297,7 +344,9 @@ def validate_config(config: dict):
         "serie_token", "programming_language"
     )
     for key in keys_to_check:
-        if key not in config or (not isinstance(config[key], str) and config[key] is not None):
+        if key not in config or (
+            not isinstance(config[key], str) and config[key] is not None
+        ):
             config[key] = None
 
     if "TOKEN" not in config:
@@ -379,7 +428,9 @@ def validate_settings(settings: dict):
 
     # Add missing settings with their default value
     for setting in settings_to_check:
-        if setting not in settings or not isinstance(settings[setting], type(settings_to_check[setting])):
+        if setting not in settings or not isinstance(
+            settings[setting], type(settings_to_check[setting])
+        ):
             settings[setting] = settings_to_check[setting]
             anything_changed = True
 

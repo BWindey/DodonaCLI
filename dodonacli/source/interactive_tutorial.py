@@ -1,6 +1,6 @@
 """
-This file will contain everything needed to provide a tutorial to first-time users.
-It uses "The Coder's Apprentice" featured course on Dodona.
+This file will contain everything needed to provide a tutorial to first-time
+users. It uses "The Coder's Apprentice" featured course on Dodona.
 """
 import http.client
 import json
@@ -58,7 +58,9 @@ def start_tutorial(config: dict, settings: dict):
     return config
 
 
-def tutorial_handle_connection(config: dict, connection: http.client.HTTPSConnection):
+def tutorial_handle_connection(
+    config: dict, connection: http.client.HTTPSConnection
+):
     res = connection.getresponse()
     status = res.status
 
@@ -70,7 +72,9 @@ def tutorial_handle_connection(config: dict, connection: http.client.HTTPSConnec
             set_data.dump_config(config)
 
         else:
-            pretty_console.console.print("Error connecting to Dodona: " + str(status))
+            pretty_console.console.print(
+                "Error connecting to Dodona: " + str(status)
+            )
             pretty_console.console.print("Reason: " + res.reason)
 
         pretty_console.console.print(
@@ -85,8 +89,10 @@ def tutorial_handle_connection(config: dict, connection: http.client.HTTPSConnec
     return json.loads(data)
 
 
-def tutorial_select_course(config: dict, connection: http.client.HTTPSConnection,
-                           headers: dict, settings: dict):
+def tutorial_select_course(
+    config: dict, connection: http.client.HTTPSConnection,
+    headers: dict, settings: dict
+):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
         "Use the command `dodona display` to show the available courses."
@@ -104,7 +110,8 @@ def tutorial_select_course(config: dict, connection: http.client.HTTPSConnection
     pretty_print.print_courses_data(json_data, settings, "Featured courses")
 
     pretty_console.console.print(
-        "\nSelect now \"The Coder's Apprenctice\" with `dodona select` + the courses id,"
+        "\nSelect now \"The Coder's Apprenctice\" "
+        "with `dodona select` + the courses id,"
         "\nor (distinct part of) the courses name"
     )
     command = input("$ ")
@@ -114,8 +121,13 @@ def tutorial_select_course(config: dict, connection: http.client.HTTPSConnection
         command = input("$ ")
 
     dod, sel, course = command.split()
-    if (len(command.split()) < 3 or
-            course != "296" and course.lower() not in "The Coder's Apprentice".lower()):
+    if (
+        len(command.split()) < 3
+        or (
+            course != "296"
+            and course.lower() not in "The Coder's Apprentice".lower()
+        )
+    ):
         pretty_console.console.print(
             "\t[red]Watch out[/], you used a wrong id or name to select"
             "\"The Coder's Apprentice\"!\n"
@@ -127,18 +139,22 @@ def tutorial_select_course(config: dict, connection: http.client.HTTPSConnection
     config['course_name'] = "The Coder's Apprentice"
 
     pretty_console.console.print(
-        "The course is now selected, let's continue with selecting an exercise-series.\n"
+        "The course is now selected, "
+        "let's continue with selecting an exercise-series.\n"
     )
     input(" <Enter to continue>")
 
     return config
 
 
-def tutorial_select_series(config: dict, connection: http.client.HTTPSConnection,
-                           headers: dict, settings: dict):
+def tutorial_select_series(
+    config: dict, connection: http.client.HTTPSConnection,
+    headers: dict, settings: dict
+):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
-        "Use the command `dodona display` to show the available exercise-series."
+        "Use the command `dodona display` to show the available "
+        "exercise-series."
     )
     command = input("$ ")
 
@@ -166,10 +182,16 @@ def tutorial_select_series(config: dict, connection: http.client.HTTPSConnection
         command = input("$ ")
 
     dod, sel, series = command.split()
-    if (len(command.split()) < 3
-            or series != "2592" and series.lower() not in "2. Using Python".lower()):
+    if (
+        len(command.split()) < 3
+        or (
+            series != "2592"
+            and series.lower() not in "2. Using Python".lower()
+        )
+    ):
         pretty_console.console.print(
-            "\tWatch out, you used a wrong id or name to select \"2. Using Python\"!\n"
+            "\tWatch out, you used a wrong id or name to select "
+            "\"2. Using Python\"!\n"
             "\tThe tutorial will continue as if you selected it right,"
             "but pay attention next time."
         )
@@ -178,8 +200,8 @@ def tutorial_select_series(config: dict, connection: http.client.HTTPSConnection
     config['serie_name'] = "2. Using Python"
 
     pretty_console.console.print(
-        "\nWith the exercise-series now selected, it's time to introcude `dodona status`, "
-        "give it a try!"
+        "\nWith the exercise-series now selected, it's time to introcude "
+        "`dodona status`, give it a try!"
     )
     command = input("$ ")
 
@@ -187,15 +209,17 @@ def tutorial_select_series(config: dict, connection: http.client.HTTPSConnection
         print("\tThat was not the right command, please try again")
         command = input("$ ")
 
-    pretty_print.print_status(config)
+    pretty_print.print_status(config, settings)
     print("Fantastic, let's move on to selecting an exercise.\n")
     input(" <Enter to continue>")
 
     return config
 
 
-def tutorial_select_exercise(config: dict, connection: http.client.HTTPSConnection,
-                             headers: dict, settings: dict):
+def tutorial_select_exercise(
+    config: dict, connection: http.client.HTTPSConnection,
+    headers: dict, settings: dict
+):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
         "Use the command `dodona display` to show the available exercises."
@@ -226,10 +250,16 @@ def tutorial_select_exercise(config: dict, connection: http.client.HTTPSConnecti
         command = input("$ ")
 
     dod, sel, exercise = command.split()
-    if (len(command.split()) < 3
-            or exercise != "1399231809" and exercise.lower() not in "Hello, World!".lower()):
+    if (
+        len(command.split()) < 3
+        or (
+            exercise != "1399231809"
+            and exercise.lower() not in "Hello, World!".lower()
+        )
+    ):
         pretty_console.console.print(
-            "\tWatch out, you used a wrong id or name to select \"2. Using Python\"!\n"
+            "\tWatch out, you used a wrong id or name to select "
+            "\"Hello, World\"!\n"
             "\tThe tutorial will continue as if you selected it right, "
             "but pay attention next time."
         )
@@ -237,31 +267,30 @@ def tutorial_select_exercise(config: dict, connection: http.client.HTTPSConnecti
     config['exercise_id'] = 1399231809
     config['exercise_name'] = "Hello, World!"
 
-    # This exercise has boilerplate code
-    with open('boilerplate.py', 'w') as boilerplate:
-        boilerplate.write(json_data[5]['boilerplate'])
-
     pretty_console.console.print(
         "This exercise has some boilerplate code attached to it,\n"
-        "here is its content:\n|\t"
+        "here is its content:\n\n|\t"
         + json_data[5]['boilerplate'].strip()
-        + "\nNormally, this file will be saved to your disk, "
-          "with the file-extension of the programming-language of the exercise.\n"
+        + "\n\nNormally, this file will be saved to your disk, with the "
+          "file-extension of the programming-language of the exercise.\n"
     )
 
     pretty_console.console.print(
-        "The exercise is now selected, let's move on to viewing an exercise description.\n"
+        "The exercise is now selected, "
+        "let's move on to viewing an exercise description.\n"
     )
     input(" <Enter to continue>")
 
     return config
 
 
-def tutorial_view_exercise(config: dict, connection: http.client.HTTPSConnection,
-                           headers: dict, settings: dict):
+def tutorial_view_exercise(
+    config: dict, connection: http.client.HTTPSConnection,
+    headers: dict, settings: dict
+):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
-        "Use the command `dodona display` to show the description of the exercise."
+        "Use the command `dodona display` to show a link to the exercise."
     )
     command = input("$ ")
 
@@ -282,14 +311,18 @@ def tutorial_view_exercise(config: dict, connection: http.client.HTTPSConnection
     input(" <Enter to continue>")
 
 
-def tutorial_post_exercise(config: dict, connection: http.client.HTTPSConnection,
-                           headers: dict, settings: dict):
+def tutorial_post_exercise(
+    config: dict, connection: http.client.HTTPSConnection,
+    headers: dict, settings: dict
+):
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
-        "Now you can post the solution. You don't need to write any code for this exercise, \n"
+        "Now you can post the solution. "
+        "You don't need to write any code for this exercise, \n"
         "as it is already writtin in the 'boilerplate.py'-file.\n"
         "You can post it with the command `dodona post <SOLUTION_FILE_NAME>`.\n"
-        "Replace <SOLUTION_FILE_NAME> with the correct file-name, in this case 'boilerplate.py'."
+        "Replace <SOLUTION_FILE_NAME> with the correct file-name, "
+        "in this case 'boilerplate.py'."
     )
     command = input("$ ")
 
@@ -305,7 +338,8 @@ def tutorial_post_exercise(config: dict, connection: http.client.HTTPSConnection
 
     pretty_console.console.print(
         "Nice, programmed that like a pro.\n"
-        "You're nearly done with this tutorial, I want to show you one last thing. \n"
+        "You're nearly done with this tutorial, "
+        "I want to show you one last thing. \n"
     )
     input(" <Enter to continue>")
 
@@ -313,10 +347,10 @@ def tutorial_post_exercise(config: dict, connection: http.client.HTTPSConnection
 def tutorial_conclude(config: dict) -> dict:
     os.system('cls' if os.name == 'nt' else 'clear')
     pretty_console.console.print(
-        "It's time deselect everything. You can do this with the "
-        "'up' command + a selection from [1|2|3|all|top].\n"
-        "The numbers specify the amount of levels you'll deselect, while all/top deselects "
-        "everything at once."
+        "It's time deselect everything. \nYou can do this with the "
+        "'up' command followed by selection from [1|2|3|all|top].\n"
+        "The numbers specify the amount of levels you'll deselect, while "
+        "all/top deselects everything at once."
     )
 
     command = input("$ ")
@@ -337,10 +371,13 @@ def tutorial_conclude(config: dict) -> dict:
     amount = command.replace("dodona up", "").strip()
     print()
     if amount in ("all", "top", "3"):
-        print("Deselected everything")
+        print("Deselected everything.")
+    elif amount == "":
+        print("Deselected everything to save on time. Normally this would "
+              "deselect 1 level.")
     elif amount.isnumeric():
         print("Deselected everything to save on time. Normally this would "
-              "deselect " + amount + " levels")
+              "deselect " + amount + " levels.")
     else:
         print("You didn't enter a valid amount, but I'll let it slip now.\n"
               "Deselected everything.")
@@ -351,7 +388,8 @@ def tutorial_conclude(config: dict) -> dict:
         "help with all the subcommands.\n"
         "Additionally there is a manual-page you can download "
         "from https://www.github.com/BWindey/DodonaCLI .\n"
-        "I would strongly encourage you to read through the README there as well."
+        "I would strongly encourage you to read through the README there as "
+        "well.\n"
     )
 
     return config

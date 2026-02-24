@@ -108,7 +108,7 @@ def post(file, use_link, check):
         # Syntax check only available without link at top of file
         if check:
             syntax_ok = syntax_checker.check_syntax(
-                file, config['programming_language']
+                file, config['programming_language'], settings
             )
             if not syntax_ok:
                 return
