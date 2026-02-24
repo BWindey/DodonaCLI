@@ -47,6 +47,7 @@ def post(file, use_link, check):
             + "your file, use the -l flag."
             + '\n' * settings['new_lines_below']
         )
+        return
 
     # Start up the connection to Dodona
     connection = http.client.HTTPSConnection("dodona.be")
