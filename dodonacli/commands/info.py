@@ -106,6 +106,11 @@ def changelog():
     changelog_raw = (
         "- Fixed 'dodona post -l/--use-link', that was bugged but I had never "
         "used it before apparently.\n"
+        "- Refactored all dodona source lines to be shorter, please howl at me"
+        " on GitHub when there are any issues!\n"
+        "- Extracted boilerplate logic to new function which makes it behave "
+        "the same between 'dodona next' and 'dodona select', and uses a better"
+        " filename for it.\n"
         "\n<br/>\n\n"
         "\tAs always, you can use the '--help' flag after every command and "
         "sub-command to learn more.\n"
