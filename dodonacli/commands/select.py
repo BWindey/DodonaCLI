@@ -4,20 +4,27 @@ import http.client
 
 @click.command(
     help="Select based on id or name. Depends on current selection. "
-         "If nothing is selected, it will try to select a course, "
-         "then an exercise-series, then an exercise. "
-         "Will not work with invalid id's or names without flag.")
-@click.option("--hidden", "-hidden",
-              help="Access a hidden series. Only available when trying to select "
-                   "exercise series."
-                   "\n\nUsage: dodona select --hidden <TOKEN> <SERIES_ID>")
-@click.option("--other", "-other",
-              help="Select a course that you're not registered for. Only works with "
-                   "an id, not a name.",
-              is_flag=True, default=False)
+    "If nothing is selected, it will try to select a course, "
+    "then an exercise-series, then an exercise. "
+    "Will not work with invalid id's or names without flag."
+)
+@click.option(
+    "--hidden", "-hidden",
+    help="Access a hidden series. Only available when trying to select "
+    "exercise series."
+    "\n\nUsage: dodona select --hidden <TOKEN> <SERIES_ID>"
+    )
+@click.option(
+    "--other", "-other",
+    help="Select a course that you're not registered for. Only works with "
+    "an id, not a name.",
+    is_flag=True, default=False
+)
 @click.argument('thing')
 def select(thing, hidden, other):
-    from dodonacli.source import set_data, get_data, pretty_print, pretty_printer
+    from dodonacli.source import (
+        set_data, get_data, pretty_print, pretty_printer
+    )
 
     # Read configs in
     config = get_data.get_configs()
@@ -35,26 +42,41 @@ def select(thing, hidden, other):
         if settings['display_series_after_select']:
             config = select_course(
                 connection, headers, thing, config,
-                {'new_lines_above': settings['new_lines_above'], 'new_lines_below': 1},
+                {
+                    'new_lines_above': settings['new_lines_above'],
+                    'new_lines_below': 1
+                },
                 other
             )
             # Print available series
-            json_data = get_data.series_data(connection, headers, config['course_id'])
-            pretty_print.print_series_data(json_data, {'new_lines_below': settings['new_lines_below']})
+            json_data = get_data.series_data(
+                connection, headers, config['course_id']
+            )
+            pretty_print.print_series_data(
+                json_data, {'new_lines_below': settings['new_lines_below']}
+            )
         else:
-            config = select_course(connection, headers, thing, config, settings, other)
+            config = select_course(
+                connection, headers, thing, config, settings, other
+            )
 
     elif config['serie_id'] is None:
         if settings['display_exercises_after_select']:
             if hidden:
                 config = select_hidden_series(
                     connection, headers, thing, hidden, config,
-                    {'new_lines_above': settings['new_lines_above'], 'new_lines_below': 1}
+                    {
+                        'new_lines_above': settings['new_lines_above'],
+                        'new_lines_below': 1
+                    }
                 )
             else:
                 config = select_series(
                     connection, headers, thing, config,
-                    {'new_lines_above': settings['new_lines_above'], 'new_lines_below': 1}
+                    {
+                        'new_lines_above': settings['new_lines_above'],
+                        'new_lines_below': 1
+                    }
                 )
             # Print available exercises
             if config['serie_token'] is None:
@@ -62,31 +84,49 @@ def select(thing, hidden, other):
             else:
                 serie_token = "?token=" + config['serie_token']
 
-            json_data = get_data.exercises_data(connection, headers, config['serie_id'], serie_token)
-            pretty_print.print_exercise_data(json_data, {'new_lines_below': settings['new_lines_below']})
+            json_data = get_data.exercises_data(
+                connection, headers, config['serie_id'], serie_token
+            )
+            pretty_print.print_exercise_data(
+                json_data, {'new_lines_below': settings['new_lines_below']}
+            )
         else:
             if hidden:
-                config = select_hidden_series(connection, headers, thing, hidden, config, settings)
+                config = select_hidden_series(
+                    connection, headers, thing, hidden, config, settings
+                )
             else:
-                config = select_series(connection, headers, thing, config, settings)
+                config = select_series(
+                    connection, headers, thing, config, settings
+                )
 
     elif config['exercise_id'] is None:
         if settings['display_exercise_after_select']:
             config = select_exercise(
                 connection, headers, thing, config,
-                {'new_lines_above': settings['new_lines_above'], 'new_lines_below': 1}
+                {
+                    'new_lines_above': settings['new_lines_above'],
+                    'new_lines_below': 1
+                }
             )
             # Print exercise-description
-            json_data = get_data.exercise_data(connection, headers, config['course_id'], config['exercise_id'])
-            pretty_print.print_exercise(json_data, config['TOKEN'], {'new_lines_below': settings['new_lines_below']})
+            json_data = get_data.exercise_data(
+                connection, headers, config['course_id'], config['exercise_id']
+            )
+            pretty_print.print_exercise(
+                json_data, config['TOKEN'],
+                {'new_lines_below': settings['new_lines_below']}
+            )
         else:
-            config = select_exercise(connection, headers, thing, config, settings)
+            config = select_exercise(
+                connection, headers, thing, config, settings
+            )
 
     else:
         # You can't select more when everything is already selected
         pretty_printer.custom_print(
-            "There is already an exercise selected.\n"
-            "Please remove selection with 'dodona up' before selecting a new exercise.",
+            "There is already an exercise selected.\nPlease remove selection "
+            "with 'dodona up' before selecting a new exercise.",
             settings
         )
         return
@@ -97,17 +137,25 @@ def select(thing, hidden, other):
     return
 
 
-def select_course(connection: http.client.HTTPSConnection, headers: dict,
-                  thing: str, config: dict, settings: dict, other: bool) -> dict:
+def select_course(
+    connection: http.client.HTTPSConnection, headers: dict, thing: str,
+    config: dict, settings: dict, other: bool
+) -> dict:
     if not other:
-        return select_registered_course(connection, headers, thing, config, settings)
+        return select_registered_course(
+            connection, headers, thing, config, settings
+        )
     else:
-        return select_unregistered_course(connection, headers, thing, config, settings)
+        return select_unregistered_course(
+            connection, headers, thing, config, settings
+        )
 
 
-def select_registered_course(connection: http.client.HTTPSConnection,
-                             headers: dict, course: str, config: dict, settings: dict) -> dict:
-    from dodonacli.source import pretty_console, get_data
+def select_registered_course(
+    connection: http.client.HTTPSConnection,
+    headers: dict, course: str, config: dict, settings: dict
+) -> dict:
+    from dodonacli.source import pretty_printer, get_data
 
     # Get all registered courses to check if a valid course was selected
     data_courses = get_data.courses_data(connection, headers)
@@ -118,10 +166,9 @@ def select_registered_course(connection: http.client.HTTPSConnection,
         config['course_id'] = course
         config['course_name'] = courses[course]
 
-        pretty_console.console.print(
-            '\n' * settings['new_lines_above']
-            + f"Course [bold]\"{courses[course]}\"[/] selected."
-            + '\n' * settings['new_lines_below']
+        pretty_printer.custom_print(
+            f"Course [bold]\"{courses[course]}\"[/] selected.",
+            settings, pretty=True
         )
     else:
         for course_item in courses.items():
@@ -129,10 +176,9 @@ def select_registered_course(connection: http.client.HTTPSConnection,
                 config['course_id'] = course_item[0]
                 config['course_name'] = course_item[1]
 
-                pretty_console.console.print(
-                    '\n' * settings['new_lines_above']
-                    + f"Course [bold]\"{courses[course_item[0]]}\" [/] selected."
-                    + '\n' * settings['new_lines_below']
+                pretty_printer.custom_print(
+                    f"Course [bold]\"{courses[course_item[0]]}\"[/] selected.",
+                    settings, pretty=True
                 )
 
                 # We found it, we can stop searching
@@ -140,54 +186,53 @@ def select_registered_course(connection: http.client.HTTPSConnection,
 
     # If config_id is still empty, nothing is found:
     if config['course_id'] is None:
-        print(
-            '\n' * settings['new_lines_above']
-            + "Not a valid course-id or -name."
-            + '\n' * settings['new_lines_below']
+        pretty_printer.custom_print(
+           "Not a valid course-id or -name.", settings
         )
+        exit(1)
 
     return config
 
 
-def select_unregistered_course(connection: http.client.HTTPSConnection,
-                               headers: dict, course_id: str, config: dict, settings: dict) -> dict:
+def select_unregistered_course(
+    connection: http.client.HTTPSConnection,
+    headers: dict, course_id: str, config: dict, settings: dict
+) -> dict:
     import json
-    from dodonacli.source import pretty_console, get_data
+    from dodonacli.source import pretty_printer, get_data
 
     # Has to be an id, because it's not possible to match against names
     if not course_id.isnumeric():
-        print(
-            '\n' * settings['new_lines_above']
-            + "The selection needs to be an id (all numbers). "
-              "It's not possible to match by name."
-            + '\n' * settings['new_lines_below']
+        pretty_printer.custom_print(
+            "The selection needs to be an id (all numbers). "
+            "It's not possible to match by name.", settings
         )
-        return config
+        exit(1)
 
     link = f"/courses/{course_id}"
-    connection = get_data.handle_connection_request(connection, "GET", link, headers)
+    connection = get_data.handle_connection_request(
+        connection, "GET", link, headers
+    )
 
     res = connection.getresponse()
 
     if res.status != 200:
-        print(
-            '\n' * settings['new_lines_above']
-            + "Something went wrong trying to select this course.\n"
-              "Make sure you have a valid course-id.\n"
-              "\tResonse code: " + str(res.status) +
-            "\n\tReason: " + str(res.reason).strip()
-            + '\n' * settings['new_lines_below']
+        pretty_printer.custom_print(
+            "Something went wrong trying to select this course.\n"
+            "Make sure you have a valid course-id.\n"
+            "\tResponse code: " + str(res.status) +
+            "\n\tReason: " + str(res.reason).strip(),
+            settings, pretty=True
         )
-        return config
+        exit(1)
 
     json_data = json.loads(res.read())
     config['course_id'] = course_id
     config['course_name'] = json_data['name']
 
-    pretty_console.console.print(
-        '\n' * settings['new_lines_above']
-        + f"Course [bold]\"{json_data['name']}\"[/] selected."
-        + '\n' * settings['new_lines_below']
+    pretty_printer.custom_print(
+        f"Course [bold]\"{json_data['name']}\"[/] selected.",
+        settings, pretty=True
     )
 
     return config
@@ -195,53 +240,54 @@ def select_unregistered_course(connection: http.client.HTTPSConnection,
 
 def select_series(connection: http.client.HTTPSConnection, headers: dict,
                   thing: str, config: dict, settings: dict):
-    from dodonacli.source import pretty_console, get_data
+    from dodonacli.source import pretty_printer, get_data
 
-    data_series = get_data.series_data(connection, headers, config['course_id'])
+    data_series = get_data.series_data(
+        connection, headers, config['course_id']
+    )
 
     series = {str(serie['id']): serie['name'] for serie in data_series}
 
     if thing.isnumeric() and thing in series:
         config['serie_id'] = thing
         config['serie_name'] = series[thing]
-        pretty_console.console.print(
-            '\n' * settings['new_lines_above']
-            + f"Series [bold]\"{series[thing]}\"[/] selected."
-            + '\n' * settings['new_lines_below']
+        pretty_printer.custom_print(
+            f"Series [bold]\"{series[thing]}\"[/] selected.",
+            settings, pretty=True
         )
     else:
         for serie in series.items():
             if thing.lower() in serie[1].lower():
                 config['serie_id'] = serie[0]
                 config['serie_name'] = serie[1]
-                pretty_console.console.print(
-                    '\n' * settings['new_lines_above']
-                    + f"Series [bold]\"{series[serie[0]]}\"[/] selected."
-                    + '\n' * settings['new_lines_below']
+                pretty_printer.custom_print(
+                    f"Series [bold]\"{series[serie[0]]}\"[/] selected.",
+                    settings, pretty=True
                 )
                 break
     if config['serie_id'] is None:
-        print(
-            '\n' * settings['new_lines_above']
-            + "Not a valid series id or -name!"
-            + '\n' * settings['new_lines_below']
+        pretty_printer.custom_print(
+            "Not a valid series id or -name!", settings
         )
+        exit(1)
 
     return config
 
 
-def select_hidden_series(connection: http.client.HTTPSConnection, headers: dict,
-                         series_id: str, series_token: str, config: dict, settings: dict):
+def select_hidden_series(
+    connection: http.client.HTTPSConnection, headers: dict,
+    series_id: str, series_token: str, config: dict, settings: dict
+):
     import json
-    from dodonacli.source import pretty_console, get_data
+    from dodonacli.source import pretty_printer, get_data
 
     if not series_id.isnumeric():
-        print(
-            '\n' * settings['new_lines_above']
-            + "Well, this won't work without a valid series-ID (only numeric characters). Please try again."
-            + '\n' * settings['new_lines_below']
+        pretty_printer.custom_print(
+            "Well, this won't work without a valid series-ID (only numeric "
+            "characters). Please try again.",
+            settings
         )
-        return config
+        exit(1)
 
     link = f"/series/{series_id}?token={series_token}"
     connection = get_data.handle_connection_request(
@@ -250,26 +296,24 @@ def select_hidden_series(connection: http.client.HTTPSConnection, headers: dict,
     res = connection.getresponse()
 
     if res.status != 200:
-        print(
-            '\n' * settings['new_lines_above']
-            + "Something went wrong trying to select the hidden series.\n"
-              "Check if you got the right series-id "
-              "(seen in /series/<serie_id> in the link you got).\n"
-              "\tResponse code: " + str(res.status)
-            + "\n\tReason: " + str(res.reason).strip()
-            + '\n' * settings['new_lines_below']
+        pretty_printer.custom_print(
+            "Something went wrong trying to select the hidden series.\n"
+            "Check if you got the right series-id "
+            "(seen in /series/<serie_id> in the link you got).\n"
+            "\tResponse code: " + str(res.status) +
+            "\n\tReason: " + str(res.reason).strip(),
+            settings
         )
-        return config
+        exit(1)
 
     json_data = json.loads(res.read())
     config['serie_id'] = series_id
     config['serie_name'] = json_data['name']
     config['serie_token'] = series_token
 
-    pretty_console.console.print(
-        '\n' * settings['new_lines_above']
-        + f"Series [bold]\"{json_data['name']}\"[/] selected."
-        + '\n' * settings['new_lines_below']
+    pretty_printer.custom_print(
+        f"Series [bold]\"{json_data['name']}\"[/] selected.",
+        settings, pretty=True
     )
 
     return config
@@ -277,8 +321,8 @@ def select_hidden_series(connection: http.client.HTTPSConnection, headers: dict,
 
 def select_exercise(connection: http.client.HTTPSConnection, headers: dict,
                     selection: str, config: dict, settings: dict) -> dict:
-    import textwrap
-    from dodonacli.source import pretty_console, get_data
+    import textwrap, os
+    from dodonacli.source import pretty_console, get_data, save_boilerplate
 
     # Token for hidden series
     if config['serie_token'] is None:
@@ -286,18 +330,26 @@ def select_exercise(connection: http.client.HTTPSConnection, headers: dict,
     else:
         serie_token = "?token=" + config['serie_token']
 
-    data_exercises = get_data.exercises_data(connection, headers, config['serie_id'], serie_token)
+    data_exercises = get_data.exercises_data(
+        connection, headers, config['serie_id'], serie_token
+    )
 
     selected_exercise = {}
 
-    if selection.isnumeric() and int(selection) in (exercise['id'] for exercise in data_exercises):
-        selected_exercise = [exercise for exercise in data_exercises if exercise['id'] == int(selection)][0]
-
+    user_input_is_numeric = selection.isnumeric()
+    if user_input_is_numeric:
+        selection = int(selection)
     else:
-        for exercise in data_exercises:
-            if selection.lower() in exercise['name'].lower():
+        selection = selection.lower()
+
+    for exercise in data_exercises:
+        if user_input_is_numeric:
+            if exercise['id'] == selection:
                 selected_exercise = exercise
                 break
+        elif selection in exercise['name'].lower():
+            selected_exercise = exercise
+            break
 
     if selected_exercise == {}:
         print(
@@ -322,10 +374,11 @@ def select_exercise(connection: http.client.HTTPSConnection, headers: dict,
 
     boilerplate = selected_exercise.get('boilerplate')
     if boilerplate and boilerplate.strip() != "":
-        print("\nBoilerplate code (copy in boilerplate-file):\n")
-        print(textwrap.indent(boilerplate.rstrip(), '\t'))
-        with open("boilerplate." + programming_language['extension'], "w") as boilerplate_file:
-            boilerplate_file.write(boilerplate)
+        save_boilerplate.save_boilerplate(
+            boilerplate,
+            selected_exercise['name'],
+            programming_language['extension']
+        )
 
     print('\n' * settings['new_lines_below'], end='')
 

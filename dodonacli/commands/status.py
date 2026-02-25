@@ -1,7 +1,10 @@
 import click
 
 
-@click.command(help="Display your current selection. Selected course, series and exercise.")
+@click.command(
+    help="Display your current selection. "
+    "Selected course, series and exercise."
+)
 def status():
     from dodonacli.source import pretty_print, get_data
 

@@ -8,8 +8,10 @@ def sub():
     pass
 
 
-@click.command(help="Load a submission to the prev_submission file, and display more info about it. "
-                    "You can specify a number, else it takes the last submission for that exercise.")
+@click.command(
+    help="Load a previous submission. You can specify a number from the view"
+    "subcommand or leave this to get the last submission."
+)
 @click.argument('number',
                 type=click.IntRange(min=0), default=0)
 def load(number):
@@ -27,18 +29,27 @@ def load(number):
         "Authorization": config['TOKEN']
     }
 
+    extension = ""
     if config['exercise_id']:
-        json_all_submissions = get_data.exercise_submissions(config, connection, headers)
-        extension = "." + get_data.get_extension(config['programming_language']) or ""
+        json_all_submissions = get_data.exercise_submissions(
+            config, connection, headers
+        )
+        _extension = get_data.get_extension(config['programming_language'])
+        if _extension:
+            extension = "." + _extension
     else:
         json_all_submissions = get_data.all_submissions(connection, headers)
         extension = ""
 
     submission = json_all_submissions[-int(number)]
 
-    submission_info = get_data.submission_info(submission['id'], connection, headers, config)
+    submission_info = get_data.submission_info(
+        submission['id'], connection, headers, config
+    )
     set_data.save_to_file(
-        submission_info['exercise_name'], submission_info['id'], submission_info['code'],
+        submission_info['exercise_name'],
+        submission_info['id'],
+        submission_info['code'],
         get_data.get_settings(), extension
     )
 
@@ -67,7 +78,9 @@ def view():
         pretty_print.print_exercise_submissions(json_data, settings)
     else:
         json_data = get_data.all_submissions(connection, headers)
-        pretty_print.print_all_submissions(connection, headers, json_data, settings)
+        pretty_print.print_all_submissions(
+            connection, headers, json_data, settings
+        )
 
 
 sub.add_command(load)

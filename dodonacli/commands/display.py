@@ -1,11 +1,17 @@
 import click
 
 
-@click.command(help="Display info based on the current selection. It will always display what you can select next, "
-                    "or an exercise description if you have selected up to an exercise.")
-@click.option("-force", "--force",
-              help="Force display (with possible mistakes) the exercise (-series) description to display.",
-              is_flag=True, default=False)
+@click.command(
+    help="Display info based on the current selection. "
+    "It will always display what you can select next, "
+    "or an exercise description if you have selected up to an exercise."
+)
+@click.option(
+    "-force", "--force",
+    help="Force display (with possible mistakes) the exercise (-series) "
+    "description to display.",
+    is_flag=True, default=False
+)
 def display(force):
     import http.client
     from dodonacli.source import get_data, pretty_print
@@ -22,7 +28,8 @@ def display(force):
         "Authorization": config['TOKEN']
     }
 
-    # Display flag changes behaviour depending on the values in the config-dictionary.
+    # Display flag changes behaviour depending on the values in the
+    # config-dictionary.
     if config['course_id'] is None:
         # Print available courses
         json_data = get_data.courses_data(connection, headers)
@@ -40,11 +47,15 @@ def display(force):
         else:
             serie_token = "?token=" + config['serie_token']
 
-        json_data = get_data.exercises_data(connection, headers, config['serie_id'], serie_token)
+        json_data = get_data.exercises_data(
+            connection, headers, config['serie_id'], serie_token
+        )
         pretty_print.print_exercise_data(json_data, settings)
 
     else:
         # Print exercise-description
         settings = get_data.get_settings()
-        json_data = get_data.exercise_data(connection, headers, config['course_id'], config['exercise_id'])
+        json_data = get_data.exercise_data(
+            connection, headers, config['course_id'], config['exercise_id']
+        )
         pretty_print.print_exercise(json_data, config['TOKEN'], settings, force)
