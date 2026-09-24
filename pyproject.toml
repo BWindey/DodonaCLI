@@ -11,7 +11,7 @@ authors = [
 description = "A CLI tool for Dodona"
 readme = "README.md"
 requires-python = ">=3.8"
-license = { file = "LICENSE" }
+license-files = [ "LICENSE" ]
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python",
